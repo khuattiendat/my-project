@@ -1,0 +1,125 @@
+.list {
+  display: flex;
+  width: 100%;
+  .listContainer {
+    flex: 6;
+    .datatableTitle {
+      font-size: 24px;
+      color: gray;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 20px 0 20px;
+      .input-form {
+        form {
+          display: flex;
+          height: 30px;
+          border-radius: 20px;
+          border: 1px solid #c4c4c4;
+          align-items: center;
+          overflow: hidden;
+        }
+
+        input {
+          width: 88%;
+          height: 100%;
+          padding: 0 10px;
+          background-color: transparent;
+          outline: none;
+          border: none;
+          font-size: 20px;
+          border-right: 1px solid #ccc;
+        }
+        button {
+          outline: none;
+          position: relative;
+          left: 0;
+          border: none;
+          background-color: transparent;
+          cursor: pointer;
+          transition: all 0.25s linear;
+          &:hover {
+            background-color: #dadada;
+          }
+        }
+      }
+      .link {
+        text-decoration: none;
+        color: green;
+        font-size: 16px;
+        font-weight: 400;
+        border: 1px solid green;
+        padding: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .deleteButton {
+        padding: 5px;
+        background-color: transparent;
+        outline: none;
+        font-size: 16px;
+        font-weight: 400;
+        border-radius: 5px;
+        color: crimson;
+        border: 1px dotted rgba(220, 20, 60, 0.6);
+        cursor: pointer;
+      }
+      .deleteButton.disabled {
+        background: #dadada;
+        cursor: default;
+        color: #888;
+      }
+    }
+    .deleteButton {
+      padding: 2px 5px;
+      border-radius: 5px;
+      background-color: transparent;
+      outline: none;
+      color: crimson;
+      border: 1px dotted rgba(220, 20, 60, 0.6);
+      cursor: pointer;
+    }
+    .deleteButton.disabled {
+      background: #dadada;
+      color: #888;
+      cursor: default;
+    }
+    .pagination {
+      display: flex;
+      justify-content: end;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      margin-top: 10px;
+      ul {
+        list-style: none;
+        display: flex;
+        button {
+          border: none;
+          outline: none;
+          background-color: transparent;
+          transition: all linear 0.2s;
+          border-radius: 4px;
+          &:hover {
+            background-color: #dadada;
+          }
+          .icon {
+            cursor: pointer;
+            font-size: 30px;
+            height: 100%;
+            width: 100%;
+          }
+        }
+        span,
+        button {
+          font-size: 16px;
+          padding: 0;
+          display: block;
+          width: 24px;
+          text-align: center;
+          height: 40px;
+          line-height: 40px;
+        }
+      }
+    }
+  }
+}

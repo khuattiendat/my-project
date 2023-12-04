@@ -1,0 +1,34 @@
+@import "../../../style/variable";
+.home {
+  width: 100%;
+  overflow: hidden;
+  .home-container {
+    padding: 0 60px;
+  }
+  .title-h1 {
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 20px 0;
+    p {
+      display: block;
+      -ms-flex: 1;
+      flex: 1;
+      height: 2px;
+      opacity: .1;
+      margin: 0;
+      background-color: currentColor;
+    }
+    span {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      color: $text-color;
+      margin: 0 10px;
+      text-transform: uppercase;
+    }
+  }
+}

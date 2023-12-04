@@ -1,0 +1,16 @@
+export const checkStatusPayment = (status) => {
+    const statusPayment = ["Chưa thanh toán", "Đã thanh toán", "Đã hủy"];
+    return statusPayment[status];
+}
+export const checkStatusDelivery = (status) => {
+    const statusDelivery = ["Chưa giao", "Đang giao hàng"];
+    return statusDelivery[status];
+}
+export const checkPaymentMethod = (status) => {
+    const paymentMethod = ["Thanh toán khi nhận hàng", "Thanh toán qua thẻ"];
+    return paymentMethod[status];
+}
+export const checkGender = (gender) => {
+    const genderList = ["Nữ", "Nam"];
+    return genderList[gender];
+}

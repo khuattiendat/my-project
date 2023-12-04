@@ -1,0 +1,73 @@
+@import "../../style/variable";
+
+.footer {
+  width: 100%;
+  padding: 0 60px;
+  margin-top: 40px;
+  border-top: 3px solid $primary-lighter;
+
+
+  &_container {
+    width: 100%;
+    display: flex;
+
+    .footer_item {
+      display: flex;
+      width: 25%;
+      flex-direction: column;
+      margin-top: 20px;
+      padding: 0 10px;
+
+      img {
+        width: 100%;
+        object-fit: cover;
+        cursor: pointer;
+      }
+
+      ul.footer_item_left {
+
+        display: flex;
+        li {
+          margin: 0 4px;
+        }
+        svg {
+          font-size: 28px;
+
+        }
+
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+        justify-content: center;
+
+        li {
+
+          position: relative;
+          margin: 10px 0;
+          a {
+            color: unset;
+            text-decoration: none;
+            font-size: 14px;
+            &:hover {
+              color: $primary-darker;
+            }
+          }
+
+          svg {
+            cursor: pointer;
+            transition: all linear .2s;
+            font-size: 16px;
+          }
+
+          svg:hover {
+            color: $primary-darker;
+          }
+        }
+      }
+
+    }
+  }
+}

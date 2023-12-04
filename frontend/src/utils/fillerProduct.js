@@ -1,0 +1,1 @@
+export const fillerProduct = (array, name) => array.filter(item => item.Category.name === name)

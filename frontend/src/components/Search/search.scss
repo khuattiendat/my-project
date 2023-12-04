@@ -1,0 +1,33 @@
+.search-container {
+  .form-input {
+    display: flex;
+    height: 30px;
+    border-radius: 20px;
+    border: 1px solid #c4c4c4;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  input {
+    width: 88%;
+    height: 100%;
+    padding: 0 10px;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    border-right: 1px solid #ccc;
+  }
+  button {
+    outline: none;
+    position: relative;
+    padding-top: 4px;
+    left: 0;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.25s linear;
+    &:hover {
+      background-color: #dadada;
+    }
+  }
+}

@@ -1,0 +1,22 @@
+.banner {
+  z-index: 1;
+  height: 600px;
+  padding: 0 60px;
+  width: 100%;
+  margin-top: 2px;
+  .mySwiper {
+    height: 100%;
+    img {
+      display: block;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      background-position: center;
+      border-radius: 2px;
+      cursor: grab;
+    }
+    img:active {
+      cursor: grabbing;
+    }
+  }
+}

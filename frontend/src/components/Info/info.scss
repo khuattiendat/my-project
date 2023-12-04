@@ -1,0 +1,123 @@
+.info {
+  .editButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    font-size: 12px;
+    color: #7451f8;
+    background-color: #7551f818;
+    cursor: pointer;
+    border-radius: 0px 0px 0px 5px;
+  }
+
+  .item {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+
+    .itemImg {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #ccc;
+      padding: 20px;
+    }
+
+    .details {
+      width: 100%;
+
+      .itemTitle {
+        margin-bottom: 10px;
+        color: #555;
+      }
+
+      .detailItem {
+        margin-bottom: 10px;
+        font-size: 14px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+
+        .itemKey {
+          font-weight: bold;
+          color: gray;
+          margin-right: 5px;
+        }
+
+        .itemValue {
+          font-weight: 300;
+        }
+
+        .itemBtn {
+          display: flex;
+          position: relative;
+
+          span {
+            margin-left: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #7451f8;
+            background-color: rgba(117, 81, 248, 0.0941176471);
+            border-radius: 4px;
+            user-select: none;
+            padding: 4px;
+
+            &:hover {
+              box-shadow: 0 0 0 2px rgba(117, 81, 248, 0.2);
+              background-color: rgba(117, 81, 248, 0.2);
+            }
+          }
+
+          .change_delivery {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            width: max-content;
+            left: calc(100% + 20px);
+            border-radius: 4px;
+            background: #f0f0f0;
+            top: 50%;
+            transform: translateY(-55%);
+
+            &:before {
+              content: "";
+              position: absolute;
+              width: 30px;
+              height: 30px;
+              left: -20px;
+              background: #f0f0f0;
+              top: 50%;
+              transform: translateY(-50%);
+              rotate: 45deg;
+              z-index: -1;
+            }
+
+            &_item {
+              display: flex;
+              align-items: center;
+
+              padding: 0 10px;
+              cursor: pointer;
+
+              &:hover {
+                background: #e0e0e0;
+              }
+
+              label {
+                font-size: 18px;
+                padding: 6px 0;
+                margin-left: 8px;
+                width: 100%;
+                cursor: pointer;
+                user-select: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

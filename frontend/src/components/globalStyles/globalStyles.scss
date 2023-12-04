@@ -1,0 +1,28 @@
+@import "../../style/variable";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  &::-webkit-scrollbar {
+    width: 8px;
+    background: #ccc;
+
+  }
+
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: $primary-lighter;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    margin: 10px 0;
+    background-color: $primary-darker;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+}
+

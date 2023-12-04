@@ -1,0 +1,101 @@
+.new {
+  width: 100%;
+  display: flex;
+
+  .newContainer {
+    flex: 6;
+
+    .top,
+    .bottom {
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      padding: 10px;
+      margin: 20px;
+      display: flex;
+
+      h1 {
+        color: lightgray;
+        font-size: 20px;
+      }
+
+      .left {
+        flex: 1;
+        text-align: center;
+        .show-img {
+          display: flex;
+          flex-wrap: wrap;
+
+          img {
+            border-radius: 2px;
+            margin: 8px;
+            border: 1px solid #000;
+          }
+        }
+        img {
+          width: 90px;
+          height: 90px;
+          border-radius: 50%;
+          margin: 8px;
+          object-fit: cover;
+          object-position: center;
+          border: 1px solid #000;
+        }
+      }
+
+      .right {
+        flex: 2;
+
+        form {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 30px;
+          justify-content: space-around;
+
+          .formInput {
+            width: 40%;
+            .error {
+              color: red;
+            }
+            label {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              margin-bottom: 4px;
+
+              .icon {
+                cursor: pointer;
+              }
+            }
+
+            input {
+              width: 100%;
+              padding: 5px;
+              border: none;
+              border-bottom: 1px solid gray;
+              outline: none;
+            }
+            select,
+            textarea {
+              width: 100%;
+              padding: 5px;
+              outline: none;
+              font-size: 16px;
+            }
+          }
+
+          button {
+            width: 150px;
+            padding: 10px;
+            border: none;
+            background-color: teal;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+  }
+}

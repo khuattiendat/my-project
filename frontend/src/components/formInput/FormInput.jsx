@@ -1,0 +1,393 @@
+import React, {useEffect, useRef, useState} from "react";
+import {checkEmail, checkPhone} from "../../utils/validator";
+import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
+import {useDispatch, useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {createAxios} from "../../utils/createInstance";
+import {loginSuccess} from "../../redux/authSlice";
+import {addUser, getAllRole, updateUser} from "../../apis/users";
+import {
+    addCategory,
+    getAllCategory,
+    updateCategory,
+} from "../../apis/category";
+import {addProduct, updateProduct} from "../../apis/products";
+import {showAlertConfirm} from "../../utils/showAlert";
+import {formatPrice} from "../../utils/format";
+import {enqueueSnackbar} from "notistack";
+
+const FormInput = (props) => {
+    const {inputs, type, data, isEdit, images = []} = props;
+    const BASE_URL_SERVER = process.env.REACT_APP_BASE_URL_SERVER;
+    const user = useSelector((state) => state.auth.login?.currentUser);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const axiosJWT = createAxios(user, dispatch, loginSuccess);
+    const [selectRole, setSelectRole] = useState([]);
+    const [selectCategory, setSelectCategory] = useState([]);
+    const [errorMessage, setErrorMessage] = useState([]);
+    const [categoryId, setCategoryId] = useState("");
+    const [categoryName, setCategoryName] = useState("");
+    const [files, setFiles] = useState([]);
+    const [value, setValue] = useState({});
+    const [roleId, setRoleId] = useState("1");
+    const [gender, setGender] = useState(0);
+    const [description, setDescription] = useState("");
+    const updateFieldChanged = (e) => {
+        let newArr = {...value}; // copying the old datas array
+        newArr[e.target.name] = e.target.value;
+        return newArr;
+    };
+    const handleAddUser = async () => {
+            setErrorMessage([]);
+            const messages = [];
+            let data = {
+                name: value.name,
+                email: value.email,
+                password: value.password,
+                phone_number: value.phone,
+                gender,
+                address: value.address,
+                role_id: roleId,
+            };
+            if (checkEmail(data.email)) {
+                messages.push("Email không hợp lệ !!!");
+            }
+            if (checkPhone(data.phone_number)) {
+                messages.push("SDT không hợp lệ !!!");
+            }
+            if (messages.length > 0) {
+                setErrorMessage(messages);
+            } else {
+                let confirm = await showAlertConfirm(
+                    "Xác nhận thông tin ",
+                    `
+        Tên sản phẩm: ${value.name},
+        email: ${value.email},
+        Password: ${value.password},
+        Số điện thoại: ${value.phone},
+        Giới tính: ${gender},
+        Địa chỉ: ${value.address}
+      `
+                );
+                if (confirm) {
+                    try {
+                        await addUser(data);
+                        navigate("/admin/users")
+                    } catch (error) {
+                        console.log(error.response.data.message);
+                        error.response.data.message.forEach(message => {
+                            enqueueSnackbar(message, {
+                                variant: "error", autoHideDuration: 1000,
+                            });
+                        })
+                    }
+                }
+            }
+        }
+    ;
+    const handleAddProduct = async () => {
+        const messages = [];
+        setErrorMessage([]);
+        let data = new FormData();
+        data.append("name", value.name);
+        data.append("description", description);
+        data.append("price", value.price);
+        data.append("discount", value.discount);
+        data.append("quantity", value.quantity);
+        data.append("category_id", categoryId);
+        files.forEach((file) => data.append("multiple_images", file));
+        if (files.length <= 0) {
+            messages.push("vui lòng chọn ít nhất 1 hình ảnh cho sản phẩn");
+        }
+        if (value.discount < 0 || value.discount > 100) {
+            messages.push("Giảm giá không hợp lệ");
+        }
+
+        if (messages.length > 0) {
+            setErrorMessage(messages);
+        } else {
+            let confirm = await showAlertConfirm(
+                "Xác nhận thông tin ",
+                `
+        Tên sản phẩm: ${value.name},
+        Giá: ${formatPrice(value.price)},
+        Số lượng: ${value.quantity},
+        Giảm giá: ${value.discount},
+        Mô tả: ${description},
+        Loại sản phẩm: ${categoryName}
+      `
+            );
+            if (confirm) {
+                await addProduct(user?.data.accessToken, data, navigate, axiosJWT);
+            }
+        }
+    };
+    const handleUpdateProduct = async (id) => {
+        const messages = [];
+        setErrorMessage([]);
+        let discount =
+            document.querySelector("[name='discount']").value ?? value.discount;
+        let data = new FormData();
+        data.append(
+            "name",
+            document.querySelector("[name='name']").value ?? value.name
+        );
+        data.append(
+            "description",
+            document.querySelector("[name='descriptions']").value ?? description
+        );
+        data.append(
+            "price",
+            document.querySelector("[name='price']").value ?? value.price
+        );
+        data.append("discount", discount);
+        data.append(
+            "quantity",
+            document.querySelector("[name='quantity']").value ?? value.quantity
+        );
+        if (discount < 0 || discount > 100) {
+            messages.push("Giảm giá không hợp lệ");
+        }
+        data.append("category_id", categoryId);
+        files.forEach((file) => data.append("multiple_images", file));
+        if (messages.length > 0) {
+            setErrorMessage(messages);
+        } else {
+            await updateProduct(user?.data.accessToken, data, id, navigate, axiosJWT);
+        }
+    };
+    const handleAddCategory = async () => {
+        let data = {
+            name: value.name,
+        };
+        await addCategory(user?.data.accessToken, data, navigate, axiosJWT);
+    };
+    const handleUpdateUser = async (id) => {
+        let data = {
+            name: document.querySelector("[name='name']").value ?? value.name,
+            email: document.querySelector("[name='email']").value ?? value.email,
+            password: value.password,
+            phone_number:
+                document.querySelector("[name='phone']").value ?? value.phone,
+            gender,
+            address:
+                document.querySelector("[name='address']").value ?? value.address,
+            role_id: roleId,
+        };
+        try {
+            await updateUser(user?.data.accessToken, data, id, axiosJWT);
+            enqueueSnackbar("Cập nhật thành công", {variant: "success", autoHideDuration: 1000,});
+            navigate("/admin/users");
+        } catch (error) {
+            let messageError = JSON.stringify(error.response.data.message)
+            enqueueSnackbar(messageError, {variant: "error", autoHideDuration: 1000,})
+        }
+    };
+    const handleUpdateCategory = async (id) => {
+        let data = {
+            name: document.querySelector("[name='name']").value ?? value.name,
+        };
+        await updateCategory(user?.data.accessToken, data, id, navigate, axiosJWT);
+    };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (type === "users" && isEdit) {
+            handleUpdateUser(data.id);
+        } else if (type === "users") {
+            handleAddUser();
+        } else if (type === "products" && isEdit) {
+            handleUpdateProduct(data.id);
+        } else if (type === "products") {
+            handleAddProduct();
+        } else if (type === "categories" && isEdit) {
+            handleUpdateCategory(data.id);
+        } else if (type === "categories") {
+            handleAddCategory();
+        }
+    };
+    useEffect(() => {
+        console.log(data);
+        if (data !== undefined) {
+            if (type === "users" && isEdit) {
+                document.querySelector("[name='name']").value = data?.name;
+                document.querySelector("[name='email']").value = data?.email;
+                document.querySelector("[name='phone']").value = data?.phone_number;
+                document.querySelector("[name='address']").value = data?.address;
+            } else if (type === "products" && isEdit) {
+                document.querySelector("[name='name']").value = data?.name;
+                document.querySelector("[name='price']").value = data?.price;
+                document.querySelector("[name='discount']").value = data?.discount;
+                document.querySelector("[name='quantity']").value = data?.quantity;
+                document.querySelector("[name='descriptions']").value =
+                    data?.description;
+            } else if (type === "categories") {
+                document.querySelector("[name='name']").value = data?.name;
+            }
+        }
+        const fetchApi = async () => {
+            if (type === "users") {
+                try {
+                    const role = await getAllRole(user?.data.accessToken, axiosJWT);
+                    setSelectRole(role);
+                } catch (error) {
+                    error.response.data.message.forEach(message => {
+                        enqueueSnackbar(message, {
+                            variant: "error", autoHideDuration: 1000,
+                        });
+                    })
+                }
+            } else if (type === "products") {
+                const category = await getAllCategory();
+                setSelectCategory(category);
+                setCategoryId(category[0]?.id);
+            }
+        };
+        fetchApi();
+    }, [data]);
+    return (
+        <>
+            <div className="left">
+                {type === "products" && files.length > 0 ? (
+                    <div className="show-img">
+                        {files.map((item, index) => (
+                            <img key={index} src={URL.createObjectURL(item)} alt="images"/>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="show-img">
+                        {images.map((item, index) => (
+                            <img
+                                key={index}
+                                src={`${BASE_URL_SERVER}uploads/${item.image_url}`}
+                                alt=""
+                            />
+                        ))}
+                    </div>
+                )}
+            </div>
+            <div className="right">
+                <form onSubmit={handleSubmit} encType="multipart/form-data">
+                    {type == "products" && (
+                        <div className="formInput">
+                            <label htmlFor="file">
+                                Image: <DriveFolderUploadOutlinedIcon className="icon"/>
+                            </label>
+                            <input
+                                type="file"
+                                id="file"
+                                onChange={(e) => {
+                                    setFiles([...e.target.files]);
+                                }}
+                                style={{display: "none"}}
+                                multiple
+                            />
+                        </div>
+                    )}
+                    {inputs.map((input, index) => (
+                        <div className="formInput" key={input.id}>
+                            <label>{input.label}</label>
+                            <input
+                                className="input"
+                                type={input.type}
+                                name={input.name}
+                                required
+                                onChange={(e) => {
+                                    setValue(updateFieldChanged(e));
+                                }}
+                                placeholder={input.placeholder}
+                            />
+                        </div>
+                    ))}
+                    {type == "users" ? (
+                        <div className="formInput">
+                            <label htmlFor="">Quyền</label>
+                            <select name="" id="" onChange={(e) => setRoleId(e.target.value)}>
+                                {selectRole.map((item) => (
+                                    <option
+                                        selected={data ? data.role_id : ""}
+                                        key={item.id}
+                                        value={item.id}
+                                    >
+                                        {item.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                    {type == "products" ? (
+                        <div className="formInput">
+                            <label htmlFor="">Loại sản phẩm</label>
+                            <select
+                                name=""
+                                id="category"
+                                onChange={(e) => {
+                                    setCategoryId(e.target.value);
+                                    setCategoryName(
+                                        e.nativeEvent.target[e.nativeEvent.target.selectedIndex]
+                                            .text
+                                    );
+                                }}
+                            >
+                                {selectCategory.map((item) => (
+                                    <option
+                                        selected={isEdit && data.category_id == item.id}
+                                        key={item.id}
+                                        value={item.id}
+                                    >
+                                        {item.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                    {type == "products" ? (
+                        <div className="formInput">
+                            <label htmlFor="">Mô tả</label>
+                            <textarea
+                                name="descriptions"
+                                id=""
+                                rows="2"
+                                onChange={(e) => setDescription(e.target.value)}
+                                required
+                            ></textarea>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                    {type == "users" ? (
+                        <div className="formInput">
+                            <label htmlFor="">Giới tính</label>
+                            <select name="" id="" onChange={(e) => setGender(e.target.value)}>
+                                <option selected={isEdit && data.gender == 1} value={1}>Nam</option>
+                                <option selected={isEdit && data.gender == 0} value={0}>Nữ</option>
+                            </select>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                    {errorMessage.length > 0 && (
+                        <div className="formInput">
+                            <label htmlFor="">ERROR</label>
+                            {errorMessage.map((error, index) => (
+                                <p className="error" key={index}>
+                                    {error}
+                                </p>
+                            ))}
+                        </div>
+                    )}
+
+                    <div className="formInput">
+                        <button type="submit">{isEdit ? "Cập nhật" : "Thêm mới"}</button>
+                    </div>
+                </form>
+            </div>
+        </>
+    );
+};
+
+export default FormInput;

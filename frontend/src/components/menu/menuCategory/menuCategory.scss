@@ -1,0 +1,65 @@
+@import "../../../style/variable";
+
+.menu {
+  z-index: 9999;
+  position: absolute;
+  min-width: 200px;
+  top: calc(100% + 4px);
+  background: #fff;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: scroll;
+  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.22);
+  transition: all linear .2s;
+  opacity: 0;
+  visibility: hidden;
+  left: 0px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    background: #ccc;
+  }
+
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: $primary-lighter
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $primary-darker;
+    border-radius: 8px;
+  }
+
+  ul.menu_list {
+    width: 100%;
+    list-style: none;
+    padding: 0;
+
+    li.menu_item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-bottom: 1px solid #ccc;
+
+      &:hover .menu_item-quantity {
+        color: $primary-darker;
+      }
+
+      .menu_item-name {
+        font-size: 14px;
+        text-transform: uppercase;
+        font-weight: 600;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        display: -webkit-box;
+        margin: 0 20px;
+      }
+
+      .menu_item-quantity {
+        font-size: 12px;
+        color: $text-color;
+      }
+    }
+  }
+}

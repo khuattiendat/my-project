@@ -1,0 +1,199 @@
+@import "../../../style/variable";
+
+.order-container {
+  width: 100%;
+  padding: 0 60px;
+  display: flex;
+  margin-top: 3px;
+
+  .left {
+    width: 35%;
+    box-shadow: 2px 0 5px -2px $text-color;
+    padding: 10px;
+    border-radius: 4px;
+
+    .title {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 20px 0;
+      text-align: center;
+      text-transform: uppercase;
+      color: $text-color;
+    }
+
+    .left_content {
+      &-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        box-shadow: 0 3px 2px -2px $text-color;
+
+        &-img {
+          width: 80px;
+          height: 80px;
+          margin-right: 20px;
+          box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+          border-radius: 2px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+        }
+
+        &-info {
+          flex: 1;
+          overflow: hidden;
+
+          div {
+            width: 100%;
+            max-width: 100%;
+            color: $text-color;
+            font-size: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* text-overflow: clip; */
+
+            a {
+              color: $text-color;
+              text-decoration: none;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+
+            span {
+              font-weight: bold;
+              padding-right: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .right {
+    flex: 1;
+
+    &_header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .title {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 20px 0;
+        text-align: center;
+        text-transform: uppercase;
+        color: $text-color;
+        padding-left: 60px;
+      }
+
+      form {
+        display: flex;
+        width: max-content;
+        align-items: center;
+        border: 1px solid $text-color;
+        border-radius: 8px;
+        overflow: hidden;
+        height: 36px;
+        transition: all 0.2s linear;
+
+        &:focus-within {
+          border: 1px solid $primary-darker;
+          box-shadow: 0 0 2px 1px $primary-darker;
+        }
+
+        input {
+          outline: none;
+          border: none;
+          padding: 0 10px;
+        }
+
+        button {
+          border: none;
+          outline: none;
+          background: $primary-lighter;
+          padding: 0 10px;
+          cursor: pointer;
+          height: 100%;
+          transition: all 0.2s linear;
+          overflow: hidden;
+
+          &:hover {
+            background: $primary-darker;
+            color: #fff;
+          }
+        }
+      }
+    }
+
+    &_content {
+      margin-left: 10px;
+
+      .MuiDataGrid-virtualScroller {
+        overflow-x: scroll;
+        cursor: pointer;
+
+        &::-webkit-scrollbar {
+          height: 8px;
+          background: $primary-lighter;
+        }
+
+        &::-webkit-scrollbar-track {
+          -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+          background-color: $primary-lighter;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: $primary-darker;
+          border-radius: 8px;
+          cursor: pointer;
+        }
+      }
+
+
+    }
+    .pagination {
+      display: flex;
+      justify-content: end;
+      margin-right: 20px;
+      margin-top: 10px;
+      ul {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        button {
+          border: none;
+          outline: none;
+          background-color: transparent;
+          transition: all linear 0.2s;
+          border-radius: 4px;
+          &:hover {
+            background-color: #dadada;
+          }
+          .icon {
+            cursor: pointer;
+            font-size: 30px;
+            height: 100%;
+            width: 100%;
+          }
+        }
+        span,
+        button {
+          font-size: 16px;
+          padding: 0;
+          display: block;
+          width: 24px;
+          text-align: center;
+          height: 40px;
+          line-height: 40px;
+        }
+      }
+    }
+  }
+
+}

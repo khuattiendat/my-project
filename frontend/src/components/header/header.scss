@@ -1,0 +1,256 @@
+@import "../../style/variable";
+/* The following line can be included in a src/App.scss */
+.header {
+  width: 100%;
+  padding: 0 -60px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.15);
+
+  &_top {
+    padding: 0 60px;
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+    background-color: $primary-lighter;
+
+    .left,
+    .right {
+      ul {
+        line-height: 40px;
+        display: flex;
+        list-style: none;
+        padding: 0;
+
+        li + li {
+          margin-left: 10px;
+        }
+
+        li a {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+          font-size: 14px;
+          color: $text-color;
+
+          span {
+            margin-left: 6px;
+          }
+        }
+
+        li a:hover {
+          span {
+            color: rgba(17, 17, 17, 0.85);
+          }
+        }
+      }
+
+
+    }
+
+    .right {
+      li span {
+        color: $text-color;
+        cursor: pointer;
+        margin-left: 10px;
+
+        &:hover {
+          color: rgba(17, 17, 17, 0.85);
+        }
+      }
+    }
+
+    .right_header_link {
+      text-decoration: none !important;
+      color: $text-color !important;
+    }
+  }
+
+  &_main {
+    height: 75px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 60px;
+
+    .left {
+      width: 280px;
+
+      form {
+        border-bottom: 2px $primary-darker solid;
+        display: flex;
+        height: 36px;
+
+        input {
+          border: none;
+          font-size: 18px;
+          padding: 0 8px;
+          height: 100%;
+          outline: none;
+          flex: 1;
+        }
+
+        button {
+          border: none;
+          outline: none;
+          background: #fff;
+          height: 98%;
+          border-radius: 2px;
+          transition: all linear .2s;
+
+          &:hover {
+            background: #ccc;
+          }
+        }
+      }
+    }
+
+    .logo {
+      flex: 1;
+      text-align: center;
+
+      img {
+        width: 26%;
+      }
+    }
+
+    .right {
+      width: 280px;
+      display: flex;
+      justify-content: end;
+
+      a {
+        text-decoration: none;
+        color: $text-color;
+        font-weight: bold;
+        font-size: 16px;
+        text-transform: uppercase;
+        display: block;
+
+        &:hover strong {
+          background: #3ac2cc;
+          color: #fff;
+        }
+
+        &:hover strong:after {
+          margin-bottom: 2px;
+        }
+      }
+
+      .icon {
+        margin-left: 10px;
+
+        strong {
+          border-radius: 2px;
+          font-weight: bold;
+          margin: 0.3em 0;
+          border: 2px solid #3ac2cc;
+          color: #3ac2cc;
+          position: relative;
+          display: inline-block;
+          vertical-align: middle;
+          text-align: center;
+          width: 30px;
+          height: 30px;
+          font-size: 1em;
+          line-height: 1.9em;
+          transition: all ease-out .2s;
+
+          &::after {
+            transition: height .1s ease-out;
+            bottom: 100%;
+            margin-bottom: 0;
+            margin-left: -7px;
+            height: 8px;
+            width: 14px;
+            left: 50%;
+            content: ' ';
+            position: absolute;
+            pointer-events: none;
+            border: 3px solid #446084;
+            border-top-left-radius: 99px;
+            border-top-right-radius: 99px;
+            border-bottom: 0;
+            border-color: #3ac2cc;
+          }
+        }
+      }
+
+    }
+
+  }
+
+  &_bottom {
+    min-height: 40px;
+    margin: 0 auto;
+    padding: 0 60px;
+
+    ul.header_bottom_list {
+      margin: 0;
+      list-style: none;
+      display: flex;
+      padding: 0;
+      justify-content: center;
+
+      li.header_bottom-item {
+        margin: 0;
+        min-height: 50px;
+        cursor: pointer;
+        border-radius: 2px;
+        border-bottom: 4px solid transparent;
+        transition: all linear .2s;
+        min-width: 150px;
+        display: flex;
+        justify-content: center;
+
+        &.category:hover .menu {
+          opacity: 1;
+          left: -20px;
+          visibility: visible;
+        }
+
+        &.active {
+          border-bottom: 4px solid $primary-darker;
+        }
+
+        &:hover {
+          border-bottom: 4px solid $primary-darker;
+          background: $primary-lighter;
+
+        }
+
+        &:hover .header_bottom_link {
+          color: #fff;
+        }
+
+        .header_bottom_link {
+          padding: 0 30px;
+          text-decoration: none;
+          color: $text-color;
+          display: block;
+          line-height: 40px;
+          font-size: 16px;
+          height: 100%;
+          text-transform: uppercase;
+          user-select: none;
+        }
+      }
+    }
+  }
+}
+
+//.alert-enter {
+//  opacity: 0;
+//  transform: scale(0.9);
+//}
+//.alert-enter-active {
+//  opacity: 1;
+//  transform: translateX(0);
+//  transition: opacity linear 300ms, transform linear 300ms;
+//}
+//.alert-exit {
+//  opacity: 1;
+//}
+//.alert-exit-active {
+//  opacity: 0;
+//  transform: scale(0.9);
+//  transition: opacity linear 300ms, transform linear 300ms;
+//}
