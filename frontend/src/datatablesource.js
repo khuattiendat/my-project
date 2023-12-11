@@ -75,6 +75,11 @@ export const orderColumnClient = [
         width: 150,
     },
     {
+        field: "createdAt",
+        headerName: "Ngày đặt hàng",
+        width: 200,
+    },
+    {
         field: "recipient_name",
         headerName: "Tên người nhận",
         width: 150,

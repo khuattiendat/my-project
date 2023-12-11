@@ -100,7 +100,7 @@ const getAllOrder = async (page, value) => {
         };
     }
 }
-const getOrderByUserId = async (id, page, value) => {
+const getOrderByUserId = async (id, page, value, orderBy = "latest") => {
     try {
         if (!page) {
             return {
@@ -122,6 +122,9 @@ const getOrderByUserId = async (id, page, value) => {
                 where: {
                     user_id: id
                 },
+                order: [
+                    orderBy === "latest" ? ['createdAt', 'DESC'] : ['createdAt', 'ASC']
+                ],
                 include: [{
                     model: User,
                     required: false

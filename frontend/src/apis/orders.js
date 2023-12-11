@@ -60,11 +60,12 @@ export const getOrderDetailByOrderId = async (accessToken, id, axiosJWT) => {
         console.log(error);
     }
 }
-export const getOrderByUserId = async (accessToken, id, axiosJWT, page, q) => {
+export const getOrderByUserId = async (accessToken, id, axiosJWT, page, q, orderBy) => {
     const res = await axiosJWT.get("orders/users/" + id, {
         params: {
             page,
-            q
+            q,
+            orderBy
         },
         headers: {
             token: `Bearer ${accessToken}`

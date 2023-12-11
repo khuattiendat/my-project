@@ -68,7 +68,8 @@ const OrderController = {
             const id = req.params.userId;
             const page = req.query.page;
             const value = req.query.q;
-            const orders = await getOrderByUserId(id, page, value);
+            const orderBy = req.query.orderBy;
+            const orders = await getOrderByUserId(id, page, value, orderBy);
             if (orders.error !== ERROR_SUCCESS) {
                 res.status(200).send(orders)
             } else {

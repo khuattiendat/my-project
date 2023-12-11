@@ -129,6 +129,10 @@
           }
         }
       }
+
+      &-sort {
+        width: 100px;
+      }
     }
 
     &_content {
@@ -157,24 +161,29 @@
 
 
     }
+
     .pagination {
       display: flex;
       justify-content: end;
       margin-right: 20px;
       margin-top: 10px;
+
       ul {
         list-style: none;
         display: flex;
         margin: 0;
+
         button {
           border: none;
           outline: none;
           background-color: transparent;
           transition: all linear 0.2s;
           border-radius: 4px;
+
           &:hover {
             background-color: #dadada;
           }
+
           .icon {
             cursor: pointer;
             font-size: 30px;
@@ -182,6 +191,7 @@
             width: 100%;
           }
         }
+
         span,
         button {
           font-size: 16px;
