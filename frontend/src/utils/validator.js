@@ -10,15 +10,12 @@ export const checkEmail = (value) => {
     return false
 }
 export const checkPhone = (value) => {
+    console.log(value)
     if (!value) {
         return true;
     }
     var re = /((09|03|07|08|05)+([0-9]{8})\b)/g;
-    if (!re.test(value.trim())) {
-        return true
-    }
-    return false;
-
+    return !re.test(value.trim());
 }
 export const checkPasswordsMatch = (value1, value2) => {
     if (value1.value !== value2.value) {

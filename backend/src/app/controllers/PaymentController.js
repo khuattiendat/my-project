@@ -71,7 +71,7 @@ const PaymentController = {
             const items = [];
             let totalMoney = 0;
             data.listProducts.map((item) => {
-                let price = (item.price / 24231.00).toFixed(2)
+                let price = (Number(item.price) / Number(req.body.rate)).toFixed(2)
                 let totalPrice = (price * item.quantity)
                 let result = {
                     name: item.name,

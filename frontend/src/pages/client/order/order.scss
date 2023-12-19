@@ -179,6 +179,7 @@
           background-color: transparent;
           transition: all linear 0.2s;
           border-radius: 4px;
+          cursor: pointer;
 
           &:hover {
             background-color: #dadada;
@@ -201,6 +202,7 @@
           text-align: center;
           height: 40px;
           line-height: 40px;
+          cursor: pointer;
         }
       }
     }

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {checkEmail, checkPhone} from "../../utils/validator";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import {useDispatch, useSelector} from "react-redux";
@@ -15,6 +15,7 @@ import {addProduct, updateProduct} from "../../apis/products";
 import {showAlertConfirm} from "../../utils/showAlert";
 import {formatPrice} from "../../utils/format";
 import {enqueueSnackbar} from "notistack";
+import {checkGender} from "../../utils/checkStatus";
 
 const FormInput = (props) => {
     const {inputs, type, data, isEdit, images = []} = props;
@@ -31,8 +32,9 @@ const FormInput = (props) => {
     const [files, setFiles] = useState([]);
     const [value, setValue] = useState({});
     const [roleId, setRoleId] = useState("1");
-    const [gender, setGender] = useState(0);
+    const [gender, setGender] = useState("1");
     const [description, setDescription] = useState("");
+    const [password, setPassword] = useState("");
     const updateFieldChanged = (e) => {
         let newArr = {...value}; // copying the old datas array
         newArr[e.target.name] = e.target.value;
@@ -41,38 +43,46 @@ const FormInput = (props) => {
     const handleAddUser = async () => {
             setErrorMessage([]);
             const messages = [];
+            if (password.length < 6) {
+                messages.push("Mật khẩu phải có ít nhất 6 kí tự");
+            }
+            console.log(value)
+            if (!value.name || !value.email || !value.phone || !value.address || !password) {
+                messages.push("Vui lòng nhập đầy đủ thông tin")
+            }
+            if (checkEmail(value.email)) {
+                messages.push("Email không hợp lệ !!!");
+            }
+            if (checkPhone(value.phone)) {
+                messages.push("SDT không hợp lệ !!!");
+            }
             let data = {
                 name: value.name,
                 email: value.email,
-                password: value.password,
+                password: password,
                 phone_number: value.phone,
                 gender,
                 address: value.address,
                 role_id: roleId,
             };
-            if (checkEmail(data.email)) {
-                messages.push("Email không hợp lệ !!!");
-            }
-            if (checkPhone(data.phone_number)) {
-                messages.push("SDT không hợp lệ !!!");
-            }
             if (messages.length > 0) {
                 setErrorMessage(messages);
             } else {
                 let confirm = await showAlertConfirm(
                     "Xác nhận thông tin ",
                     `
-        Tên sản phẩm: ${value.name},
+        Họ và tên: ${value.name},
         email: ${value.email},
-        Password: ${value.password},
+        Password: ${password},
         Số điện thoại: ${value.phone},
-        Giới tính: ${gender},
+        Giới tính: ${checkGender(gender)},
         Địa chỉ: ${value.address}
       `
                 );
                 if (confirm) {
                     try {
                         await addUser(data);
+                        enqueueSnackbar("Thêm mới thành công", {variant: "success", autoHideDuration: 1000,});
                         navigate("/admin/users")
                     } catch (error) {
                         console.log(error.response.data.message);
@@ -162,6 +172,7 @@ const FormInput = (props) => {
             name: value.name,
         };
         await addCategory(user?.data.accessToken, data, navigate, axiosJWT);
+
     };
     const handleUpdateUser = async (id) => {
         let data = {
@@ -170,7 +181,7 @@ const FormInput = (props) => {
             password: value.password,
             phone_number:
                 document.querySelector("[name='phone']").value ?? value.phone,
-            gender,
+            gender: document.querySelector("[name='gender']").value ?? gender,
             address:
                 document.querySelector("[name='address']").value ?? value.address,
             role_id: roleId,
@@ -206,8 +217,8 @@ const FormInput = (props) => {
             handleAddCategory();
         }
     };
-    useEffect(() => {
-        console.log(data);
+    useEffect(async () => {
+        console.log(inputs);
         if (data !== undefined) {
             if (type === "users" && isEdit) {
                 document.querySelector("[name='name']").value = data?.name;
@@ -231,11 +242,7 @@ const FormInput = (props) => {
                     const role = await getAllRole(user?.data.accessToken, axiosJWT);
                     setSelectRole(role);
                 } catch (error) {
-                    error.response.data.message.forEach(message => {
-                        enqueueSnackbar(message, {
-                            variant: "error", autoHideDuration: 1000,
-                        });
-                    })
+                    console.log(error)
                 }
             } else if (type === "products") {
                 const category = await getAllCategory();
@@ -243,7 +250,7 @@ const FormInput = (props) => {
                 setCategoryId(category[0]?.id);
             }
         };
-        fetchApi();
+        await fetchApi();
     }, [data]);
     return (
         <>
@@ -256,7 +263,7 @@ const FormInput = (props) => {
                     </div>
                 ) : (
                     <div className="show-img">
-                        {images.map((item, index) => (
+                        {images?.map((item, index) => (
                             <img
                                 key={index}
                                 src={`${BASE_URL_SERVER}uploads/${item.image_url}`}
@@ -268,7 +275,7 @@ const FormInput = (props) => {
             </div>
             <div className="right">
                 <form onSubmit={handleSubmit} encType="multipart/form-data">
-                    {type == "products" && (
+                    {type === "products" && (
                         <div className="formInput">
                             <label htmlFor="file">
                                 Image: <DriveFolderUploadOutlinedIcon className="icon"/>
@@ -284,14 +291,14 @@ const FormInput = (props) => {
                             />
                         </div>
                     )}
-                    {inputs.map((input, index) => (
+                    {inputs && inputs?.map((input) => (
                         <div className="formInput" key={input.id}>
                             <label>{input.label}</label>
                             <input
                                 className="input"
                                 type={input.type}
                                 name={input.name}
-                                required
+                                required={input.required}
                                 onChange={(e) => {
                                     setValue(updateFieldChanged(e));
                                 }}
@@ -299,13 +306,15 @@ const FormInput = (props) => {
                             />
                         </div>
                     ))}
-                    {type == "users" ? (
+                    {type === "users" ? (
                         <div className="formInput">
                             <label htmlFor="">Quyền</label>
-                            <select name="" id="" onChange={(e) => setRoleId(e.target.value)}>
-                                {selectRole.map((item) => (
+                            <select name="" id=""
+                                    defaultValue={isEdit ? data.role_id : 1}
+                                    onChange={(e) => setRoleId(e.target.value)}>
+                                {selectRole && selectRole.map((item) => (
                                     <option
-                                        selected={data ? data.role_id : ""}
+                                        selected={isEdit && data.role_id === item.id}
                                         key={item.id}
                                         value={item.id}
                                     >
@@ -317,7 +326,21 @@ const FormInput = (props) => {
                     ) : (
                         <></>
                     )}
-                    {type == "products" ? (
+                    {type === "users" && !isEdit ? (
+                        <div className="formInput">
+                            <label htmlFor="">Mật khẩu</label>
+                            <input
+                                className="input"
+                                type="password"
+                                name="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required/>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                    {type === "products" ? (
                         <div className="formInput">
                             <label htmlFor="">Loại sản phẩm</label>
                             <select
@@ -333,7 +356,7 @@ const FormInput = (props) => {
                             >
                                 {selectCategory.map((item) => (
                                     <option
-                                        selected={isEdit && data.category_id == item.id}
+                                        selected={isEdit && data.category_id === item.id}
                                         key={item.id}
                                         value={item.id}
                                     >
@@ -345,7 +368,7 @@ const FormInput = (props) => {
                     ) : (
                         <></>
                     )}
-                    {type == "products" ? (
+                    {type === "products" ? (
                         <div className="formInput">
                             <label htmlFor="">Mô tả</label>
                             <textarea
@@ -359,10 +382,11 @@ const FormInput = (props) => {
                     ) : (
                         <></>
                     )}
-                    {type == "users" ? (
+                    {type === "users" ? (
                         <div className="formInput">
                             <label htmlFor="">Giới tính</label>
-                            <select name="" id="" onChange={(e) => setGender(e.target.value)}>
+                            <select name="gender" id="" defaultValue={data?.gender}
+                                    onChange={(e) => setGender(e.target.value)}>
                                 <option selected={isEdit && data.gender == 1} value={1}>Nam</option>
                                 <option selected={isEdit && data.gender == 0} value={0}>Nữ</option>
                             </select>

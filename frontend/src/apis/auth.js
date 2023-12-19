@@ -13,6 +13,7 @@ export const loginAdmin = async (user, dispatch) => {
         dispatch(loginSuccess(res.data));
         return res.data
     } catch (error) {
+        console.log(error)
         dispatch(loginFailed());
         return error.response.data
     }

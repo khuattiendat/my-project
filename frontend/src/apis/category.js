@@ -36,6 +36,8 @@ export const addCategory = async (accessToken, data, navigate, axiosJWT) => {
         navigate("/admin/categories")
     } catch (error) {
         console.log(error);
+        let messageError = JSON.stringify(error.response.data.message)
+        enqueueSnackbar(messageError, {variant: "error", autoHideDuration: 1000,})
     }
 }
 export const deleteCategory = async (accessToken, id, navigate, axiosJWT) => {

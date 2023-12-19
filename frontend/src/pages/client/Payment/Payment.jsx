@@ -27,6 +27,7 @@ const Payment = () => {
     const {isShowing, toggle} = useModal();
     const dispatch = useDispatch();
     const axiosJWT = createAxios(user, dispatch, loginSuccess);
+    const [rate, setRate] = useState("")
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
@@ -41,17 +42,19 @@ const Payment = () => {
     const [note, setNote] = useState("");
     const [paymentMethod, setPaymentMethod] = useState(0);
 
-    const fetchProvinces = async () => {
+    const fetchApi = async () => {
         try {
             const response = await axios.get(
                 "https://provinces.open-api.vn/api/?depth=3"
             );
+            const rate = await axios.get(`https://api.currencyfreaks.com/v2.0/rates/latest?apikey=b199b4389d9a4ae0bc4b751d7fe3ae3b`)
             const data = await response.data;
+            setRate(rate?.data.rates.VND)
             setProvinces(data);
+            console.log(rate)
         } catch (error) {
             console.log("Failed to fetch provinces: ", error.message);
         }
-
     }
     useEffect(async () => {
         window.scrollTo({
@@ -60,7 +63,7 @@ const Payment = () => {
             behavior: "smooth"
         })
         document.title = "Thanh toán";
-        await fetchProvinces();
+        await fetchApi();
     }, []);
     useEffect(() => {
         setTotalMoney(getProductByLocalStore.reduce((total, item) => total + item.total_money, 0))
@@ -88,6 +91,7 @@ const Payment = () => {
             user_phone: user?.data.user.phone_number,
             note: note === "" ? "Không có ghi chú" : note,
             recipient_phone: phoneNumber,
+            rate,
             address_delivery: addressDelivery,
             recipient_name: recipientName,
             total_money: totalMoney,

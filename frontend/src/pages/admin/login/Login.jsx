@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 import "./login.scss";
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import * as ReactDOM from "react-dom";
 import Loading from "../../../components/Loading/Loading";
 import {loginAdmin} from "../../../apis/auth";
 import {enqueueSnackbar} from "notistack";
@@ -24,7 +23,7 @@ const Login = () => {
             enqueueSnackbar("Đăng nhập thành công", {variant: "success", autoHideDuration: 1000});
             navigate("/admin");
         } else {
-            enqueueSnackbar("Đăng nhập thất bại", {variant: "error", autoHideDuration: 1000});
+            enqueueSnackbar(dataLogin?.message, {variant: "error", autoHideDuration: 1000});
         }
     };
     useEffect(() => {

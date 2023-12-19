@@ -141,6 +141,7 @@ const Datatable = (props) => {
                     checkboxSelection
                     onSelectionModelChange={(id) => setIds(id)}
                     hideFooter
+
                 />
             </>
         </div>

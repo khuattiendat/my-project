@@ -101,7 +101,7 @@ const Product = () => {
             <div className={"product-container"}>
                 <div className={"left"}>
                     <div className={"product-discount"}>
-                        -15%
+                        {product.discount > 0 ? `-${product.discount}%` : "0%"}
                     </div>
                     <>
                         <Swiper

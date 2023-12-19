@@ -169,7 +169,7 @@ const
                                 }}>Không có sản phẩm nào !!!</h3>
                             )
                         }
-                        {listProduct.length && (
+                        {listProduct.length ? (
                             <div className="pagination">
                                 <ul>
                                     <li>
@@ -199,6 +199,8 @@ const
                                     </li>
                                 </ul>
                             </div>
+                        ) : (
+                            <></>
                         )}
                     </div>
                 </div>

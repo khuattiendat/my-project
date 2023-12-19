@@ -4,10 +4,9 @@ import Navbar from "../../../components/navbar/Navbar";
 import {useDispatch, useSelector} from "react-redux";
 import FormInput from "../../../components/formInput/FormInput";
 
-const New = (...props) => {
+const New = ({...props}) => {
     const {inputs, title, type} = props;
-    const user = useSelector((state) => state.auth.login?.currentUser);
-    const dispatch = useDispatch();
+    console.log(inputs)
 
     return (
         <div className="new">

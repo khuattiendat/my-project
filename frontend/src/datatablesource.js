@@ -1,34 +1,36 @@
 const BASE_URL_SERVER = process.env.REACT_APP_BASE_URL_SERVER;
 export const userColumns = [
-    {field: "id", headerName: "ID", width: 50},
     {
         field: "name",
         headerName: "Họ và tên",
-        width: 180,
+        width: 200,
+        headerAlign: 'center',
     },
     {
         field: "email",
         headerName: "Email",
         width: 230,
+        headerAlign: 'center',
     },
 
     {
         field: "phone_number",
         headerName: "Số điện thoại",
         width: 150,
+        headerAlign: 'center',
     },
     {
         field: "address",
         headerName: "Địa chỉ",
-        width: 200,
+        width: 250,
+        headerAlign: 'center',
     },
 ];
 export const productColumns = [
-    {field: "id", headerName: "ID", width: 70},
     {
         field: "name",
         headerName: "Tên sản phẩm",
-        width: 230,
+        width: 250,
         renderCell: (params) => {
             return (
                 <div className="cellWithImg">
@@ -48,12 +50,12 @@ export const productColumns = [
     {
         field: "quantity",
         headerName: "Tồn kho",
-        width: 100,
+        width: 120,
     },
     {
         field: "status",
         headerName: "Loại sản phẩm",
-        width: 120,
+        width: 150,
         renderCell: (params) => {
             return (
                 <div>
@@ -112,16 +114,15 @@ export const orderColumnClient = [
 
 ]
 export const orderColumns = [
-    {field: "id", headerName: "ID", width: 70},
     {
         field: "order_id",
         headerName: "Mã đơn hàng",
-        width: 150,
+        width: 160,
     },
     {
         field: "name",
         headerName: "Tên khách hàng",
-        width: 150,
+        width: 200,
         renderCell: (params) => {
             return (
                 <div>
@@ -143,11 +144,10 @@ export const orderColumns = [
     {
         field: "total_money",
         headerName: "Tổng tiền",
-        width: 140,
+        width: 150,
     },
 ];
 export const transactionColumns = [
-    {field: "id", headerName: "ID", width: 50},
     {
         field: "user_name",
         headerName: "Tên khách hàng",
@@ -156,12 +156,12 @@ export const transactionColumns = [
     {
         field: "user_phone",
         headerName: "Số điện thoại",
-        width: 130,
+        width: 150,
     },
     {
         field: "payment_method",
         headerName: "Phương thức thanh toán",
-        width: 180,
+        width: 200,
     },
     {
         field: "status_payment",
@@ -171,11 +171,10 @@ export const transactionColumns = [
     {
         field: "amount",
         headerName: "Tổng tiền",
-        width: 120,
+        width: 150,
     },
 ]
 export const categoryColumn = [
-    {field: "id", headerName: "ID", width: 70},
     {
         field: "name",
         headerName: "Tên loại",

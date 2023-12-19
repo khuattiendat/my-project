@@ -408,8 +408,7 @@ const getAllRoleUser = async () => {
 const updateUser = async (id, data) => {
     try {
         const messages = [];
-        const salt = await bcrypt.genSalt(10);
-        const hashed = await bcrypt.hash(data.password, salt);
+
         if (isNullOrWhiteSpace(data.name)) {
             messages.push(String.format(MESSAGE_EMPTY, "name"));
         }
@@ -421,9 +420,6 @@ const updateUser = async (id, data) => {
         }
         if (isNullOrWhiteSpace(data.phone_number)) {
             messages.push(String.format(MESSAGE_EMPTY, "phone_number"));
-        }
-        if (isNullOrWhiteSpace(data.password)) {
-            messages.push(String.format(MESSAGE_EMPTY, "password"));
         }
         if (isNullOrWhiteSpace(data.gender)) {
             messages.push(String.format(MESSAGE_EMPTY, "gender"));
@@ -446,10 +442,8 @@ const updateUser = async (id, data) => {
                 email: data.email,
                 address: data.address,
                 phone_number: data.phone_number,
-                password: hashed,
                 gender: data.gender,
                 role_id: data.role_id,
-                // updatedAt: customDateTime()
             }, {
                 where: {
                     id: id,

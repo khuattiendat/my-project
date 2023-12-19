@@ -146,31 +146,6 @@ const Header = () => {
                                                   e.currentTarget.style.color = "#666666d9"
                                               }}
                                               style={{textDecoration: "none", color: "#666666d9"}}
-                                              to={"/users/profile"}>
-                                            Thông tin tài khoản
-                                        </Link>
-                                    </Typography>
-                                    <Typography
-                                        onMouseOver={(e) => {
-                                            e.currentTarget.style.color = "#3ac2cc !important"
-                                        }}
-                                        onMouseOut={(e) => {
-                                            e.currentTarget.style.color = "#666666d9"
-                                        }}
-                                        style={{
-                                            minWidth: "150px",
-                                            cursor: "pointer",
-                                            padding: "4px 12px",
-                                            borderBottom: "1px solid #ccc"
-                                        }} sx={{p: 2}}>
-                                        <Link className={"right_header_link"}
-                                              onMouseOver={(e) => {
-                                                  e.currentTarget.style.color = "#3ac2cc"
-                                              }}
-                                              onMouseOut={(e) => {
-                                                  e.currentTarget.style.color = "#666666d9"
-                                              }}
-                                              style={{textDecoration: "none", color: "#666666d9"}}
                                               to={"/users/order"}>
                                             Đơn hàng của bạn
                                         </Link>
