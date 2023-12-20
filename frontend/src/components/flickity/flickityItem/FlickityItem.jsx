@@ -37,6 +37,13 @@ const FlickityItem = ({product, loading}) => {
                         <span
                             className={"discount"}>{formatPriceDiscount(product.price, product.discount)}</span>
                     </div>
+                    {
+                        product.total_sold && (
+                            <div className={"total_sold"}>
+                                <span className={"sold"}>Đã bán: {product.total_sold}</span>
+                            </div>
+                        )
+                    }
 
                 </div>
             </div>

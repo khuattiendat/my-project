@@ -1,4 +1,3 @@
-
 export const getAllTransaction = async (accessToken, page, q, axiosJWT) => {
     try {
         const res = await axiosJWT.get("transactions", {
@@ -52,6 +51,30 @@ export const getTransactionById = async (accessToken, id, axiosJWT) => {
         })
         return res.data.data;
 
+    } catch (error) {
+        console.log(error);
+    }
+}
+export const getRevenueDaily = async (accessToken, axiosJWT) => {
+    try {
+        const res = await axiosJWT.get("transactions/revenue-daily", {
+            headers: {
+                token: `Bearer ${accessToken}`
+            }
+        })
+        return res.data.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+export const getRevenueMonthly = async (accessToken, axiosJWT) => {
+    try {
+        const res = await axiosJWT.get("transactions/revenue-monthly", {
+            headers: {
+                token: `Bearer ${accessToken}`
+            }
+        })
+        return res.data.data;
     } catch (error) {
         console.log(error);
     }

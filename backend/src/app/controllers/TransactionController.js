@@ -1,5 +1,10 @@
-const { ERROR_SUCCESS } = require("../common/messageList");
-const { getAllTransaction, searchTransactions, getLatestTransaction, getTransactionByUserId, getTransactionById } = require("../services/transactionService");
+const {ERROR_SUCCESS} = require("../common/messageList");
+const {
+    getAllTransaction,
+    getLatestTransaction,
+    getTransactionByUserId,
+    getTransactionById, getRevenueDaily, getRevenueMonthly
+} = require("../services/transactionService");
 
 const TransactionController = {
     getAllTransaction: async (req, res,) => {
@@ -9,8 +14,7 @@ const TransactionController = {
             const transaction = await getAllTransaction(page, value);
             if (transaction.error !== ERROR_SUCCESS) {
                 res.status(200).send(transaction)
-            }
-            else {
+            } else {
                 res.status(400).send(transaction)
             }
         } catch (error) {
@@ -24,8 +28,7 @@ const TransactionController = {
             const transaction = await getTransactionByUserId(userId, page)
             if (transaction.error !== ERROR_SUCCESS) {
                 res.status(200).send(transaction)
-            }
-            else {
+            } else {
                 res.status(400).send(transaction)
             }
         } catch (error) {
@@ -37,8 +40,7 @@ const TransactionController = {
             const transaction = await getLatestTransaction();
             if (transaction.error != ERROR_SUCCESS) {
                 res.status(200).send(transaction)
-            }
-            else {
+            } else {
                 res.status(400).send(transaction)
             }
         } catch (error) {
@@ -49,10 +51,33 @@ const TransactionController = {
         try {
             const id = req.params.id;
             const transaction = await getTransactionById(id);
-            if (transaction.error != ERROR_SUCCESS) {
+            if (transaction.error !== ERROR_SUCCESS) {
                 res.status(200).send(transaction)
+            } else {
+                res.status(400).send(transaction)
             }
-            else {
+        } catch (error) {
+            res.status(500).send(error.message);
+        }
+    },
+    getRevenueDaily: async (req, res) => {
+        try {
+            const transaction = await getRevenueDaily();
+            if (transaction.error !== ERROR_SUCCESS) {
+                res.status(200).send(transaction)
+            } else {
+                res.status(400).send(transaction)
+            }
+        } catch (error) {
+            res.status(500).send(error.message);
+        }
+    },
+    getRevenueMonthly: async (req, res) => {
+        try {
+            const transaction = await getRevenueMonthly();
+            if (transaction.error !== ERROR_SUCCESS) {
+                res.status(200).send(transaction)
+            } else {
                 res.status(400).send(transaction)
             }
         } catch (error) {

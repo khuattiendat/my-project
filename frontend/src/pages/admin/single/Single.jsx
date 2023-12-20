@@ -99,14 +99,14 @@ const Single = (props) => {
                             id={id}
                         />
                     </div>
-                    {type === "users" && (
-                        <div className="right">
-                            <Chart
-                                aspect={3 / 1}
-                                title="Chi tiêu của tài khoản trong 6 tháng qua"
-                            />
-                        </div>
-                    )}
+                    {/*{type === "users" && (*/}
+                    {/*    <div className="right">*/}
+                    {/*        <Chart*/}
+                    {/*            aspect={3 / 1}*/}
+                    {/*            title="Chi tiêu của tài khoản trong 6 tháng qua"*/}
+                    {/*        />*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
                 </div>
 
                 {type === "users" && (

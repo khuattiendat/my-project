@@ -21,7 +21,6 @@ import Profile from "./pages/client/profile/Profile";
 
 function App() {
     const {darkMode} = useContext(DarkModeContext);
-    console.log(productInputs)
     return (
         <div className={darkMode ? "app dark" : "app"}>
             <BrowserRouter>

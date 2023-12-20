@@ -15,7 +15,7 @@ import {getAllProducts} from "../../../apis/products";
 import {getAllOrder} from "../../../apis/orders";
 import {
     getAllTransaction,
-    getLatestTransaction,
+    getLatestTransaction, getRevenueDaily, getRevenueMonthly,
 } from "../../../apis/transactions";
 
 const Home = () => {
@@ -23,6 +23,8 @@ const Home = () => {
     const [isFetching, setIsFetching] = useState(false);
     const [total, setTotal] = useState({});
     const [dataTransaction, setDataTransaction] = useState([]);
+    const [RevenueDaily, setRevenueDaily] = useState([]);
+    const [RevenueMonthly, setRevenueMonthly] = useState([]);
     const componentMounted = useRef(true);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -46,6 +48,10 @@ const Home = () => {
             );
             dataTransaction = await listLateTransaction;
             const listProduct = await getAllProducts();
+            let RevenueDaily = await getRevenueDaily(user?.data.accessToken, axiosJWT);
+            let RevenueMonthly = await getRevenueMonthly(user?.data.accessToken, axiosJWT);
+            setRevenueDaily(RevenueDaily);
+            setRevenueMonthly(RevenueMonthly);
             total.totalUser = await lisUser.totalUser;
             total.totalProduct = await listProduct.totalProducts;
             total.totalOrder = await lisOrder.totalOrder;
@@ -58,12 +64,12 @@ const Home = () => {
             console.log(error);
         }
     };
-    useEffect(() => {
+    useEffect(async () => {
         document.title = "Home";
         if (!user) {
             navigate("/admin/login");
         }
-        fetchApi();
+        await fetchApi();
         return () => (componentMounted.current = false);
     }, []);
     return (
@@ -78,8 +84,8 @@ const Home = () => {
                     <Widget isFetching={isFetching} total={total} type="transaction"/>
                 </div>
                 <div className="charts">
-                    <Featured/>
-                    <Chart title="Last 6 Months (Revenue)" aspect={2 / 1}/>
+                    <Featured data={RevenueDaily[0]}/>
+                    <Chart data={RevenueMonthly} title="Doanh thu 12 tháng qua" aspect={2 / 1}/>
                 </div>
                 <div className="listContainer">
                     <div className="listTitle">Giao dịch mới nhất</div>

@@ -184,8 +184,9 @@ const FormInput = (props) => {
             gender: document.querySelector("[name='gender']").value ?? gender,
             address:
                 document.querySelector("[name='address']").value ?? value.address,
-            role_id: roleId,
+            role_id: document.querySelector("[name='role']").value ?? roleId,
         };
+
         try {
             await updateUser(user?.data.accessToken, data, id, axiosJWT);
             enqueueSnackbar("Cập nhật thành công", {variant: "success", autoHideDuration: 1000,});
@@ -194,6 +195,7 @@ const FormInput = (props) => {
             let messageError = JSON.stringify(error.response.data.message)
             enqueueSnackbar(messageError, {variant: "error", autoHideDuration: 1000,})
         }
+
     };
     const handleUpdateCategory = async (id) => {
         let data = {
@@ -309,7 +311,7 @@ const FormInput = (props) => {
                     {type === "users" ? (
                         <div className="formInput">
                             <label htmlFor="">Quyền</label>
-                            <select name="" id=""
+                            <select name="role" id=""
                                     defaultValue={isEdit ? data.role_id : 1}
                                     onChange={(e) => setRoleId(e.target.value)}>
                                 {selectRole && selectRole.map((item) => (

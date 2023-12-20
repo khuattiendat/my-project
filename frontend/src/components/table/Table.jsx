@@ -20,12 +20,11 @@ const List = (props) => {
             <Table sx={{minWidth: 650}} aria-label="simple table">
                 <TableHead>
                     <TableRow className="tableRow">
-                        <TableCell className="tableCell">ID</TableCell>
                         <TableCell className="tableCell">
-                            {type === "users" ? "Số Điện Thoại" : "Tên sản phẩm"}
+                            {type === "users" ? "Tên khách hàng" : "Tên sản phẩm"}
                         </TableCell>
                         <TableCell className="tableCell">
-                            {type === "users" ? "Tên khách hàng" : "Ảnh sản phẩm"}
+                            {type === "users" ? "Số Điện Thoại" : "Ảnh sản phẩm"}
                         </TableCell>
                         <TableCell className="tableCell">
                             {type === "users" ? "Ngày giao dịch" : "Giá"}
@@ -44,15 +43,14 @@ const List = (props) => {
                 <TableBody>
                     {data.length > 0 ? (
                         <>
-                            {data.map((row) => (
-                                <TableRow key={row.id}>
-                                    <TableCell className="tableCell">{row.id}</TableCell>
+                            {data.map((row, index) => (
+                                <TableRow key={index}>
                                     <TableCell className="tableCell">
-                                        {type === "users" ? row.user_phone : row.product.name}
+                                        {type === "users" ? row.user_name : row.product.name}
                                     </TableCell>
                                     <TableCell className="tableCell">
                                         {type === "users" ? (
-                                            row.user_name
+                                            row.user_phone
                                         ) : (
                                             <img
                                                 src={BASE_URL_SERVER + "/uploads/" + row.product.image}

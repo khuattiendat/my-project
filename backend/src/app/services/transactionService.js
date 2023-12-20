@@ -10,6 +10,8 @@ const {
 } = require('../common/messageList');
 const {customDateTime, isNullOrWhiteSpace, isNullOrEmptyArray} = require('../common/utils');
 const {Op} = require("sequelize");
+const sequelize = require('../../config/connectDB');
+const {QueryTypes} = require('sequelize');
 String.format = function () {
     let s = arguments[0];
     for (let i = 0; i < arguments.length - 1; i++) {
@@ -311,6 +313,41 @@ const getTransactionById = async (id) => {
     }
 
 }
+const getRevenueDaily = async () => {
+    try {
+        const date = new Date();
+        const _date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        const sql = "SELECT SUM(transactions.amount) AS total FROM transactions WHERE NOT transactions.status_payment = 2 and transactions.createdAt LIKE '" + _date + "%'";
+        const transaction = await sequelize.query(sql, {type: QueryTypes.SELECT});
+        return {
+            error: ERROR_FAILED,
+            data: transaction,
+            message: MESSAGE_SUCCESS
+        };
+    } catch (error) {
+        return {
+            error: ERROR_SUCCESS,
+            message: error.message
+        };
+    }
+
+}
+const getRevenueMonthly = async () => {
+    try {
+        const sql = "SELECT(MONTH(createdAt)) AS month,SUM(transactions.amount) AS total FROM transactions WHERE NOT transactions.status_payment = 2  GROUP BY MONTH ORDER BY MONTH ASC"
+        const transaction = await sequelize.query(sql, {type: QueryTypes.SELECT});
+        return {
+            error: ERROR_FAILED,
+            data: transaction,
+            message: MESSAGE_SUCCESS
+        };
+    } catch (error) {
+        return {
+            error: ERROR_SUCCESS,
+            message: error.message
+        };
+    }
+}
 module.exports = {
     getAllTransaction,
     addTransaction,
@@ -318,5 +355,7 @@ module.exports = {
     searchTransactions,
     getLatestTransaction,
     getTransactionByUserId,
-    getTransactionById
+    getTransactionById,
+    getRevenueDaily,
+    getRevenueMonthly
 }

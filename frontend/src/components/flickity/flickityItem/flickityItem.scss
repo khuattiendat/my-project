@@ -123,6 +123,15 @@
         font-weight: bold;
         margin-left: 10px;
       }
+
+    }
+
+    .total_sold {
+      font-size: 14px;
+      color: $primary-darker;
+      float: right;
+      margin-top: 10px;
+      margin-right: 10px;
     }
   }
 }

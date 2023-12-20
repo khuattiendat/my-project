@@ -22,33 +22,33 @@ const Info = (props) => {
     const dataUser = (data) => [
         {
             itemKey: "Họ và tên",
-            itemValue: data.name,
+            itemValue: data?.name,
         },
         {
             itemKey: "email",
-            itemValue: data.email,
+            itemValue: data?.email,
         },
         {
             itemKey: "Số điện thoại",
-            itemValue: data.phone_number,
+            itemValue: data?.phone_number,
         },
         {
             itemKey: "Địa chỉ",
-            itemValue: data.address,
+            itemValue: data?.address,
         },
         {
             itemKey: "Giới tính",
-            itemValue: checkGender(data.gender),
+            itemValue: checkGender(data?.gender),
         },
         {
             itemKey: "Ngày đăng ký",
-            itemValue: new Date(data.createdAt).toLocaleString("en-US", {
+            itemValue: new Date(data?.createdAt).toLocaleString("en-US", {
                 timeZone: "Asia/Ho_Chi_Minh",
             }),
         },
         {
             itemKey: "Ngày cập nhật",
-            itemValue: new Date(data.updatedAt).toLocaleString("en-US", {
+            itemValue: new Date(data?.updatedAt).toLocaleString("en-US", {
                 timeZone: "Asia/Ho_Chi_Minh",
             }),
         },
@@ -56,37 +56,37 @@ const Info = (props) => {
     const dataProduct = (data) => [
         {
             itemKey: "Tên sản phẩm",
-            itemValue: data.name,
+            itemValue: data?.name,
         },
         {
             itemKey: "Loại sản phẩm",
-            itemValue: data.Category ? data.Category.name : "",
+            itemValue: data?.Category ? data?.Category.name : "",
         },
         {
             itemKey: "Giá",
-            itemValue: formatPrice(data.price),
+            itemValue: formatPrice(data?.price),
         },
         {
             itemKey: "Giảm giá",
-            itemValue: data.discount + "%",
+            itemValue: data?.discount + "%",
         },
         {
             itemKey: "Mô tả",
-            itemValue: data.description,
+            itemValue: data?.description,
         },
         {
             itemKey: "Số lượng",
-            itemValue: data.quantity,
+            itemValue: data?.quantity,
         },
         {
             itemKey: "Ngày tạo",
-            itemValue: new Date(data.createdAt).toLocaleString("en-US", {
+            itemValue: new Date(data?.createdAt).toLocaleString("en-US", {
                 timeZone: "Asia/Ho_Chi_Minh",
             }),
         },
         {
             itemKey: "Ngày cập nhật",
-            itemValue: new Date(data.updatedAt).toLocaleString("en-US", {
+            itemValue: new Date(data?.updatedAt).toLocaleString("en-US", {
                 timeZone: "Asia/Ho_Chi_Minh",
             }),
         },
@@ -94,17 +94,17 @@ const Info = (props) => {
     const dataCategory = (data) => [
         {
             itemKey: "Tên loại sản phẩm",
-            itemValue: data.name,
+            itemValue: data?.name,
         },
         {
             itemKey: "Ngày tạo",
-            itemValue: new Date(data.createdAt).toLocaleString("en-US", {
+            itemValue: new Date(data?.createdAt).toLocaleString("en-US", {
                 timeZone: "Asia/Ho_Chi_Minh",
             }),
         },
         {
             itemKey: "Ngày cập nhật",
-            itemValue: new Date(data.updatedAt).toLocaleString("en-US", {
+            itemValue: new Date(data?.updatedAt).toLocaleString("en-US", {
                 timeZone: "Asia/Ho_Chi_Minh",
             }),
         },
@@ -112,41 +112,41 @@ const Info = (props) => {
     const dataOrder = (data) => [
         {
             itemKey: "Tên khách hàng",
-            itemValue: data.user ? data?.user.name : "",
+            itemValue: data?.user ? data?.user.name : "",
         },
         {
             itemKey: "Trạng thái thanh toán",
-            itemValue: checkStatusPayment(data.status_payment),
+            itemValue: checkStatusPayment(data?.status_payment),
         },
         {
             itemKey: "Trạng thái giao hàng",
-            itemValue: checkStatusDelivery(data.status_delivery),
+            itemValue: checkStatusDelivery(data?.status_delivery),
             itemBtn: "Thay đổi",
             onclick: handleUpdateDelivery,
         },
         {
             itemKey: "Tên người nhận",
-            itemValue: data.recipient_name,
+            itemValue: data?.recipient_name,
         },
         {
             itemKey: "Số điện thoại",
-            itemValue: data.recipient_phone,
+            itemValue: data?.recipient_phone,
         },
         {
             itemKey: "Địa chỉ",
-            itemValue: data.address_delivery,
+            itemValue: data?.address_delivery,
         },
         {
             itemKey: "Lưu ý",
-            itemValue: data.note,
+            itemValue: data?.note,
         },
         {
             itemKey: "Tổng tiền",
-            itemValue: formatPrice(data.total_money),
+            itemValue: formatPrice(data?.total_money),
         },
         {
             itemKey: "Ngày tạo",
-            itemValue: new Date(data.createdAt).toLocaleString("en-US", {
+            itemValue: new Date(data?.createdAt).toLocaleString("en-US", {
                 timeZone: "Asia/Ho_Chi_Minh",
             }),
         },
@@ -154,35 +154,31 @@ const Info = (props) => {
     const dataTransaction = (data) => [
         {
             itemKey: "Tên khách hàng",
-            itemValue: data.user_name,
+            itemValue: data?.user_name,
         },
         {
             itemKey: "Số điện thoại",
-            itemValue: data.user_phone,
+            itemValue: data?.user_phone,
         },
         {
             itemKey: "Email",
-            itemValue: data.user_email,
+            itemValue: data?.user_email,
         },
         {
             itemKey: "Phương thức thanh toán",
-            itemValue: checkPaymentMethod(data.payment_method),
+            itemValue: checkPaymentMethod(data?.payment_method),
         },
         {
             itemKey: "Trạng thái thanh toán",
-            itemValue: checkPaymentMethod(data.status_payment),
+            itemValue: checkPaymentMethod(data?.status_payment),
         },
         {
             itemKey: "Tổng tiền",
-            itemValue: formatPrice(data.amount),
-        },
-        {
-            itemKey: "Trạng thái",
-            itemValue: data.status,
+            itemValue: formatPrice(data?.amount),
         },
         {
             itemKey: "Ngày tạo",
-            itemValue: new Date(data.createdAt).toLocaleString("en-US", {
+            itemValue: new Date(data?.createdAt).toLocaleString("en-US", {
                 timeZone: "Asia/Ho_Chi_Minh",
             }),
         },
@@ -207,14 +203,14 @@ const Info = (props) => {
     const handleOnchane = async (e) => {
         let status_delivery = e.target.value;
         let _data = {
-            id: data.id,
+            id: data?.id,
             status_delivery: status_delivery,
             status_payment: null
         }
         try {
-            await updateOrder(user?.data.accessToken, _data, navigate, axiosJWT);
-            navigate(`/admin/orders/info/${encrypt(data.id)}`, {
-                state: data.id,
+            await updateOrder(user?.data?.accessToken, _data, navigate, axiosJWT);
+            navigate(`/admin/orders/info/${encrypt(data?.id)}`, {
+                state: data?.id,
             });
             setIsShow(false);
         } catch (err) {
@@ -267,13 +263,13 @@ const Info = (props) => {
                                             <div className={"change_delivery_item"} onChange={handleOnchane}>
                                                 <input type="radio" value={0}
                                                        name={"delivery"}
-                                                       checked={data.status_delivery === 0}
+                                                       checked={data?.status_delivery === 0}
                                                        id={"option1"}/>
                                                 <label htmlFor={"option1"}>Chưa giao hàng</label>
                                             </div>
                                             <div className={"change_delivery_item"} onChange={handleOnchane}>
                                                 <input type="radio" value={1}
-                                                       checked={data.status_delivery === 1}
+                                                       checked={data?.status_delivery === 1}
                                                        name={"delivery"}
                                                        id={"option2"}/>
                                                 <label htmlFor={"option2"}>Đang giao hàng</label>

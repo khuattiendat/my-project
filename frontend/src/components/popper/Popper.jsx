@@ -13,6 +13,7 @@ import {showAlertConfirm, showAlertError} from "../../utils/showAlert";
 import {logout} from "../../apis/auth";
 import {resetPassword} from "../../apis/users";
 import {enqueueSnackbar} from "notistack";
+import {encrypt} from "../../utils/crypto";
 
 const Popper = () => {
     const [openModal, setOpenModal] = useState(false);
@@ -67,7 +68,7 @@ const Popper = () => {
         <>
             <div className="popper_container">
                 <ul>
-                    <Link to={`/admin/users/info/${id}`}>
+                    <Link to={`/admin/users/info/${encrypt(id)}`}>
                         <li>
                             <AccountCircleOutlinedIcon/>
                             <span>Profile</span>

@@ -211,11 +211,11 @@ const List = ({title, type}) => {
                     console.log(err);
                 }
             } else if (type === "products") {
-                deleteProduct(user?.data.accessToken, ids, navigate, axiosJWT);
+                await deleteProduct(user?.data.accessToken, ids, navigate, axiosJWT);
             } else if (type === "orders") {
-                deleteOrder(user?.data.accessToken, ids, navigate, axiosJWT);
+                await deleteOrder(user?.data.accessToken, ids, navigate, axiosJWT);
             } else if (type === "categories") {
-                deleteCategory(user?.data.accessToken, ids, navigate, axiosJWT);
+                await deleteCategory(user?.data.accessToken, ids, navigate, axiosJWT);
             }
         }
     };
@@ -242,7 +242,7 @@ const List = ({title, type}) => {
                     <button
                         disabled={ids.length <= 0 || type === "transactions"}
                         className={
-                            ids.length > 0 ? "deleteButton" : "deleteButton disabled"
+                            (ids.length <= 0 || type === "transactions") ? "deleteButton disabled" : "deleteButton"
                         }
                         onClick={() => {
                             handleDelete(ids);
@@ -250,15 +250,18 @@ const List = ({title, type}) => {
                     >
                         Xóa các mục đã chọn
                     </button>
+
                     <Link
                         onClick={(e) => {
-                            if (type === "orders") {
+                            if (type === "orders" || type === "transactions") {
                                 e.preventDefault();
                             }
                         }}
-                        to={`/admin/${type}/new`} className="link">
+                        to={`/admin/${type}/new`}
+                        className={(type === "transactions" || type === "orders") ? "disabled link" : "link"}>
                         Thêm Mới
                     </Link>
+
                 </div>
                 {isFetching ? (
                     <Loading/>
