@@ -15,7 +15,6 @@ const ChangePassword = ({isShowing, hide}) => {
     const [confirmPassword, setConfirm] = useState("");
     const {enqueueSnackbar} = useSnackbar();
     const user = useSelector((state) => state.auth.login?.currentUser);
-    console.log(user)
     const id = user?.data.user.id;
     const navigate = useNavigate();
     const dispatch = useDispatch();

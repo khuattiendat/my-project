@@ -408,7 +408,11 @@ const getAllRoleUser = async () => {
 const updateUser = async (id, data) => {
     try {
         const messages = [];
-
+        const checkPhoneNumber = await User.findAll({
+            where: {
+                phone_number: data.phone_number,
+            }
+        })
         if (isNullOrWhiteSpace(data.name)) {
             messages.push(String.format(MESSAGE_EMPTY, "name"));
         }
@@ -423,6 +427,9 @@ const updateUser = async (id, data) => {
         }
         if (isNullOrWhiteSpace(data.gender)) {
             messages.push(String.format(MESSAGE_EMPTY, "gender"));
+        }
+        if (checkPhoneNumber.length > 0) {
+            messages.push("Số điện thoại đã tồn tại !!!");
         }
         if (!isNullOrEmptyArray(messages)) {
             return {

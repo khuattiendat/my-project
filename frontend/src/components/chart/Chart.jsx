@@ -36,7 +36,7 @@ const Chart = ({aspect, title, data}) => {
                 Total: item.total,
             };
         })
-        setDataRender(dataRender)
+        setDataRender(dataRender.reverse())
     }, [data])
     return (
         <div className="chart">

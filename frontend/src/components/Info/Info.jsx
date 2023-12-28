@@ -224,10 +224,10 @@ const Info = (props) => {
         <div className="info">
             <Link
                 to={`/admin/${type}/edit/${id}`}
-                onClick={(e) => (type === "orders" ? e.preventDefault() : "")}
+                onClick={(e) => ((type === "orders" || type === "transactions") ? e.preventDefault() : "")}
             >
                 <div
-                    style={{cursor: type === "orders" ? "not-allowed" : "pointer"}}
+                    style={{cursor: (type === "orders" || type === "transactions") ? "not-allowed" : "pointer"}}
                     className="editButton"
                 >
                     Cập nhật thông tin

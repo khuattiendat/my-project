@@ -27,6 +27,7 @@ const Product = () => {
     const BASE_URL_SERVER = process.env.REACT_APP_BASE_URL_SERVER;
     const params = useParams();
     const {id} = params;
+    console.log(id)
     const _id = decrypt(id);
     const navigate = useNavigate()
     const [thumbsSwiper, setThumbsSwiper] = useState(null);

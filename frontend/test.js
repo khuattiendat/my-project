@@ -1,0 +1,1 @@
+//SELECT categories.name AS categoryName, COUNT(products.id) AS totalProduct, MAX(products.price) AS maxPrice, MIN(products.price) AS minPrice, AVG(products.price) AS averagePrice FROM products  INNER JOIN categories ON products.category_id = categories.id WHERE (products.deletedAt IS NULL AND categories.deletedAt IS NULL) GROUP BY categories.name;

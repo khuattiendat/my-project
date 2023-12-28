@@ -6,7 +6,6 @@ import FormInput from "../../../components/formInput/FormInput";
 
 const New = ({...props}) => {
     const {inputs, title, type} = props;
-    console.log(inputs)
 
     return (
         <div className="new">

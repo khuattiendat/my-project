@@ -100,6 +100,9 @@ const FormInput = (props) => {
         const messages = [];
         setErrorMessage([]);
         let data = new FormData();
+        if (!value.name || !value.price || !value.quantity || !value.discount || !description) {
+            messages.push("Vui lòng nhập đầy đủ thông tin")
+        }
         data.append("name", value.name);
         data.append("description", description);
         data.append("price", value.price);
@@ -175,16 +178,23 @@ const FormInput = (props) => {
 
     };
     const handleUpdateUser = async (id) => {
+        let name = document.querySelector("[name='name']").value ?? value.name;
+        let email = document.querySelector("[name='email']").value ?? value.email;
+        let phone = document.querySelector("[name='phone']").value ?? value.phone;
+        let address = document.querySelector("[name='address']").value ?? value.address;
+        let _gender = document.querySelector("[name='gender']").value ?? gender;
+        let role_id = document.querySelector("[name='role']").value ?? roleId;
+        if (!name || !email || !phone || !address) {
+            setErrorMessage(["Vui lòng nhập đầy đủ thông tin"]);
+            return;
+        }
         let data = {
-            name: document.querySelector("[name='name']").value ?? value.name,
-            email: document.querySelector("[name='email']").value ?? value.email,
-            password: value.password,
-            phone_number:
-                document.querySelector("[name='phone']").value ?? value.phone,
-            gender: document.querySelector("[name='gender']").value ?? gender,
-            address:
-                document.querySelector("[name='address']").value ?? value.address,
-            role_id: document.querySelector("[name='role']").value ?? roleId,
+            name,
+            email,
+            phone_number: phone,
+            gender: _gender,
+            address,
+            role_id,
         };
 
         try {
