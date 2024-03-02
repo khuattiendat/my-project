@@ -4,6 +4,7 @@ const {MiddlewareLogin} = require('../app/middleware/MiddlewareLogin');
 const router = express.Router();
 // [GET] /transactions
 router.get("/users", MiddlewareLogin.verifyTokenAndAdmin, TransactionController.getTransactionByUserId)
+
 router.get("/latest", MiddlewareLogin.verifyTokenAndAdmin, TransactionController.getLatestTransaction)
 router.get("/revenue-daily", MiddlewareLogin.verifyTokenAndAdmin, TransactionController.getRevenueDaily)
 router.get("/revenue-monthly", MiddlewareLogin.verifyTokenAndAdmin, TransactionController.getRevenueMonthly)

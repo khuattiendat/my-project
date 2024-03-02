@@ -72,8 +72,8 @@ const List = ({title, type}) => {
                         valueSearch,
                         axiosJWT
                     );
-                    data = res.orders;
-                    totalPage = res.totalPage;
+                    data = res?.orders;
+                    totalPage = res?.totalPage;
                     break;
                 case "transactions":
                     setIsFetching(true);

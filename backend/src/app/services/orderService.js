@@ -47,6 +47,9 @@ const getAllOrder = async (page, value) => {
                     model: User,
                     required: false
                 }],
+                order: [
+                    ['createdAt', 'DESC']
+                ],
                 limit: pageSize,
                 offset: offset
             })
@@ -74,6 +77,9 @@ const getAllOrder = async (page, value) => {
                         {'$user.address$': {[Op.like]: '%' + value + '%'}},
                     ]
                 },
+                order: [
+                    ['createdAt', 'DESC']
+                ],
                 limit: pageSize,
                 offset: offset
             })

@@ -239,6 +239,17 @@ const updateProduct = async (id, data, files) => {
         if (isNullOrWhiteSpace(data.quantity)) {
             messages.push(String.format(MESSAGE_EMPTY, "quantity"))
         }
+        const checkNameProduct = await Product.findAll({
+            where: {
+                name: data.name,
+                id: {
+                    [Op.not]: id
+                }
+            }
+        })
+        if (checkNameProduct.length > 0) {
+            messages.push("Tên sản phẩm đã tồn tại !!!");
+        }
         if (!isNullOrEmptyArray(messages)) {
             return {
                 error: ERROR_SUCCESS,

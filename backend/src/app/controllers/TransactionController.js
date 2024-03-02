@@ -38,7 +38,7 @@ const TransactionController = {
     getLatestTransaction: async (req, res) => {
         try {
             const transaction = await getLatestTransaction();
-            if (transaction.error != ERROR_SUCCESS) {
+            if (transaction.error !== ERROR_SUCCESS) {
                 res.status(200).send(transaction)
             } else {
                 res.status(400).send(transaction)

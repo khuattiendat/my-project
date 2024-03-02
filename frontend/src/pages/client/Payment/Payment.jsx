@@ -53,7 +53,7 @@ const Payment = () => {
             setProvinces(data);
             console.log(rate)
         } catch (error) {
-            console.log("Failed to fetch provinces: ", error.message);
+            console.log("Failed to fetch provinces: ", error);
         }
     }
     useEffect(async () => {
@@ -368,7 +368,9 @@ const Payment = () => {
                                         <div className={"right_product"} key={index}>
                                             <div className={"right_product_image"}>
                                                 <span>{item.quantity}</span>
-                                                <img src={`${BASE_URL_SERVER}/uploads/${item.image}`} alt={item.name}/>
+                                                <img
+                                                    src={`${BASE_URL_SERVER}/uploads/${item.image}` ?? "/images/no-image.jfif"}
+                                                    alt={item.name}/>
                                             </div>
                                             <div className={"right_product_name"}>
                                                 <Link to={`/product/${encrypt(item.product_id)}`}>

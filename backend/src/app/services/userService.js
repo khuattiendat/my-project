@@ -411,8 +411,20 @@ const updateUser = async (id, data) => {
         const checkPhoneNumber = await User.findAll({
             where: {
                 phone_number: data.phone_number,
-            }
+                id: {
+                    [Op.not]: id
+                }
+            },
         })
+        const checkEmail = await User.findAll({
+            where: {
+                email: data.email,
+                id: {
+                    [Op.not]: id
+                }
+            },
+        })
+
         if (isNullOrWhiteSpace(data.name)) {
             messages.push(String.format(MESSAGE_EMPTY, "name"));
         }
@@ -430,6 +442,9 @@ const updateUser = async (id, data) => {
         }
         if (checkPhoneNumber.length > 0) {
             messages.push("Số điện thoại đã tồn tại !!!");
+        }
+        if (checkEmail.length > 0) {
+            messages.push("Email đã tồn tại !!!");
         }
         if (!isNullOrEmptyArray(messages)) {
             return {

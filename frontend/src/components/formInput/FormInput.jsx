@@ -16,6 +16,7 @@ import {showAlertConfirm} from "../../utils/showAlert";
 import {formatPrice} from "../../utils/format";
 import {enqueueSnackbar} from "notistack";
 import {checkGender} from "../../utils/checkStatus";
+import {LoadingButton} from "@mui/lab";
 
 const FormInput = (props) => {
     const {inputs, type, data, isEdit, images = []} = props;
@@ -24,6 +25,7 @@ const FormInput = (props) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const axiosJWT = createAxios(user, dispatch, loginSuccess);
+    const [loading, setLoading] = useState(false);
     const [selectRole, setSelectRole] = useState([]);
     const [selectCategory, setSelectCategory] = useState([]);
     const [errorMessage, setErrorMessage] = useState([]);
@@ -167,14 +169,37 @@ const FormInput = (props) => {
         if (messages.length > 0) {
             setErrorMessage(messages);
         } else {
-            await updateProduct(user?.data.accessToken, data, id, navigate, axiosJWT);
+            try {
+                await updateProduct(user?.data.accessToken, data, id, navigate, axiosJWT);
+                enqueueSnackbar("sửa thành công", {variant: "success", autoHideDuration: 1000})
+                navigate("/admin/products")
+            } catch (error) {
+                let messageError = JSON.stringify(error.response.data.message)
+                enqueueSnackbar(messageError, {variant: "error", autoHideDuration: 1000,})
+            }
         }
     };
     const handleAddCategory = async () => {
-        let data = {
-            name: value.name,
-        };
-        await addCategory(user?.data.accessToken, data, navigate, axiosJWT);
+        try {
+            setLoading(true)
+            const res = await getAllCategory();
+            const check = res.find((item) => item.name === value.name);
+            if (check) {
+                enqueueSnackbar("Tên danh mục đã tồn tại", {variant: "error", autoHideDuration: 1000,})
+                return;
+            }
+            let data = {
+                name: value.name,
+            };
+            await addCategory(user?.data.accessToken, data, navigate, axiosJWT);
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
+
 
     };
     const handleUpdateUser = async (id) => {
@@ -418,7 +443,9 @@ const FormInput = (props) => {
                     )}
 
                     <div className="formInput">
-                        <button type="submit">{isEdit ? "Cập nhật" : "Thêm mới"}</button>
+                        <LoadingButton loading={loading} variant={"outlined"} type={"submit"}>
+                            {isEdit ? "Cập nhật" : "Thêm mới"}
+                        </LoadingButton>
                     </div>
                 </form>
             </div>

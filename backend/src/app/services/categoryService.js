@@ -147,17 +147,30 @@ const addCategory = async (data) => {
     }
 }
 const updateCategory = async (id, data) => {
+    let result;
     try {
-        var messages = [];
+        const messages = [];
         if (isNullOrWhiteSpace(data.name)) {
             messages.push(String.format(MESSAGE_EMPTY, "name"));
         }
+        const checkNameCategory = await Category.findAll({
+            where: {
+                name: data.name,
+                id: {
+                    [Op.not]: id
+                }
+            }
+
+        })
+        if (checkNameCategory.length > 0) {
+            messages.push("Tên danh mục đã tồn tại !!!");
+        }
         if (!isNullOrEmptyArray(messages)) {
-            var result = {
+            return {
                 error: ERROR_SUCCESS,
+                data: null,
                 message: messages,
             };
-            return result
         }
         const row = await Category.findOne({
             where: {
@@ -172,14 +185,14 @@ const updateCategory = async (id, data) => {
                     id: id,
                 }
             })
-            var result = {
+            result = {
                 error: ERROR_FAILED,
                 data: null,
                 message: MESSAGE_SUCCESS,
             };
             return result;
         } else {
-            var result = {
+            result = {
                 error: ERROR_FAILED,
                 data: null,
                 message: "user does not exist",
@@ -187,7 +200,7 @@ const updateCategory = async (id, data) => {
             return result;
         }
     } catch (error) {
-        var result = {
+        result = {
             error: ERROR_SUCCESS,
             message: error.message,
         };

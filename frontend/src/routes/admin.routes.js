@@ -6,6 +6,7 @@ import New from "../pages/admin/new/New";
 import NotFound from "../pages/admin/NotFound/NotFound";
 import Edit from "../pages/admin/edit/Edit";
 import {categoruInput, productInputs, userInputs} from "../formSource";
+import Reset from "../pages/admin/reset/Reset";
 
 export const routesConfigAdmin = [
     {
@@ -16,6 +17,11 @@ export const routesConfigAdmin = [
     {
         path: "/admin/login",
         element: <Login/>,
+        children: []
+    },
+    {
+        path: "/admin/reset",
+        element: <Reset/>,
         children: []
     },
     // users

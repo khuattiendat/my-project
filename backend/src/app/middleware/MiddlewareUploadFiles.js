@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken')
 const multer = require('multer');
 const path = require('path');
 var appRoot = require('app-root-path');
@@ -28,7 +27,6 @@ const MiddleWareUploadFiles = (req, res, next) => {
         } else if (err) {
             res.send(err.message)
         }
-
         else {
             // make sure to call next() if all was well
             next();

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import Navbar from "../../../components/navbar/Navbar";
 import Loading from "../../../components/Loading/Loading";
@@ -12,6 +12,7 @@ import {loginSuccess} from "../../../redux/authSlice";
 import {getListImages, getProductById} from "../../../apis/products";
 import {getCategoryById} from "../../../apis/category";
 import {decrypt} from "../../../utils/crypto";
+import {DarkModeContext} from "../../../context/darkModeContext";
 
 const Edit = ({inputs, type, title}) => {
     const user = useSelector((state) => state.auth.login?.currentUser);

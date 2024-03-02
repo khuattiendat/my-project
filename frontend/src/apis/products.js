@@ -97,17 +97,12 @@ export const getListImages = async (id) => {
     }
 }
 export const updateProduct = async (accessToken, data, id, navigate, axiosJWT) => {
-    try {
-        await axiosJWT.put("products/" + id, data, {
-            headers: {
-                token: `Bearer ${accessToken}`
-            }
-        })
-        enqueueSnackbar("sửa thành công", {variant: "success", autoHideDuration: 1000})
-        navigate("/admin/products")
-    } catch (error) {
-        console.log(error);
-    }
+
+    await axiosJWT.put("products/" + id, data, {
+        headers: {
+            token: `Bearer ${accessToken}`
+        }
+    })
 
 }
 export const fillterProduct = async (price, orderBy, categories, page = 1) => {

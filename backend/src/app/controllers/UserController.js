@@ -1,7 +1,22 @@
-const { ERROR_FAILED, MESSAGE_SUCCESS, ERROR_SUCCESS, MESSAGE_EMPTY, MESSAGE_IS_PHONE_NUMBER } = require('../common/messageList');
-const { sendEmail } = require('../common/utils');
+const {
+    ERROR_FAILED,
+    MESSAGE_SUCCESS,
+    ERROR_SUCCESS,
+    MESSAGE_EMPTY,
+    MESSAGE_IS_PHONE_NUMBER
+} = require('../common/messageList');
+const {sendEmail} = require('../common/utils');
 const User = require('../models/User');
-const { getAllUser, getUserById, updateUser, deleteUser, searchUser, resetPassword, forgotPassword, getAllRoleUser } = require('../services/userService');
+const {
+    getAllUser,
+    getUserById,
+    updateUser,
+    deleteUser,
+    searchUser,
+    resetPassword,
+    forgotPassword,
+    getAllRoleUser
+} = require('../services/userService');
 String.format = function () {
     var s = arguments[0];
     for (var i = 0; i < arguments.length - 1; i++) {
@@ -16,11 +31,10 @@ const UserController = {
         try {
             const page = req.query.page;
             const value = req.query.q;
-            const users = await getAllUser(page,value);
+            const users = await getAllUser(page, value);
             if (users.error != ERROR_SUCCESS) {
                 res.status(200).send(users);
-            }
-            else {
+            } else {
                 res.status(400).send(users);
             }
         } catch (error) {
@@ -33,8 +47,7 @@ const UserController = {
             const user = await getUserById(id);
             if (user.error != ERROR_SUCCESS) {
                 return res.status(200).send(user);
-            }
-            else {
+            } else {
                 return res.status(400).send(user);
             }
         } catch (error) {
@@ -46,8 +59,7 @@ const UserController = {
             const users = await getAllRoleUser();
             if (users.error != ERROR_SUCCESS) {
                 res.status(200).send(users);
-            }
-            else {
+            } else {
                 res.status(400).send(users);
             }
         } catch (error) {
@@ -61,8 +73,7 @@ const UserController = {
             const user = await updateUser(id, data);
             if (user.error != ERROR_SUCCESS) {
                 res.status(200).send(user);
-            }
-            else {
+            } else {
                 res.status(400).send(user);
             }
         } catch (error) {
@@ -76,8 +87,7 @@ const UserController = {
             const user = await deleteUser(id);
             if (user.error != ERROR_SUCCESS) {
                 res.status(200).send(user);
-            }
-            else {
+            } else {
                 res.status(400).send(user);
             }
         } catch (error) {
@@ -91,8 +101,7 @@ const UserController = {
             const user = await searchUser(value, page);
             if (user.error != ERROR_SUCCESS) {
                 res.status(200).send(user);
-            }
-            else {
+            } else {
                 res.status(400).send(user);
             }
         } catch (error) {
@@ -106,8 +115,7 @@ const UserController = {
             const reset = await resetPassword(id, data);
             if (reset.error != ERROR_SUCCESS) {
                 res.status(200).send(reset);
-            }
-            else {
+            } else {
                 res.status(400).send(reset);
             }
         } catch (error) {
@@ -120,8 +128,7 @@ const UserController = {
             const reset = await forgotPassword(data);
             if (reset.error != ERROR_SUCCESS) {
                 res.status(200).send(reset);
-            }
-            else {
+            } else {
                 res.status(400).send(reset);
             }
         } catch (error) {

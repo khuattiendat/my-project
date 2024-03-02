@@ -15,8 +15,8 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         const newUser = {
-            phone_number: phoneNumber,
-            password: password,
+            phone_number: phoneNumber.trim(),
+            password: password.trim(),
         };
         let dataLogin = await loginAdmin(newUser, dispatch);
         if (dataLogin.error === 0) {
