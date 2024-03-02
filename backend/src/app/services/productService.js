@@ -77,7 +77,6 @@ const getAllProducts = async () => {
             }
             ]
         });
-        console.log(count);
         await rows.forEach((item) => {
             products.push(item.dataValues)
         })

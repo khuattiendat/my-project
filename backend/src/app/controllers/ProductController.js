@@ -81,7 +81,6 @@ const ProductController = {
     addProduct: async (req, res) => {
         try {
             // const data = req.body;
-            console.log(req);
             const files = req.files;
             const product = await addProduct(req, files);
             if (product.error !== ERROR_SUCCESS) {
@@ -96,7 +95,6 @@ const ProductController = {
     // [PUT] /api/products
     updateProduct: async (req, res) => {
         try {
-            console.log(req);
             const id = req.params.id;
             const data = req.body;
             const files = req.files;

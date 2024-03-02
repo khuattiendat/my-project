@@ -37,7 +37,6 @@ const MiddlewareLogin = {
     // nếu người dùng đăng nhập rồi thì check xem có phải là admin không
     verifyTokenAndAdmin: (req, res, next) => {
         MiddlewareLogin.verifyToken(req, res, () => {
-            console.log(req.user.isAdmin)
             if (req.user.isAdmin) {
                 return next();
             } else {

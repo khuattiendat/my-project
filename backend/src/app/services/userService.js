@@ -653,7 +653,6 @@ const forgotPassword = async (data) => {
     try {
         let messages = [];
         const {phone_number, email} = data;
-        console.log(data);
         const passwordRandom = randomNewPassword(6);
         const salt = await bcrypt.genSalt(10);
         const newPassword = await bcrypt.hash(passwordRandom, salt);

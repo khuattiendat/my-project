@@ -124,7 +124,6 @@ const PaymentController = {
 
     },
     ResponsePaymentSuccess: async (req, res) => {
-        console.log(req.query);
         const totalMoney = req.query.totalMoney;
         const payerId = req.query.PayerID;
         const paymentId = req.query.paymentId;

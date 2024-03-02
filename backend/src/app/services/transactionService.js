@@ -123,7 +123,6 @@ const getTransactionByUserId = async (userId, page) => {
 }
 const addTransaction = async (data) => {
     try {
-        console.log(data)
         let messages = [];
         if (isNullOrWhiteSpace(data.user_id)) {
             messages.push(String.format(MESSAGE_EMPTY, "id"))
@@ -334,7 +333,7 @@ const getRevenueDaily = async () => {
 }
 const getRevenueMonthly = async () => {
     try {
-        const sql = "SELECT(MONTH(createdAt)) AS month,SUM(transactions.amount) AS total FROM transactions WHERE NOT transactions.status_payment = 2  GROUP BY MONTH ORDER BY MONTH DESC LIMIT 12";
+        const sql = "SELECT(MONTH(createdAt)) AS month, (YEAR(createdAt)) AS year ,SUM(transactions.amount) AS total FROM transactions WHERE NOT transactions.status_payment = 2  GROUP BY MONTH ORDER BY MONTH DESC LIMIT 12";
         const transaction = await sequelize.query(sql, {type: QueryTypes.SELECT});
         return {
             error: ERROR_FAILED,

@@ -32,7 +32,7 @@ const Chart = ({aspect, title, data}) => {
         console.log(data)
         let dataRender = data.map((item) => {
             return {
-                name: "Tháng" + item.month,
+                name: "Tháng    " + item.month + "(" + item.year + ")",
                 Total: item.total,
             };
         })
