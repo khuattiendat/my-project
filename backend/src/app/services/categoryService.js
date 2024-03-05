@@ -33,18 +33,16 @@ const getAllCategory = async () => {
             }],
             group: ['id']
         });
-        var result = {
+        return {
             error: ERROR_FAILED,
             data: category,
             message: MESSAGE_SUCCESS
         }
-        return result
     } catch (error) {
-        var result = {
+        return {
             error: ERROR_SUCCESS,
             message: error.message
         }
-        return result
     }
 }
 const getAllCategoryByPaging = async (page, value = "") => {
@@ -245,12 +243,13 @@ const deleteCategory = async (id) => {
     }
 }
 const searchCategory = async (value, page) => {
+    let result;
     try {
         if (!value || !page) {
-            var result = {
+            result = {
                 error: ERROR_SUCCESS,
                 message: String.format(MESSAGE_ALL_EMPTY, "value", "page")
-            }
+            };
             return result
         }
         let categories = []
@@ -270,20 +269,20 @@ const searchCategory = async (value, page) => {
             categories.push(item.dataValues)
         })
         let totalPage = Math.ceil(count / pageSize)
-        var result = {
+        result = {
             error: ERROR_FAILED,
             data: {
                 product: categories,
                 totalPage: totalPage
             },
             message: MESSAGE_SUCCESS
-        }
+        };
         return result;
     } catch (error) {
-        var result = {
+        result = {
             error: ERROR_SUCCESS,
             message: error.message
-        }
+        };
         return result
     }
 }

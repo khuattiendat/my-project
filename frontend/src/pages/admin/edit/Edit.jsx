@@ -1,7 +1,6 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import Navbar from "../../../components/navbar/Navbar";
-import Loading from "../../../components/Loading/Loading";
 import "./edit.scss";
 import FormInput from "../../../components/formInput/FormInput";
 import {getUserById} from "../../../apis/users";
@@ -12,7 +11,7 @@ import {loginSuccess} from "../../../redux/authSlice";
 import {getListImages, getProductById} from "../../../apis/products";
 import {getCategoryById} from "../../../apis/category";
 import {decrypt} from "../../../utils/crypto";
-import {DarkModeContext} from "../../../context/darkModeContext";
+import {getBannerById} from "../../../apis/banner";
 
 const Edit = ({inputs, type, title}) => {
     const user = useSelector((state) => state.auth.login?.currentUser);
@@ -45,6 +44,12 @@ const Edit = ({inputs, type, title}) => {
                     if (type === "categories") {
                         const res = await getCategoryById(ids);
                         data = res;
+                    }
+                    if (type === "banners") {
+                        const res = await getBannerById(ids);
+                        //  const resImage = await getListImages(ids);
+                        data = res?.data.data;
+                        // images = resImage;
                     }
                     setData(data);
                     setListImages(images);

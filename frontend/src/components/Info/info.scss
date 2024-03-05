@@ -25,6 +25,14 @@
       padding: 20px;
     }
 
+    .itemImg.banner {
+      width: 50%;
+      height: 200px;
+      border-radius: 5px;
+      object-fit: cover;
+      border: 1px solid #ccc;
+    }
+
     .details {
       width: 100%;
 

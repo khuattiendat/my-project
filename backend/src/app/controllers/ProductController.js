@@ -9,7 +9,7 @@ const {
     updateProduct,
     deleteProduct,
     getProductByPagingOrSearch,
-    getListImages, getBestSellers, getNewest, filterProduct
+    getListImages, getBestSellers, getNewest, filterProduct, searchProduct
 } = require('../services/productService');
 const ProductController = {
     getBestSellers: async (req, res) => {
@@ -128,6 +128,19 @@ const ProductController = {
             const page = parseInt(req.query.page);
             const value = req.query.q;
             const products = await getProductByPagingOrSearch(page, value)
+            if (products.error !== ERROR_SUCCESS) {
+                res.status(200).send(products);
+            } else {
+                res.status(400).send(products);
+            }
+        } catch (error) {
+            res.status(500).send(error.message);
+        }
+    },
+    searchProduct: async (req, res) => {
+        try {
+            const value = req.query.q;
+            const products = await searchProduct(value)
             if (products.error !== ERROR_SUCCESS) {
                 res.status(200).send(products);
             } else {

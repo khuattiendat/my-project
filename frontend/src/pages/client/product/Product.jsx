@@ -27,7 +27,6 @@ const Product = () => {
     const BASE_URL_SERVER = process.env.REACT_APP_BASE_URL_SERVER;
     const params = useParams();
     const {id} = params;
-    console.log(id)
     const _id = decrypt(id);
     const navigate = useNavigate()
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -182,7 +181,9 @@ const Product = () => {
                             </div>
                             <div className={"btn_add"}>
                                 <button onClick={handleAddCart}>
-                                    THÊM VÀO GIỎ
+                                    <span>
+                                    THÊM VÀO GIỎ HÀNG
+                                    </span>
                                 </button>
                             </div>
                         </div>

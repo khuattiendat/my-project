@@ -14,3 +14,7 @@ export const checkGender = (gender) => {
     const genderList = ["Nữ", "Nam"];
     return genderList[gender];
 }
+export const checkActiveBanner = (status) => {
+    const activeBanner = ["Không", "Sử dụng"];
+    return activeBanner[status];
+}

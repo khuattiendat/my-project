@@ -7,6 +7,7 @@ import InsertChartIcon from "@mui/icons-material/InsertChart";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import SettingsSystemDaydreamOutlinedIcon from "@mui/icons-material/SettingsSystemDaydreamOutlined";
@@ -91,6 +92,12 @@ const Sidebar = () => {
                         <li>
                             <MonetizationOnOutlinedIcon className="icon"/>
                             <span>Giao dịch</span>
+                        </li>
+                    </Link>
+                    <Link to={"/admin/banners"} style={{textDecoration: "none"}}>
+                        <li>
+                            <AspectRatioIcon className="icon"/>
+                            <span>Banner</span>
                         </li>
                     </Link>
                     <p className="title">USEFUL</p>

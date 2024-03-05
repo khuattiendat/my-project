@@ -19,6 +19,7 @@ import {getCategoryById} from "../../../apis/category";
 import {getOrderById, getOrderDetailByOrderId} from "../../../apis/orders";
 import CryptoJS from "crypto-js";
 import {decrypt} from "../../../utils/crypto";
+import {getBannerById} from "../../../apis/banner";
 
 const Single = (props) => {
     const params = useParams();
@@ -79,6 +80,11 @@ const Single = (props) => {
                     axiosJWT
                 );
                 data = res;
+            } else if (type === "banners") {
+                const res = await getBannerById(ids);
+                let dataRes = res?.data?.data;
+                setImage([dataRes]);
+                data = dataRes;
             }
             setData(data);
         };

@@ -26,6 +26,34 @@ export const userColumns = [
         headerAlign: 'center',
     },
 ];
+export const bannerColumns = [
+    {
+        field: "image_url",
+        headerName: "Hình ảnh",
+        width: 200,
+        renderCell: (params) => {
+            return (
+                <div className="cellWithImg">
+                    <img className="cellImg"
+                         src={params.row.image_url ? BASE_URL_SERVER + "/uploads/" + params.row.image_url : "/images/user-icon.png"}
+                         alt="avatar"/>
+                </div>
+            );
+        },
+    },
+    {
+        field: "title",
+        headerName: "Tiêu đề",
+        width: 200,
+
+    },
+    {
+        field: "is_active",
+        headerName: "Trạng thái sử dụng",
+        width: 250,
+    }
+
+]
 export const productColumns = [
     {
         field: "name",

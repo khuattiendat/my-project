@@ -7,35 +7,43 @@ import {formatPrice, formatPriceDiscount} from "../../utils/format";
 import {Link} from "react-router-dom";
 import {encrypt} from "../../utils/crypto";
 import FlickityItem from "./flickityItem/FlickityItem";
+import Loading from "../Loading/Loading";
 
 
 const Flickity = ({data, loading}) => {
     return (
-        <div className={"flickity"}>
-            <Swiper
-                loop={data.length > 5}
-                slidesPerView={4}
-                spaceBetween={10}
-                // autoplay={{
-                //     delay: 3000,
-                //     disableOnInteraction: false,
-                // }}
-                // modules={[Autoplay]}
-                className="mySwiper"
-            >
-                {
-                    data.map((product, index) => {
+        <>
+            {loading ? <Loading/> :
+                <>
+                    <div className={"flickity"}>
+                        <Swiper
+                            loop={data.length > 5}
+                            slidesPerView={4}
+                            spaceBetween={10}
+                            // autoplay={{
+                            //     delay: 3000,
+                            //     disableOnInteraction: false,
+                            // }}
+                            // modules={[Autoplay]}
+                            pagination
+                            className="mySwiper"
+                        >
+                            {
+                                data.map((product, index) => {
 
-                        return (
-                            <SwiperSlide style={{margin: "0 !important"}} key={index}>
-                                <FlickityItem product={product} loading={loading}/>
-                            </SwiperSlide>
-                        )
-                    })
-                }
+                                    return (
+                                        <SwiperSlide style={{margin: "0 !important"}} key={index}>
+                                            <FlickityItem product={product} loading={loading}/>
+                                        </SwiperSlide>
+                                    )
+                                })
+                            }
 
-            </Swiper>
-        </div>
+                        </Swiper>
+                    </div>
+                </>
+            }
+        </>
     )
 }
 export default Flickity;

@@ -164,6 +164,7 @@
 
         .btn_add {
           button {
+            position: relative;
             border: none;
             outline: none;
             background: #b5e2eb;
@@ -177,10 +178,33 @@
             margin-left: 20px;
             border-radius: 2px;
             cursor: pointer;
+            //
+            overflow: hidden;
 
-            &:hover {
-              background: #91b5bc;
+            span {
+              position: relative;
+              z-index: 1;
             }
+
+            &::before {
+              content: "";
+              position: absolute;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              width: 0;
+              background: $primary-darker;
+              transition: all linear .3s;
+            }
+
+            &:hover::before {
+              left: 0;
+              width: 100%;
+            }
+
+            //&:hover {
+            //  background: #91b5bc;
+            //}
           }
         }
       }

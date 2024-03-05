@@ -15,7 +15,6 @@ import {showAlertConfirm} from "../../utils/showAlert";
 import {logoutSuccess} from "../../redux/authSlice";
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import {logout} from "../../apis/auth";
 import {useSnackbar} from "notistack";
 import ChangePassword from "../modals/changePassword/ChangePassword";
@@ -31,6 +30,7 @@ const Header = () => {
     const _dispatch = useDispatch();
     const navigate = useNavigate();
     const axiosJWT = createAxios(user, _dispatch, logoutSuccess);
+    const [searchValue, setSearchValue] = useState("");
     const {enqueueSnackbar} = useSnackbar();
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLogin, setLogin] = useState(false)
@@ -63,6 +63,11 @@ const Header = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const handleSubmitSearch = (e) => {
+        e.preventDefault()
+        if (searchValue === "") return;
+        navigate("/search?q=" + searchValue)
+    }
     const open = Boolean(anchorEl);
     const id_open = open ? 'simple-popover' : undefined;
     return (
@@ -194,9 +199,12 @@ const Header = () => {
             {isChange && <ChangePassword isShowing={isShowing} hide={toggle}/>}
             <div className={"header_main"}>
                 <div className={"left"}>
-                    <form action="">
-                        <input type="text" placeholder={"Tìm kiếm trang sức"}/>
-                        <button>
+                    <form action="" onSubmit={handleSubmitSearch}>
+                        <input type="text"
+                               onChange={(e) => setSearchValue(e.target.value)}
+                               value={searchValue}
+                               placeholder={"Tìm kiếm trang sức"}/>
+                        <button type={"submit"}>
                             <SearchIcon fontSize={"medium"}/>
                         </button>
                     </form>

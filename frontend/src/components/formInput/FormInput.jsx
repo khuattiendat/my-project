@@ -17,6 +17,7 @@ import {formatPrice} from "../../utils/format";
 import {enqueueSnackbar} from "notistack";
 import {checkGender} from "../../utils/checkStatus";
 import {LoadingButton} from "@mui/lab";
+import {addBanner, updateBanner} from "../../apis/banner";
 
 const FormInput = (props) => {
     const {inputs, type, data, isEdit, images = []} = props;
@@ -98,6 +99,34 @@ const FormInput = (props) => {
             }
         }
     ;
+    const handleAddBanner = async () => {
+        const messages = [];
+        setErrorMessage([]);
+        let data = new FormData();
+        if (!description) {
+            messages.push("Vui lòng nhập mô tả")
+        }
+        data.append("title", description);
+        files.forEach((file) => data.append("multiple_images", file));
+        if (files.length <= 0) {
+            messages.push("vui lòng chọn ít nhất 1 hình ảnh");
+        }
+        if (messages.length > 0) {
+            setErrorMessage(messages);
+        } else {
+            let confirm = await showAlertConfirm("Bạn muốn thêm banner này")
+            if (confirm) {
+                try {
+                    await addBanner(user?.data.accessToken, data, axiosJWT);
+                    enqueueSnackbar("Thêm mới thành công", {variant: "success", autoHideDuration: 1000,});
+                    navigate("/admin/banners")
+                } catch (error) {
+                    let messageError = JSON.stringify(error.response.data.message)
+                    enqueueSnackbar(messageError, {variant: "error", autoHideDuration: 1000,})
+                }
+            }
+        }
+    }
     const handleAddProduct = async () => {
         const messages = [];
         setErrorMessage([]);
@@ -138,6 +167,26 @@ const FormInput = (props) => {
             }
         }
     };
+    const handleUpdateBanner = async (id) => {
+        const messages = [];
+        setErrorMessage([]);
+        let data = new FormData();
+        data.append("title", document.querySelector("[name='descriptions']").value ?? description);
+        files.forEach((file) => data.append("multiple_images", file));
+        if (messages.length > 0) {
+            setErrorMessage(messages);
+        } else {
+            try {
+                await updateBanner(user?.data.accessToken, data, id, axiosJWT)
+                enqueueSnackbar("sửa thành công", {variant: "success", autoHideDuration: 1000})
+                navigate("/admin/banners")
+            } catch (error) {
+                console.log(error)
+                let messageError = JSON.stringify(error.response.data.message)
+                enqueueSnackbar(messageError, {variant: "error", autoHideDuration: 1000,})
+            }
+        }
+    }
     const handleUpdateProduct = async (id) => {
         const messages = [];
         setErrorMessage([]);
@@ -252,6 +301,10 @@ const FormInput = (props) => {
             handleUpdateCategory(data.id);
         } else if (type === "categories") {
             handleAddCategory();
+        } else if (type === "banners" && isEdit) {
+            handleUpdateBanner(data.id)
+        } else if (type === "banners") {
+            handleAddBanner();
         }
     };
     useEffect(async () => {
@@ -271,6 +324,8 @@ const FormInput = (props) => {
                     data?.description;
             } else if (type === "categories") {
                 document.querySelector("[name='name']").value = data?.name;
+            } else if (type === "banners") {
+                document.querySelector("[name='descriptions']").value = data?.title;
             }
         }
         const fetchApi = async () => {
@@ -292,7 +347,7 @@ const FormInput = (props) => {
     return (
         <>
             <div className="left">
-                {type === "products" && files.length > 0 ? (
+                {type === "products" || type === "banners" && files.length > 0 ? (
                     <div className="show-img">
                         {files.map((item, index) => (
                             <img key={index} src={URL.createObjectURL(item)} alt="images"/>
@@ -325,6 +380,21 @@ const FormInput = (props) => {
                                 }}
                                 style={{display: "none"}}
                                 multiple
+                            />
+                        </div>
+                    )}
+                    {type === "banners" && (
+                        <div className="formInput">
+                            <label htmlFor="file">
+                                Image: <DriveFolderUploadOutlinedIcon className="icon"/>
+                            </label>
+                            <input
+                                type="file"
+                                id="file"
+                                onChange={(e) => {
+                                    setFiles([...e.target.files]);
+                                }}
+                                style={{display: "none"}}
                             />
                         </div>
                     )}
@@ -405,7 +475,7 @@ const FormInput = (props) => {
                     ) : (
                         <></>
                     )}
-                    {type === "products" ? (
+                    {type === "products" && (
                         <div className="formInput">
                             <label htmlFor="">Mô tả</label>
                             <textarea
@@ -416,8 +486,17 @@ const FormInput = (props) => {
                                 required
                             ></textarea>
                         </div>
-                    ) : (
-                        <></>
+                    )}
+                    {type === "banners" && (
+                        <div className="formInput">
+                            <label htmlFor="">Tiêu đề</label>
+                            <textarea
+                                name="descriptions"
+                                id=""
+                                rows="2"
+                                onChange={(e) => setDescription(e.target.value)}
+                            ></textarea>
+                        </div>
                     )}
                     {type === "users" ? (
                         <div className="formInput">

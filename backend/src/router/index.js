@@ -6,6 +6,7 @@ const galleryRouter = require('./gallery');
 const transactionRouter = require('./transaction');
 const paymentRouter = require('./payment');
 const orderRouter = require('./order');
+const bannerRouter = require('./banner');
 
 function Router(app) {
     app.use('/api/users', userRouter)
@@ -16,6 +17,7 @@ function Router(app) {
     app.use('/api/transactions', transactionRouter)
     app.use('/api/payments', paymentRouter);
     app.use('/api/orders', orderRouter);
+    app.use('/api/banners', bannerRouter);
 }
 
 module.exports = Router;

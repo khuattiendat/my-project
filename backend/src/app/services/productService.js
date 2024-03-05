@@ -383,27 +383,21 @@ const deleteProduct = async (id) => {
         }
     }
 }
-const searchProduct = async (value, page) => {
+const searchProduct = async (value) => {
     try {
-        if (!value || !page) {
+        if (!value) {
             return {
                 error: ERROR_SUCCESS,
-                message: String.format(MESSAGE_ALL_EMPTY, "value", "page")
+                message: String.format(MESSAGE_EMPTY, "value")
             }
         }
         let products = [];
-        let pageSize = parseInt(process.env.PAGE_SIZE);
-        let offset = (page - 1) * pageSize;
-        if (page < 1) {
-            page = 1;
-        }
-        Product.belongsTo(Category, {
-            foreignKey: 'category_id',
-        })
+        let totalProduct = 0;
+        Product.belongsTo(Category, {foreignKey: 'category_id'})
         const {count, rows} = await Product.findAndCountAll({
             include: [{
                 model: Category,
-                required: false,
+                required: false
             }
             ],
             where: {
@@ -413,20 +407,18 @@ const searchProduct = async (value, page) => {
                     {price: {[Op.like]: '%' + value + '%'}},
                     {'$Category.name$': {[Op.like]: '%' + value + '%'}}
                 ]
-            },
-            limit: pageSize,
-            offset: offset
+            }
         })
         await rows.forEach((item) => {
             products.push(item.dataValues);
         })
-        let totalPage = Math.ceil(count / pageSize)
+        totalProduct = count;
         if (rows) {
             return {
                 error: ERROR_FAILED,
                 data: {
-                    product: products,
-                    totalPage: totalPage
+                    products,
+                    totalProduct
                 },
                 message: MESSAGE_SUCCESS
             };
@@ -446,7 +438,8 @@ const searchProduct = async (value, page) => {
 const getProductByPagingOrSearch = async (page = 1, value) => {
     try {
         let products = []
-        let totalPage;
+        let totalPage = 1;
+        let totalProduct = 0;
         let perPage = parseInt(process.env.PAGE_SIZE);
         let offset = (page - 1) * perPage;
         if (page < 1) {
@@ -466,6 +459,7 @@ const getProductByPagingOrSearch = async (page = 1, value) => {
             await rows.forEach((item) => {
                 products.push(item.dataValues)
             })
+            totalProduct = count;
             totalPage = Math.ceil(count / perPage)
         } else {
             const {count, rows} = await Product.findAndCountAll({
@@ -488,13 +482,15 @@ const getProductByPagingOrSearch = async (page = 1, value) => {
             await rows.forEach((item) => {
                 products.push(item.dataValues);
             })
+            totalProduct = count;
             totalPage = Math.ceil(count / perPage)
         }
         return {
             error: ERROR_FAILED,
             data: {
                 products: products,
-                totalPage: totalPage
+                totalPage: totalPage,
+                totalProduct: totalProduct
             },
             message: MESSAGE_SUCCESS
         };
@@ -625,5 +621,5 @@ module.exports = {
     getProductByPagingOrSearch,
     getListImages,
     filterProduct,
-    updateQuantityProduct
+    updateQuantityProduct,
 }

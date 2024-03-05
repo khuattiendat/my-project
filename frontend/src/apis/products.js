@@ -48,6 +48,19 @@ export const getProductByPaging = async (page, q) => {
         console.log(error);
     }
 }
+export const searchProduct = async (q) => {
+    try {
+        const res = await axios.get(`${BASE_URL}api/products/search`, {
+            params: {
+                q
+            }
+        });
+        return res.data.data
+    } catch (error) {
+        console.log(error);
+    }
+
+}
 export const getProductById = async (id) => {
     try {
         const res = await axios.get(`${BASE_URL}api/products/${id}`);

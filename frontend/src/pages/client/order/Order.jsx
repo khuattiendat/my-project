@@ -72,7 +72,7 @@ const Order = () => {
     }
     useEffect(async () => {
         await fetchListOrders("");
-
+        document.title = "Đơn hàng";
         window.scrollTo({
             top: 0,
             behavior: "smooth",

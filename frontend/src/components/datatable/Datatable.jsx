@@ -9,7 +9,7 @@ import {
     productColumns,
     orderColumns,
     transactionColumns,
-    categoryColumn,
+    categoryColumn, bannerColumns,
 } from "../../datatablesource";
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useRef, useState} from "react";
@@ -23,8 +23,9 @@ import {deleteOrder} from "../../apis/orders";
 import {deleteCategory} from "../../apis/category";
 import {formatPrice} from "../../utils/format";
 import {encrypt} from "../../utils/crypto";
-import {checkPaymentMethod, checkStatusDelivery, checkStatusPayment} from "../../utils/checkStatus";
+import {checkActiveBanner, checkPaymentMethod, checkStatusDelivery, checkStatusPayment} from "../../utils/checkStatus";
 import {enqueueSnackbar} from "notistack";
+import {deleteBanner} from "../../apis/banner";
 
 const Datatable = (props) => {
     const user = useSelector((state) => state.auth.login?.currentUser);
@@ -71,12 +72,19 @@ const Datatable = (props) => {
         if (type === "users") {
             setColumns(userColumns.concat(actionColumn));
         }
+        if (type === "banners") {
+            setColumns(bannerColumns.concat(actionColumn));
+            rows.map((row, i) => {
+                row.is_active = checkActiveBanner(row.is_active)
+            })
+        }
         if (type === "products") {
             rows.map((row, i) => {
                 row.price = formatPrice(row.price);
             });
             setColumns(productColumns.concat(actionColumn));
         }
+
         if (type === "orders") {
             rows.map((row, i) => {
                 row.total_money = formatPrice(row.total_money);
@@ -96,7 +104,6 @@ const Datatable = (props) => {
         if (type === "categories") {
             setColumns(categoryColumn.concat(actionColumn));
         }
-        console.log(rows)
     }, []);
 
     const handleDelete = async (id) => {
@@ -126,13 +133,26 @@ const Datatable = (props) => {
                 deleteOrder(user?.data.accessToken, id, navigate, axiosJWT);
             } else if (type === "categories") {
                 deleteCategory(user?.data.accessToken, id, navigate, axiosJWT);
+            } else if (type === "banners") {
+                try {
+                    await deleteBanner(user?.data.accessToken, id, axiosJWT);
+                    enqueueSnackbar("Xóa thành công", {variant: "success", autoHideDuration: 1000})
+                    navigate("/admin/banners", {
+                        state: id,
+                    });
+                } catch (err) {
+                    enqueueSnackbar("Xóa thất bại", {variant: "error", autoHideDuration: 1000})
+                    console.log(err)
+                }
             }
+
         }
     };
     return (
         <div className="datatable">
             <>
                 <DataGrid
+                    key={"id"}
                     className="datagrid"
                     rows={rows}
                     columns={columns}

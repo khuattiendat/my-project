@@ -8,18 +8,21 @@ import Outstansing from "../../../components/outstanding/Outstansing";
 import Footer from "../../../components/footer/Footer";
 import {getAllProducts, getBestsellerProducts, getNewest} from "../../../apis/products";
 import {fillerProduct} from "../../../utils/fillerProduct";
+import {getAllBannerIsActive} from "../../../apis/banner";
 
 const Home = () => {
     const [listBestseller, setListBestseller] = useState([])
     const [listNewest, setListNewest] = useState([])
     const [listProduct, setListProduct] = useState([])
+    const [listBanner, setListBanner] = useState([])
     const [loading, setLoading] = useState(false)
     const fetchApis = async () => {
         setLoading(true)
+        let listBanner = await getAllBannerIsActive();
         let listBestseller = await getBestsellerProducts();
         let listNewest = await getNewest();
         let listProduct = await getAllProducts();
-
+        setListBanner(listBanner.data.data)
         setListProduct(listProduct.products)
         setListBestseller(listBestseller.products)
         setListNewest(listNewest.products);
@@ -37,7 +40,7 @@ const Home = () => {
     return (
         <div className="home">
             <Header/>
-            <Banner data={dataBanner}/>
+            <Banner data={listBanner} loading={loading}/>
             <div className={"home-container"}>
                 <h1 className={"title-h1"}>
                     <p></p>

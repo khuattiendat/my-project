@@ -28,10 +28,10 @@ const Payment = () => {
     const dispatch = useDispatch();
     const axiosJWT = createAxios(user, dispatch, loginSuccess);
     const [rate, setRate] = useState("")
-    const [provinces, setProvinces] = useState([]);
-    const [districts, setDistricts] = useState([]);
-    const [wards, setWards] = useState([]);
-    const [selected, setSelected] = useState({});
+    // const [provinces, setProvinces] = useState([]);
+    // const [districts, setDistricts] = useState([]);
+    // const [wards, setWards] = useState([]);
+    //  const [selected, setSelected] = useState({});
     const [totalMoney, setTotalMoney] = useState(0);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -44,14 +44,14 @@ const Payment = () => {
 
     const fetchApi = async () => {
         try {
-            const response = await axios.get(
-                "https://provinces.open-api.vn/api/?depth=3"
-            );
+            // const response = await axios.get(
+            //     "https://provinces.open-api.vn/api/?depth=3"
+            // );
             const rate = await axios.get(`https://api.currencyfreaks.com/v2.0/rates/latest?apikey=b199b4389d9a4ae0bc4b751d7fe3ae3b`)
-            const data = await response.data;
             setRate(rate?.data.rates.VND)
-            setProvinces(data);
-            console.log(rate)
+            //   const data = await response.data;
+            //  setProvinces(data);
+            // console.log(rate)
         } catch (error) {
             console.log("Failed to fetch provinces: ", error);
         }
@@ -70,11 +70,15 @@ const Payment = () => {
 
     }, [getProductByLocalStore]);
     const handleClickPayment = async () => {
+        if (!getProductByLocalStore.length) {
+            enqueueSnackbar("Chưa có sản phẩm trong giỏ hàng", {variant: "error"})
+            return
+        }
         if (checkPhone(phoneNumber)) {
             enqueueSnackbar("Số điện thoại không hợp lệ", {variant: "error"})
             return
         }
-        if (!recipientName || !address || !selected.province || !selected.district || !selected.ward) {
+        if (!recipientName || !address) {
             enqueueSnackbar("Vui lòng nhập đầy đủ thông tin", {variant: "error"})
             return
         }
@@ -83,7 +87,7 @@ const Payment = () => {
             enqueueSnackbar("Số lượng sản phẩm trong kho không đủ", {variant: "error"})
             return
         }
-        let addressDelivery = `${address}, ${selected.ward}, ${selected.district}, ${selected.province}`
+        let addressDelivery = `${address}`
         let data = {
             user_id: user?.data.user.id,
             user_name: user?.data.user.name,
@@ -144,30 +148,27 @@ const Payment = () => {
                 }
             }
 
-        } else {
-            enqueueSnackbar("Chưa có sản phẩm trong giỏ hàng", {variant: "error"})
-            navigate("/")
         }
     }
-    const handleUpdateProvince = (e) => {
-        const {value} = e.target;
-        setSelected({});
-        setDistricts([]);
-        setWards([])
-        const listDistricts = provinces?.filter((item) => item.name === value);
-        setDistricts(listDistricts[0]?.districts);
-        setSelected({province: value});
-    }
-    const handleUpdateDistricts = (e) => {
-        const {value} = e.target;
-        const listWards = districts?.filter((item) => item.name === value);
-        setWards(listWards[0]?.wards);
-        setSelected({...selected, district: value});
-    }
-    const handleUpdateWards = (e) => {
-        const {value} = e.target;
-        setSelected({...selected, ward: value});
-    }
+    // const handleUpdateProvince = (e) => {
+    //     const {value} = e.target;
+    //     setSelected({});
+    //     setDistricts([]);
+    //     setWards([])
+    //     const listDistricts = provinces?.filter((item) => item.name === value);
+    //     setDistricts(listDistricts[0]?.districts);
+    //     setSelected({province: value});
+    // }
+    // const handleUpdateDistricts = (e) => {
+    //     const {value} = e.target;
+    //     const listWards = districts?.filter((item) => item.name === value);
+    //     setWards(listWards[0]?.wards);
+    //     setSelected({...selected, district: value});
+    // }
+    // const handleUpdateWards = (e) => {
+    //     const {value} = e.target;
+    //     setSelected({...selected, ward: value});
+    // }
     const handleIncreaseQuantity = (id) => {
         getProductByLocalStore = getProductByLocalStore.map(item => {
             if (item.product_id === id) {
@@ -267,53 +268,53 @@ const Payment = () => {
                                         <input type="text" id={"email"} placeholder={"Nhập Email ..."}/>
                                     </div>
                                 </div>
-                                <div className={"left_address"}>
-                                    <div className={"left_address-input"}>
-                                        <label htmlFor="provice">Tỉnh/Thành phố <span
-                                            style={{color: "red"}}>*</span></label>
-                                        <select id={"provice"} onChange={handleUpdateProvince}>
-                                            <option label="------ Chọn ------"/>
-                                            {provinces &&
-                                                provinces.map((item) => (
-                                                    <option
-                                                        key={item.code}
-                                                        id={item.code}
-                                                        value={item.name}
-                                                        label={`${item.name}`}
-                                                    />
-                                                ))}
-                                        </select>
-                                    </div>
-                                    <div className={"left_address-input"}>
-                                        <label htmlFor="districts">Quận/Huyện <span
-                                            style={{color: "red"}}>*</span></label>
-                                        <select id={"districts"} onChange={handleUpdateDistricts}>
-                                            <option label="------ Chọn ------"/>
-                                            {districts &&
-                                                districts.map((item) => (
-                                                    <option
-                                                        key={item.code}
-                                                        value={item.name}
-                                                        label={`${item.name}`}
-                                                    />
-                                                ))}
-                                        </select>
-                                    </div>
-                                    <div className={"left_address-input"}>
-                                        <label htmlFor="wards">Phường/xã <span style={{color: "red"}}>*</span></label>
-                                        <select onChange={handleUpdateWards}>
-                                            <option id={"wards"} label="------ Chọn ------"/>
-                                            {wards &&
-                                                wards.map((item) => (
-                                                    <option
-                                                        key={item.code}
-                                                        value={item.name}
-                                                        label={`${item.name}`}
-                                                    />
-                                                ))}
-                                        </select>
-                                    </div>
-                                </div>
+                                {/*<div className={"left_address"}>*/}
+                                {/*    <div className={"left_address-input"}>*/}
+                                {/*        <label htmlFor="provice">Tỉnh/Thành phố <span*/}
+                                {/*            style={{color: "red"}}>*</span></label>*/}
+                                {/*        <select id={"provice"} onChange={handleUpdateProvince}>*/}
+                                {/*            <option label="------ Chọn ------"/>*/}
+                                {/*            {provinces &&*/}
+                                {/*                provinces.map((item) => (*/}
+                                {/*                    <option*/}
+                                {/*                        key={item.code}*/}
+                                {/*                        id={item.code}*/}
+                                {/*                        value={item.name}*/}
+                                {/*                        label={`${item.name}`}*/}
+                                {/*                    />*/}
+                                {/*                ))}*/}
+                                {/*        </select>*/}
+                                {/*    </div>*/}
+                                {/*    <div className={"left_address-input"}>*/}
+                                {/*        <label htmlFor="districts">Quận/Huyện <span*/}
+                                {/*            style={{color: "red"}}>*</span></label>*/}
+                                {/*        <select id={"districts"} onChange={handleUpdateDistricts}>*/}
+                                {/*            <option label="------ Chọn ------"/>*/}
+                                {/*            {districts &&*/}
+                                {/*                districts.map((item) => (*/}
+                                {/*                    <option*/}
+                                {/*                        key={item.code}*/}
+                                {/*                        value={item.name}*/}
+                                {/*                        label={`${item.name}`}*/}
+                                {/*                    />*/}
+                                {/*                ))}*/}
+                                {/*        </select>*/}
+                                {/*    </div>*/}
+                                {/*    <div className={"left_address-input"}>*/}
+                                {/*        <label htmlFor="wards">Phường/xã <span style={{color: "red"}}>*</span></label>*/}
+                                {/*        <select onChange={handleUpdateWards}>*/}
+                                {/*            <option id={"wards"} label="------ Chọn ------"/>*/}
+                                {/*            {wards &&*/}
+                                {/*                wards.map((item) => (*/}
+                                {/*                    <option*/}
+                                {/*                        key={item.code}*/}
+                                {/*                        value={item.name}*/}
+                                {/*                        label={`${item.name}`}*/}
+                                {/*                    />*/}
+                                {/*                ))}*/}
+                                {/*        </select>*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
                                 <div className={"left_info-input"}>
                                     <label htmlFor="address">Địa chỉ <span style={{color: "red"}}>*</span></label>
                                     <input type="text" id={"address"} required

@@ -27,6 +27,7 @@ import {
 } from "../../../apis/category";
 import {showAlertConfirm, showAlertWarning} from "../../../utils/showAlert";
 import {enqueueSnackbar} from "notistack";
+import {deleteBanner, getAllBanner} from "../../../apis/banner";
 
 const List = ({title, type}) => {
     const {state} = useLocation();
@@ -92,6 +93,12 @@ const List = ({title, type}) => {
                     data = res.categories;
                     totalPage = res.totalPage;
                     break;
+                case "banners":
+                    setIsFetching(true);
+                    res = await getAllBanner(page);
+                    data = res?.data?.data?.banners;
+                    totalPage = res?.data?.data?.totalPage;
+                    break;
                 default:
                     setIsFetching(false);
                     break;
@@ -104,25 +111,23 @@ const List = ({title, type}) => {
         }
 
     };
-    useEffect(() => {
+    useEffect(async () => {
         if (!user) {
             navigate("/admin/login");
         }
         setValueSearch("");
         setPage(1);
-        const getdata = async () => {
-            await fetchApi("", 1);
-        };
-        getdata();
+        await fetchApi("", 1);
+
     }, [type]);
-    useEffect(() => {
+    useEffect(async () => {
         if (!user) {
             navigate("/admin/login");
         }
         const getdata = async () => {
             await fetchApi(valueSearch, page);
         };
-        getdata();
+        await getdata();
     }, [state, page]);
     const handleSubmitSearch = async (e) => {
         e.preventDefault();
@@ -216,6 +221,17 @@ const List = ({title, type}) => {
                 await deleteOrder(user?.data.accessToken, ids, navigate, axiosJWT);
             } else if (type === "categories") {
                 await deleteCategory(user?.data.accessToken, ids, navigate, axiosJWT);
+            } else if (type === "banners") {
+                try {
+                    await deleteBanner(user?.data.accessToken, ids, axiosJWT);
+                    enqueueSnackbar("Xóa thành công", {variant: "success", autoHideDuration: 1000})
+                    navigate("/admin/banners", {
+                        state: ids,
+                    });
+                } catch (err) {
+                    enqueueSnackbar("Xóa thất bại", {variant: "error", autoHideDuration: 1000})
+                    console.log(err)
+                }
             }
         }
     };
@@ -266,45 +282,51 @@ const List = ({title, type}) => {
                 {isFetching ? (
                     <Loading/>
                 ) : (
-                    <Datatable
-                        data={data}
-                        title={title}
-                        type={type}
-                        totalPage={totalPage}
-                        setPage={setPage}
-                        page={page}
-                        setIds={setIds}
-                    />
+                    <>
+                        {data && <Datatable
+                            data={data}
+                            title={title}
+                            type={type}
+                            totalPage={totalPage}
+                            setPage={setPage}
+                            page={page}
+                            setIds={setIds}
+                        />}
+                    </>
+
                 )}
-                <div className="pagination">
-                    <ul>
-                        <li>
-                            <button
-                                disabled={page <= 1 ? true : false}
-                                onClick={() => setPage((page) => page - 1)}
-                            >
-                                <ChevronLeftIcon className="icon"/>
-                            </button>
-                        </li>
-                        <li>
-                            <span>{page}</span>
-                        </li>
-                        <li>
-                            <span>/</span>
-                        </li>
-                        <li>
-                            <span>{totalPage}</span>
-                        </li>
-                        <li>
-                            <button
-                                disabled={page >= totalPage ? true : false}
-                                onClick={() => setPage((page) => page + 1)}
-                            >
-                                <ChevronRightIcon className="icon"/>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
+                {
+                    data && <div className="pagination">
+                        <ul>
+                            <li>
+                                <button
+                                    disabled={page <= 1 ? true : false}
+                                    onClick={() => setPage((page) => page - 1)}
+                                >
+                                    <ChevronLeftIcon className="icon"/>
+                                </button>
+                            </li>
+                            <li>
+                                <span>{page}</span>
+                            </li>
+                            <li>
+                                <span>/</span>
+                            </li>
+                            <li>
+                                <span>{totalPage}</span>
+                            </li>
+                            <li>
+                                <button
+                                    disabled={page >= totalPage ? true : false}
+                                    onClick={() => setPage((page) => page + 1)}
+                                >
+                                    <ChevronRightIcon className="icon"/>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                }
+
             </div>
         </div>
     );

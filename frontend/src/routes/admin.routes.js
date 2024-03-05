@@ -109,6 +109,27 @@ export const routesConfigAdmin = [
         element: <Single type={"transactions"}/>,
         children: []
     },
+    // banner
+    {
+        path: "/admin/banners",
+        element: <List type={"banners"} title="Danh sách banner"/>,
+        children: []
+    },
+    {
+        path: "/admin/banners/new",
+        element: <New inputs={[]} title={"Thêm mới banner"} type={"banners"}/>,
+        children: []
+    },
+    {
+        path: "/admin/banners/edit/:id",
+        element: <Edit inputs={[]} title={"Sửa thông tin banner"} type={"banners"}/>,
+        children: []
+    },
+    {
+        path: "/admin/banners/info/:id",
+        element: <Single type={"banners"}/>,
+        children: []
+    },
     // not found
     {
         path: "*",

@@ -71,4 +71,4 @@ export const categoruInput = [
         placeholder: "",
         name: "name"
     },
-]
+];

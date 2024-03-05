@@ -100,7 +100,7 @@ const CategoryController = {
             const value = req.query.q;
             const page = req.query.page;
             const category = await searchCategory(value, page);
-            if (category.error != ERROR_SUCCESS) {
+            if (category.error !== ERROR_SUCCESS) {
                 res.status(200).send(category);
             } else {
                 res.status(400).send(category);

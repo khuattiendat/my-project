@@ -92,12 +92,14 @@
           border: none;
           outline: none;
           background: #fff;
-          height: 98%;
+          height: 100%;
           border-radius: 2px;
+          width: 34px;
           transition: all linear .2s;
 
           &:hover {
-            background: #ccc;
+            background: $primary-lighter;
+            cursor: pointer;
           }
         }
       }
@@ -158,7 +160,7 @@
             transition: height .1s ease-out;
             bottom: 100%;
             margin-bottom: 0;
-            margin-left: -7px;
+            margin-left: -10px;
             height: 8px;
             width: 14px;
             left: 50%;

@@ -114,6 +114,7 @@
     .right_list_product {
       width: 100%;
       display: grid;
+      margin-top: -10px;
       justify-content: space-evenly;
       grid-template-columns: 258px 258px 258px;
     }
