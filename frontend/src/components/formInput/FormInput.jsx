@@ -339,7 +339,7 @@ const FormInput = (props) => {
             } else if (type === "products") {
                 const category = await getAllCategory();
                 setSelectCategory(category);
-                setCategoryId(category[0]?.id);
+                setCategoryId(data.category_id);
             }
         };
         await fetchApi();

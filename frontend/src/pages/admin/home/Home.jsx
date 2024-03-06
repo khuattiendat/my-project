@@ -84,7 +84,7 @@ const Home = () => {
                     <Widget isFetching={isFetching} total={total} type="transaction"/>
                 </div>
                 <div className="charts">
-                    {/*<Featured data={RevenueDaily[0]}/>*/}
+                    <Featured data={RevenueDaily[0]}/>
                     <Chart data={RevenueMonthly} title="Doanh thu 12 tháng qua" aspect={2 / 1}/>
                 </div>
                 <div className="listContainer">

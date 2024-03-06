@@ -39,7 +39,8 @@ const getAllTransaction = async (page, value) => {
         if (!value) {
             const {rows, count} = await Transaction.findAndCountAll({
                 limit: pageSize,
-                offset: offset
+                offset: offset,
+                order: [['createdAt', 'DESC']]
             })
             await rows.forEach((item) => {
                 transactions.push(item.dataValues)
@@ -57,7 +58,8 @@ const getAllTransaction = async (page, value) => {
                     ]
                 },
                 limit: pageSize,
-                offset: offset
+                offset: offset,
+                order: [['createdAt', 'DESC']]
             })
             await rows.forEach((item) => {
                 transactions.push(item.dataValues);
@@ -263,7 +265,7 @@ const getLatestTransaction = async () => {
     try {
         const transaction = await Transaction.findAll({
             order: [
-                ['id', "DESC"]
+                ['createdAt', "DESC"]
             ],
             limit: 10,
         })
@@ -315,7 +317,10 @@ const getTransactionById = async (id) => {
 const getRevenueDaily = async () => {
     try {
         const date = new Date();
-        const _date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        const _date = year + "-" + month + "-" + day;
         const sql = "SELECT SUM(transactions.amount) AS total FROM transactions WHERE NOT transactions.status_payment = 2 and transactions.createdAt LIKE '" + _date + "%'";
         const transaction = await sequelize.query(sql, {type: QueryTypes.SELECT});
         return {

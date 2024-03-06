@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Header from "../../../components/header/Header";
 import Banner from "../../../components/banner/Banner";
-import {dataBanner} from "../../../dataBanner";
 import "./home.scss"
 import Flickity from "../../../components/flickity/Flickity";
 import Outstansing from "../../../components/outstanding/Outstansing";

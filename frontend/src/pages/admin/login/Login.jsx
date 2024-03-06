@@ -14,6 +14,10 @@ const Login = () => {
     const navigate = useNavigate();
     const handleLogin = async (e) => {
         e.preventDefault();
+        if (phoneNumber === "" || password === "") {
+            dispatch(enqueueSnackbar({message: "Vui lòng nhập đầy đủ thông tin", options: {variant: "error"}}));
+            return;
+        }
         const newUser = {
             phone_number: phoneNumber.trim(),
             password: password.trim(),
