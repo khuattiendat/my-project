@@ -300,7 +300,7 @@ const List = ({title, type}) => {
                         <ul>
                             <li>
                                 <button
-                                    disabled={page <= 1 ? true : false}
+                                    disabled={page <= 1}
                                     onClick={() => setPage((page) => page - 1)}
                                 >
                                     <ChevronLeftIcon className="icon"/>
@@ -317,7 +317,7 @@ const List = ({title, type}) => {
                             </li>
                             <li>
                                 <button
-                                    disabled={page >= totalPage ? true : false}
+                                    disabled={page >= totalPage}
                                     onClick={() => setPage((page) => page + 1)}
                                 >
                                     <ChevronRightIcon className="icon"/>

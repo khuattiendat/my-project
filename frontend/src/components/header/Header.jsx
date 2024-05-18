@@ -12,7 +12,7 @@ import LoginModal from "../modals/loginModal/LoginModal";
 import useModal from "../../hooks/useModal";
 import {createAxios} from "../../utils/createInstance";
 import {showAlertConfirm} from "../../utils/showAlert";
-import {logoutSuccess} from "../../redux/authSlice";
+import {logoutStart, logoutSuccess} from "../../redux/authSlice";
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import {logout} from "../../apis/auth";
@@ -49,11 +49,20 @@ const Header = () => {
             "Bạn muốn đăng xuất !!!"
         );
         if (confirm) {
-            let dataLogOut = await logout(user?.data.accessToken, _dispatch, axiosJWT, id);
-            if (dataLogOut.error === 0) {
-                enqueueSnackbar("Đã đăng xuất!!!", {variant: "success", autoHideDuration: 1000})
-            } else {
-                enqueueSnackbar("Đăng xuất thất bại!!!", {variant: "error", autoHideDuration: 1000})
+            _dispatch(logoutStart())
+            try {
+                await logout(user?.data.accessToken, axiosJWT, id);
+                enqueueSnackbar("Đăng xuất thành công", {
+                    variant: "success",
+                    autoHideDuration: 1000,
+                });
+                _dispatch(logoutSuccess());
+                navigate("/");
+            } catch (err) {
+                enqueueSnackbar("Đăng xuất thất bại", {
+                    variant: "success",
+                    autoHideDuration: 1000,
+                });
             }
         }
     };

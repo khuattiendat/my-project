@@ -28,7 +28,7 @@ const Home = () => {
         setLoading(false)
     }
     useEffect(async () => {
-        document.title = "Home";
+        document.title = "Trang chủ";
         window.scrollTo({
             top: 0,
             left: 0,
@@ -71,10 +71,14 @@ const Home = () => {
                     <p></p>
                 </h1>
             </div>
-
+            <div className={"messenger"}>
+                {/*<Messengers/>*/}
+            </div>
             <Outstansing/>
             <Footer/>
+
         </div>
+
     );
 };
 

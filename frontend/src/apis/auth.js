@@ -32,21 +32,14 @@ export const loginUser = async (user, dispatch, navigate) => {
         return error.response.data
     }
 }
-export const logout = async (accessToken, dispatch, axiosJWT, id) => {
-    dispatch(logoutStart())
-    try {
-        const res = await axiosJWT.post("auth/logout", id, {
-            headers: {
-                token: `Bearer ${accessToken}`
-            }
-        })
-        dispatch(logoutSuccess())
-        return res.data
-    } catch (error) {
-        dispatch(logoutFailed())
-        return error.response.data
-    }
+export const logout = async (accessToken, axiosJWT, id) => {
 
+    const res = await axiosJWT.post("auth/logout", id, {
+        headers: {
+            token: `Bearer ${accessToken}`
+        }
+    })
+    return res.data
 }
 
 

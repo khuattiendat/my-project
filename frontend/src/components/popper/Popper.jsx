@@ -8,7 +8,7 @@ import "tippy.js/dist/tippy.css";
 import "./popper.scss";
 import {useDispatch, useSelector} from "react-redux";
 import {createAxios} from "../../utils/createInstance";
-import {loginSuccess, logoutSuccess} from "../../redux/authSlice";
+import {loginSuccess, logoutStart, logoutSuccess} from "../../redux/authSlice";
 import {showAlertConfirm, showAlertError} from "../../utils/showAlert";
 import {logout} from "../../apis/auth";
 import {resetPassword} from "../../apis/users";
@@ -28,12 +28,15 @@ const Popper = () => {
     const handleLogOut = async () => {
         const confirm = await showAlertConfirm('Bạn có chắc không?', "Bạn muốn đăng xuất !!!");
         if (confirm) {
-            let dataLogOut = await logout(user?.data.accessToken, dispatch, axiosJWT, id);
-            if (dataLogOut.error === 0) {
+            dispatch(logoutStart());
+            try {
+                await logout(user?.data.accessToken, axiosJWT, id);
                 enqueueSnackbar("Đăng xuất thành công", {variant: "success", autoHideDuration: 1000});
+                dispatch(logoutSuccess());
                 navigate("/admin/login");
-            } else {
+            } catch (err) {
                 enqueueSnackbar("Đăng xuất thất bại", {variant: "success", autoHideDuration: 1000});
+                dispatch(logoutSuccess());
             }
         }
     };
@@ -68,7 +71,7 @@ const Popper = () => {
         <>
             <div className="popper_container">
                 <ul>
-                    <Link to={`/admin/users/info/${encrypt(id)}`}>
+                    <Link to={`/admin/users/info/${encrypt(id ?? "")}`}>
                         <li>
                             <AccountCircleOutlinedIcon/>
                             <span>Profile</span>

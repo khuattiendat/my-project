@@ -1,0 +1,4 @@
+--> làm kịch bản
+--> làm phần thống kê
+-> thống kê tồn kho, thống kê doanh thu (theo tháng, năm)
+--> tích hợp thanh toán momo

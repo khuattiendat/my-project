@@ -4,47 +4,55 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import StoreIcon from "@mui/icons-material/Store";
 import CategoryIcon from "@mui/icons-material/Category";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import SettingsSystemDaydreamOutlinedIcon from "@mui/icons-material/SettingsSystemDaydreamOutlined";
-import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import {Link, useNavigate} from "react-router-dom";
 import {DarkModeContext} from "../../context/darkModeContext";
 import {useContext} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {logoutSuccess} from "../../redux/authSlice";
+import {logoutFailed, logoutStart, logoutSuccess} from "../../redux/authSlice";
 import {createAxios} from "../../utils/createInstance";
 import {logout} from "../../apis/auth";
 import {showAlertConfirm} from "../../utils/showAlert";
 import {enqueueSnackbar} from "notistack";
+import {encrypt} from "../../utils/crypto";
 
 const Sidebar = () => {
     const {dispatch} = useContext(DarkModeContext);
     const user = useSelector((state) => state.auth.login?.currentUser);
-    const id = user?.data.id;
+    const id = user?.data?.user.id;
     const _dispatch = useDispatch();
     const navigate = useNavigate();
     const axiosJWT = createAxios(user, _dispatch, logoutSuccess);
     const handleLogOut = async () => {
-        const confirm = await showAlertConfirm(
-            "Bạn có chắc không?",
-            "Bạn muốn đăng xuất !!!"
-        );
-        if (confirm) {
-            let dataLogOut = await logout(user?.data.accessToken, _dispatch, axiosJWT, id);
-            if (dataLogOut.error === 0) {
-                enqueueSnackbar("Đăng xuất thành công", {variant: "success", autoHideDuration: 1000});
-                navigate("/admin/login");
-            } else {
-                enqueueSnackbar("Đăng xuất thất bại", {variant: "success", autoHideDuration: 1000});
+            const confirm = await showAlertConfirm(
+                "Bạn có chắc không?",
+                "Bạn muốn đăng xuất !!!"
+            );
+            if (confirm) {
+                _dispatch(logoutStart())
+                try {
+                    await logout(user?.data.accessToken, axiosJWT, id);
+                    enqueueSnackbar("Đăng xuất thành công", {
+                        variant: "success",
+                        autoHideDuration: 1000,
+                    });
+                    _dispatch(logoutSuccess());
+                    navigate("/admin/login");
+                } catch (err) {
+                    enqueueSnackbar("Đăng xuất thất bại", {
+                        variant: "success",
+                        autoHideDuration: 1000,
+                    });
+                    _dispatch(logoutFailed());
+                }
             }
         }
-    };
+    ;
     return (
         <div className="sidebar">
             <div className="top">
@@ -101,32 +109,37 @@ const Sidebar = () => {
                         </li>
                     </Link>
                     <p className="title">USEFUL</p>
-                    <li>
-                        <InsertChartIcon className="icon"/>
-                        <span>Thống kê</span>
-                    </li>
+                    <Link to={"/admin/statistical"} style={{textDecoration: "none"}}>
+                        <li>
+                            <InsertChartIcon className="icon"/>
+                            <span>Thống kê</span>
+                        </li>
+                    </Link>
+
                     <li>
                         <NotificationsNoneIcon className="icon"/>
                         <span>Thông báo</span>
                     </li>
-                    <p className="title">SERVICE</p>
-                    <li>
-                        <SettingsSystemDaydreamOutlinedIcon className="icon"/>
-                        <span>System Health</span>
-                    </li>
-                    <li>
-                        <PsychologyOutlinedIcon className="icon"/>
-                        <span>Logs</span>
-                    </li>
-                    <li>
-                        <SettingsApplicationsIcon className="icon"/>
-                        <span>Settings</span>
-                    </li>
+                    {/*<p className="title">SERVICE</p>*/}
+                    {/*<li>*/}
+                    {/*    <SettingsSystemDaydreamOutlinedIcon className="icon"/>*/}
+                    {/*    <span>System Health</span>*/}
+                    {/*</li>*/}
+                    {/*<li>*/}
+                    {/*    <PsychologyOutlinedIcon className="icon"/>*/}
+                    {/*    <span>Logs</span>*/}
+                    {/*</li>*/}
+                    {/*<li>*/}
+                    {/*    <SettingsApplicationsIcon className="icon"/>*/}
+                    {/*    <span>Settings</span>*/}
+                    {/*</li>*/}
                     <p className="title">USER</p>
-                    <li>
-                        <AccountCircleOutlinedIcon className="icon"/>
-                        <span>Profile</span>
-                    </li>
+                    <Link to={`/admin/users/info/${encrypt(id ?? "")}`} style={{textDecoration: "none"}}>
+                        <li>
+                            <AccountCircleOutlinedIcon className="icon"/>
+                            <span>Profile</span>
+                        </li>
+                    </Link>
                     <li onClick={handleLogOut}>
                         <ExitToAppIcon className="icon"/>
                         <span>Logout</span>
@@ -144,7 +157,8 @@ const Sidebar = () => {
                 ></div>
             </div>
         </div>
-    );
+    )
+        ;
 };
 
 export default Sidebar;

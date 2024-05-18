@@ -326,6 +326,14 @@ const Info = (props) => {
                                                                    id={"option2"}/>
                                                             <label htmlFor={"option2"}>Đang giao hàng</label>
                                                         </div>
+                                                        <div className={"change_delivery_item"}
+                                                             onChange={handleOnchange}>
+                                                            <input type="radio" value={2}
+                                                                   checked={data?.status_delivery === 2}
+                                                                   name={"delivery"}
+                                                                   id={"option3"}/>
+                                                            <label htmlFor={"option3"}>Đã giao hàng</label>
+                                                        </div>
                                                     </div>
                                                 ) : (
                                                     <>

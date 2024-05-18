@@ -58,6 +58,6 @@ const Order = sequelize.define('orders', {
     }
 });
 
-// status_delivery : 0: chưa giao, 1: đang giao,
+// status_delivery : 0: chưa giao, 1: đang giao, 2: đã giao
 // status_payment : 0: chưa thanh toán, 1: đã thanh toán
 module.exports = Order;

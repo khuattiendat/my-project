@@ -7,6 +7,7 @@ import NotFound from "../pages/admin/NotFound/NotFound";
 import Edit from "../pages/admin/edit/Edit";
 import {categoruInput, productInputs, userInputs} from "../formSource";
 import Reset from "../pages/admin/reset/Reset";
+import Statistical from "../pages/admin/statistical/Statistical";
 
 export const routesConfigAdmin = [
     {
@@ -130,7 +131,14 @@ export const routesConfigAdmin = [
         element: <Single type={"banners"}/>,
         children: []
     },
+    // statistical
+    {
+        path: "/admin/statistical",
+        element: <Statistical/>,
+        children: []
+    },
     // not found
+
     {
         path: "*",
         element: <NotFound/>,

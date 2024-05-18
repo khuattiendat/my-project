@@ -121,26 +121,26 @@ const Payment = () => {
             if (confirm) {
                 if (paymentMethod === 0) {
                     try {
-                        setLogin(true)
+                        setLoading(true)
                         await addPaymentByCash(accessToken, data, axiosJWT)
                         enqueueSnackbar("Đặt hàng thành công", {variant: "success"})
                         dispatch(getProduct([]));
                         navigate("/users/order")
-                        setLogin(false)
+                        setLoading(false)
                     } catch (error) {
                         enqueueSnackbar("Đã có lỗi xảy ra", {variant: "error", autoHideDuration: 1000})
                         console.log(error)
-                        setLogin(false)
+                        setLoading(false)
                     }
                 } else {
                     try {
-                        setLogin(true)
+                        setLoading(true)
                         let response = await addPaymentByPaypal(accessToken, data, axiosJWT)
                         window.location = response.forwardLink
                         dispatch(getProduct([]));
-                        setLogin(false)
+                        setLoading(false)
                     } catch (error) {
-                        setLogin(false)
+                        setLoading(false)
                         enqueueSnackbar("Đã có lỗi xảy ra", {variant: "error", autoHideDuration: 1000})
                         console.log(error)
                     }
@@ -379,7 +379,7 @@ const Payment = () => {
                                             <div className={"right_product_image"}>
                                                 <span>{item.quantity}</span>
                                                 <img
-                                                    src={`${BASE_URL_SERVER} / uploads /${item.image}` ?? "/images/no-image.jfif"}
+                                                    src={`${BASE_URL_SERVER}/uploads/${item.image}` ?? "/images/no-image.jfif"}
                                                     alt={item.name}/>
                                             </div>
                                             <div className={"right_product_name"}>

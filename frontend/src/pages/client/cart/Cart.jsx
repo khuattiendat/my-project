@@ -56,7 +56,6 @@ const Cart = () => {
         enqueueSnackbar("Đã xóa hết sản phẩm trong giỏ hàng", {variant: "success", autoHideDuration: 500})
     }
     const handleDeleteItemProduct = (id) => {
-        console.log(id)
         getProductByLocalStore = getProductByLocalStore.filter((item) => item.product_id !== id)
         dispatch(getProduct(getProductByLocalStore))
         enqueueSnackbar("Đã xóa sản phẩm khỏi giỏ hàng", {variant: "success"})
@@ -80,9 +79,9 @@ const Cart = () => {
         getProductByLocalStore = getProductByLocalStore.map(item => {
             if (item.product_id === id) {
                 let newQuantity = item.quantity - 1
-                if (newQuantity < 0) {
+                if (newQuantity < 1) {
                     enqueueSnackbar("Số lượng sản phẩm phải lớn hơn 0", {variant: "error", autoHideDuration: 1000})
-                    newQuantity = 0
+                    newQuantity = 1
                 }
                 let newTotalMoney = newQuantity * item.price
                 return {...item, quantity: newQuantity, total_money: newTotalMoney}
@@ -93,7 +92,12 @@ const Cart = () => {
     }
     const handleClickPayment = () => {
         if (getProductByLocalStore.length > 0) {
-            const checkProductQuantity = getProductByLocalStore.some(item => item.inventory <= 0);
+            const checkProductQuantity = getProductByLocalStore.some(item => item.inventory <= item.quantity);
+            const checkProductQuantity2 = getProductByLocalStore.some(item => item.quantity <= 0);
+            if (checkProductQuantity2) {
+                enqueueSnackbar("Số lượng sản phẩm phải lớn hơn 0", {variant: "error"})
+                return
+            }
             if (checkProductQuantity) {
                 enqueueSnackbar("Số lượng sản phẩm trong kho không đủ", {variant: "error"})
                 return
@@ -113,7 +117,7 @@ const Cart = () => {
         getProductByLocalStore = getProductByLocalStore.map(item => {
             if (item.product_id === id) {
                 let newQuantity = e.target.value
-                // if (newQuantity <= 0) {
+                // if (newQuantity < 1) {
                 //     enqueueSnackbar("Số lượng sản phẩm phải lớn hơn 0", {variant: "error"})
                 //     newQuantity = 1
                 // }

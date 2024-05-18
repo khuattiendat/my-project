@@ -4,7 +4,6 @@ import Product from "../pages/client/product/Product";
 import Category from "../pages/client/category/Category";
 import Payment from "../pages/client/Payment/Payment";
 import Order from "../pages/client/order/Order";
-import Profile from "../pages/client/profile/Profile";
 import Search from "../pages/client/search/Search";
 
 export const routesConfigClient = [

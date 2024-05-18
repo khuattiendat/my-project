@@ -13,7 +13,7 @@ import {orderColumnClient} from "../../../datatablesource";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, {SelectChangeEvent} from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import {formatDate, formatPrice} from "../../../utils/format";
 import {checkStatusDelivery, checkStatusPayment} from "../../../utils/checkStatus";
 import Loading from "../../../components/Loading/Loading";
@@ -47,7 +47,7 @@ const Order = () => {
             let data = await getOrderByUserId(user?.data.accessToken, userId, axiosJWT, page, q, sort)
             setListOrder(data?.orders)
             setTotalPage(data?.totalPage)
-            data?.orders.map((row, i) => {
+            data?.orders.map((row) => {
                 row.createdAt = formatDate(row.createdAt);
                 row.total_money = formatPrice(row.total_money);
                 row.status_payment = checkStatusPayment(row.status_payment)
@@ -100,43 +100,45 @@ const Order = () => {
             <div className={"order-container"}>
                 <div className={"left"}>
                     <h2 className={"title"}>Chi tiết đơn hàng</h2>
-                    {loadOrderDetail ? <Loading/> : (
-                        <div className={"left_content"}>
-                            {listOrderDetail ?
-                                listOrderDetail.map((item, index) => {
-                                    return (
-                                        <div className={"left_content-item"} key={index}>
-                                            <div className={"left_content-item-img"}>
-                                                <Link to={`/product/${encrypt(item.product.id)}`}>
-                                                    <img src={`${BASE_URL_SERVER}/uploads/${item.product.image}`}/>
-                                                </Link>
-                                            </div>
-                                            <div className={"left_content-item-info"}>
-                                                <div className={"left_content-item-info-name"}>
+                    <div className={"left_content"}>
+                        {loadOrderDetail ? <Loading/> : (
+                            <>
+                                {listOrderDetail &&
+                                    listOrderDetail.map((item, index) => {
+                                        return (
+                                            <div className={"left_content-item"} key={index}>
+                                                <div className={"left_content-item-img"}>
                                                     <Link to={`/product/${encrypt(item.product.id)}`}>
-                                                        <span>Tên sản phẩm: </span>{item.product.name}
+                                                        <img alt={"image"} src={`${BASE_URL_SERVER}/uploads/${item.product.image}`}/>
                                                     </Link>
+                                                </div>
+                                                <div className={"left_content-item-info"}>
+                                                    <div className={"left_content-item-info-name"}>
+                                                        <Link to={`/product/${encrypt(item.product.id)}`}>
+                                                            <span>Tên sản phẩm: </span>{item.product.name}
+                                                        </Link>
 
-                                                </div>
-                                                <div className={"left_content-item-info-price"}>
-                                                    <span>Giá:</span> {formatPrice(item.price)}
-                                                </div>
-                                                <div className={"left_content-item-info-quantity"}>
-                                                    <span>Số lượng:</span>{item.quantity}
-                                                </div>
-                                                <div className={"left_content-item-info-cost"}>
-                                                    <span>Giá gốc:</span>{formatPrice(item.product.price)}
-                                                </div>
-                                                <div className={"left_content-item-info-money"}>
-                                                    <span>Thành tiền:</span> {formatPrice(item.total_money)}
+                                                    </div>
+                                                    <div className={"left_content-item-info-price"}>
+                                                        <span>Giá:</span> {formatPrice(item.price)}
+                                                    </div>
+                                                    <div className={"left_content-item-info-quantity"}>
+                                                        <span>Số lượng:</span>{item.quantity}
+                                                    </div>
+                                                    <div className={"left_content-item-info-cost"}>
+                                                        <span>Giá gốc:</span>{formatPrice(item.product.price)}
+                                                    </div>
+                                                    <div className={"left_content-item-info-money"}>
+                                                        <span>Thành tiền:</span> {formatPrice(item.total_money)}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )
-                                })
-                                : null}
-                        </div>
-                    )}
+                                        )
+                                    })
+                                }
+                            </>
+                        )}
+                    </div>
 
                 </div>
                 <div className={"right"}>
@@ -196,7 +198,7 @@ const Order = () => {
                         <ul>
                             <li>
                                 <button
-                                    disabled={page <= 1 ? true : false}
+                                    disabled={page <= 1}
                                     onClick={() => setPage((page) => page - 1)}
                                 >
                                     <ChevronLeftIcon className="icon"/>
@@ -213,7 +215,7 @@ const Order = () => {
                             </li>
                             <li>
                                 <button
-                                    disabled={page >= totalPage ? true : false}
+                                    disabled={page >= totalPage}
                                     onClick={() => setPage((page) => page + 1)}
                                 >
                                     <ChevronRightIcon className="icon"/>

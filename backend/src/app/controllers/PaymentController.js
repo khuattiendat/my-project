@@ -12,7 +12,7 @@ paypal.configure({
     'client_id': process.env.CLIENT_ID,
     'client_secret': process.env.CLIENT_SECRET
 });
-var listProducts = [];
+let listProducts = [];
 const PaymentController = {
     paymentProductByPaypal: async (req, res) => {
         // data mẫu
@@ -51,6 +51,7 @@ const PaymentController = {
         //
         try {
             const data = req.body;
+            console.log(data)
             listProducts = data.listProducts;
             const transaction = await addTransaction(data);
             if (transaction.error === ERROR_SUCCESS) {
@@ -71,8 +72,8 @@ const PaymentController = {
             const items = [];
             let totalMoney = 0;
             data.listProducts.map((item) => {
-                let price = (Number(item.price) / Number(req.body.rate)).toFixed(2)
-                let totalPrice = (price * item.quantity)
+                let price = (Number(item.price) / Number(req.body.rate)).toFixed(2);
+                let totalPrice = price * item.quantity;
                 let result = {
                     name: item.name,
                     price: price,
@@ -81,6 +82,7 @@ const PaymentController = {
                 }
                 totalMoney += totalPrice;
                 items.push(result);
+
             })
             const create_payment_json = {
                 "intent": "sale",
