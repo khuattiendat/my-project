@@ -243,6 +243,15 @@ const randomNewOrderId = (length) => {
 const addOrders = async (data) => {
     try {
         let messages = [];
+        let orderId = randomNewOrderId(12);
+        let checkOrderIdExist = await Order.findOne({
+            where: {
+                order_id: orderId
+            }
+        })
+        if (checkOrderIdExist) {
+            orderId = randomNewOrderId(12);
+        }
         if (isNullOrWhiteSpace(data.user_id.toString())) {
             messages.push(String.format(MESSAGE_EMPTY, "id"))
         }
@@ -271,7 +280,7 @@ const addOrders = async (data) => {
                 message: messages
             };
         }
-        let orderId = randomNewOrderId(12);
+
         const order = await Order.create({
             user_id: data.user_id,
             order_id: orderId,
