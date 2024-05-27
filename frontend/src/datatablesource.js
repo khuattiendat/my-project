@@ -209,3 +209,89 @@ export const categoryColumn = [
         width: 200,
     },
 ]
+export const statisticalCategoryColumns = [
+    {
+        field: "categoryName",
+        headerName: "Tên Danh mục sản phẩm",
+        width: 200,
+    },
+    {
+        field: "totalProduct",
+        headerName: "Tổng số sản phẩm",
+        width: 150,
+    },
+    {
+        field: "maxPrice",
+        headerName: "Giá cao nhất",
+        width: 200,
+    },
+    {
+        field: "minPrice",
+        headerName: "Giá thấp nhất",
+        width: 200,
+    },
+    {
+        field: "averagePrice",
+        headerName: "Giá trung bình",
+        width: 200,
+    },
+
+]
+export const statisticalProductColumns = [
+    {
+        headerAlign: 'center',
+        field: "name",
+        headerName: "Tên sản phẩm",
+        renderCell: (params) => {
+            return (
+                <div className="cellWithImg">
+                    <img className="cellImg"
+                         src={params.row.image ? BASE_URL_SERVER + "/uploads/" + params.row.image : "/images/user-icon.png"}
+                         alt="avatar"/>
+                    {params.row.name}
+                </div>
+            );
+        },
+        width: 350,
+    },
+    {
+        headerAlign: 'center',
+        field: "price",
+        headerName: "Giá sản phẩm",
+        width: 200,
+    },
+    {
+        headerAlign: 'center',
+        field: "quantity",
+        headerName: "Tồn kho",
+        width: 150,
+    },
+    {
+        headerAlign: 'center',
+        field: "status",
+        headerName: "Loại sản phẩm",
+        width: 250,
+        renderCell: (params) => {
+            return (
+                <div>
+                    {params.row.Category.name}
+                </div>
+            );
+        },
+    },
+];
+export const statisticalRevenueColumns =
+    [
+        {
+            headerAlign: 'center',
+            field: "month",
+            headerName: "Tháng",
+            width: 250,
+        },
+        {
+            headerAlign: 'center',
+            field: "total",
+            headerName: "Danh thu",
+            width: 250,
+        }
+    ]

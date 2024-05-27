@@ -1,7 +1,9 @@
 .app.dark {
   background-color: #111;
   color: rgb(156, 156, 156);
-
+  .navbar {
+    background: #111;
+  }
   .chartGrid {
     stroke: rgba(228, 228, 228, 0.219);
   }

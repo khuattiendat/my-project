@@ -314,44 +314,7 @@ const getTransactionById = async (id) => {
     }
 
 }
-const getRevenueDaily = async () => {
-    try {
-        const date = new Date();
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-        let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-        const _date = year + "-" + month + "-" + day;
-        const sql = "SELECT SUM(transactions.amount) AS total FROM transactions WHERE NOT transactions.status_payment = 2 and transactions.createdAt LIKE '" + _date + "%'";
-        const transaction = await sequelize.query(sql, {type: QueryTypes.SELECT});
-        return {
-            error: ERROR_FAILED,
-            data: transaction,
-            message: MESSAGE_SUCCESS
-        };
-    } catch (error) {
-        return {
-            error: ERROR_SUCCESS,
-            message: error.message
-        };
-    }
 
-}
-const getRevenueMonthly = async () => {
-    try {
-        const sql = "SELECT(MONTH(createdAt)) AS month, (YEAR(createdAt)) AS year ,SUM(transactions.amount) AS total FROM transactions WHERE NOT transactions.status_payment = 2  GROUP BY MONTH ORDER BY MONTH DESC LIMIT 12";
-        const transaction = await sequelize.query(sql, {type: QueryTypes.SELECT});
-        return {
-            error: ERROR_FAILED,
-            data: transaction,
-            message: MESSAGE_SUCCESS
-        };
-    } catch (error) {
-        return {
-            error: ERROR_SUCCESS,
-            message: error.message
-        };
-    }
-}
 module.exports = {
     getAllTransaction,
     addTransaction,
@@ -360,6 +323,4 @@ module.exports = {
     getLatestTransaction,
     getTransactionByUserId,
     getTransactionById,
-    getRevenueDaily,
-    getRevenueMonthly
 }

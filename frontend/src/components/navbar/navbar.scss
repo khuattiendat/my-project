@@ -5,6 +5,10 @@
   align-items: center;
   font-size: 14px;
   color: #555;
+  position: fixed;
+  width: 100%;
+  background-color: white;
+  z-index: 999;
 
   .wrapper {
     width: 100%;
@@ -26,6 +30,7 @@
     .items {
       display: flex;
       align-items: center;
+      margin-right: 200px;
 
       .item {
         display: flex;

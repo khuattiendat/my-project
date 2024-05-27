@@ -100,9 +100,13 @@ const Product = () => {
             <Header/>
             <div className={"product-container"}>
                 <div className={"left"}>
-                    <div className={"product-discount"}>
-                        {product.discount > 0 ? `-${product.discount}%` : "0%"}
-                    </div>
+                    {product.discount > 0 &&
+                        (
+                            <div className={"product-discount"}>
+                                {`-${product.discount}%`}
+                            </div>
+                        )
+                    }
                     <>
                         <Swiper
                             style={{

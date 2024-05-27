@@ -6,8 +6,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import SearchIcon from '@mui/icons-material/Search';
 import "./header.scss";
 import {useDispatch, useSelector} from "react-redux";
-import {CSSTransition} from "react-transition-group";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import LoginModal from "../modals/loginModal/LoginModal";
 import useModal from "../../hooks/useModal";
 import {createAxios} from "../../utils/createInstance";
@@ -20,6 +19,7 @@ import {useSnackbar} from "notistack";
 import ChangePassword from "../modals/changePassword/ChangePassword";
 import MenuCategory from "../menu/menuCategory/MenuCategory";
 import {getAllCategory} from "../../apis/category";
+import {encrypt} from "../../utils/crypto";
 
 
 const Header = () => {
@@ -36,9 +36,11 @@ const Header = () => {
     const [isLogin, setLogin] = useState(false)
     const [isChange, setChange] = useState(false)
     const [listCategory, setListCategory] = useState([])
+    const [initId, setInitId] = useState(null)
     const fetchApis = async () => {
         let listCategory = await getAllCategory()
         setListCategory(listCategory);
+        setInitId(listCategory[0]?.id);
     }
     useEffect(async () => {
         await fetchApis();
@@ -244,7 +246,12 @@ const Header = () => {
                         <Link className={"header_bottom_link"} to={"/"}>Home</Link>
                     </li>
                     <li className={"header_bottom-item category"} style={{position: "relative"}}>
-                        <Link className={"header_bottom_link"} to={""}>Sản phẩm</Link>
+                        <Link className={"header_bottom_link"}
+
+                              to={initId && `/categories/${encrypt(initId)}`}
+                        >
+
+                            Sản phẩm</Link>
                         <MenuCategory data={listCategory}/>
                     </li>
                     <li className={"header_bottom-item"}>

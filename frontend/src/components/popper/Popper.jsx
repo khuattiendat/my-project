@@ -14,12 +14,14 @@ import {logout} from "../../apis/auth";
 import {resetPassword} from "../../apis/users";
 import {enqueueSnackbar} from "notistack";
 import {encrypt} from "../../utils/crypto";
+import {LoadingButton} from "@mui/lab";
 
 const Popper = () => {
     const [openModal, setOpenModal] = useState(false);
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
+    const [loading, setLoading] = useState(false);
     const user = useSelector((state) => state.auth.login?.currentUser);
     const id = user?.data.user.id;
     const dispatch = useDispatch();
@@ -52,6 +54,7 @@ const Popper = () => {
             newPassword,
         };
         try {
+            setLoading(true);
             await resetPassword(accessToken, data, axiosJWT, userId);
             enqueueSnackbar("Đổi mật khẩu thành công", {variant: "success", autoHideDuration: 1000});
             navigate("/admin");
@@ -59,7 +62,9 @@ const Popper = () => {
             setOldPassword("");
             setNewPassword("");
             setConfirmNewPassword("");
+            setLoading(false);
         } catch (err) {
+            setLoading(false);
             console.log(err)
             err.response.data.message.forEach(mess => {
                 enqueueSnackbar(mess, {variant: "warning", autoHideDuration: 1000});
@@ -102,7 +107,7 @@ const Popper = () => {
                                 <div className="form_input">
                                     <label htmlFor="">Mật khẩu cũ</label>
                                     <input
-                                        type="text"
+                                        type="password"
                                         required
                                         onChange={(e) => setOldPassword(e.target.value)}
                                         value={oldPassword}
@@ -111,7 +116,7 @@ const Popper = () => {
                                 <div className="form_input">
                                     <label htmlFor="">Mật khẩu mới</label>
                                     <input
-                                        type="text"
+                                        type="password"
                                         required
                                         onChange={(e) => setNewPassword(e.target.value)}
                                         value={newPassword}
@@ -120,13 +125,20 @@ const Popper = () => {
                                 <div className="form_input">
                                     <label htmlFor="">Nhập lại mật khẩu mới</label>
                                     <input
-                                        type="text"
+                                        type="password"
                                         required
                                         onChange={(e) => setConfirmNewPassword(e.target.value)}
                                         value={confirmNewPassword}
                                     />
                                 </div>
-                                <button type="submit">Xác nhận</button>
+                                <LoadingButton style={{
+                                    color: "white",
+                                    fontSize: "16px",
+                                    padding: "10px 20px",
+                                    textTransform: "capitalize"
+                                }} loading={loading} variant={"outlined"} type={"submit"}>
+                                    Cập nhật
+                                </LoadingButton>
                             </form>
                         </div>
                     </div>

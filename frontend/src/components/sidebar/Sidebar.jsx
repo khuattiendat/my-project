@@ -116,23 +116,6 @@ const Sidebar = () => {
                         </li>
                     </Link>
 
-                    <li>
-                        <NotificationsNoneIcon className="icon"/>
-                        <span>Thông báo</span>
-                    </li>
-                    {/*<p className="title">SERVICE</p>*/}
-                    {/*<li>*/}
-                    {/*    <SettingsSystemDaydreamOutlinedIcon className="icon"/>*/}
-                    {/*    <span>System Health</span>*/}
-                    {/*</li>*/}
-                    {/*<li>*/}
-                    {/*    <PsychologyOutlinedIcon className="icon"/>*/}
-                    {/*    <span>Logs</span>*/}
-                    {/*</li>*/}
-                    {/*<li>*/}
-                    {/*    <SettingsApplicationsIcon className="icon"/>*/}
-                    {/*    <span>Settings</span>*/}
-                    {/*</li>*/}
                     <p className="title">USER</p>
                     <Link to={`/admin/users/info/${encrypt(id ?? "")}`} style={{textDecoration: "none"}}>
                         <li>

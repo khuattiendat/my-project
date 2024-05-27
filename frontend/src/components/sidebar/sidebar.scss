@@ -10,21 +10,15 @@
     align-items: center;
     justify-content: center;
     border-bottom: 0.5px solid rgb(231, 228, 228);
+
     .logo {
       font-size: 36px;
       font-weight: bold;
       letter-spacing: 4px;
-      font-weight: bold;
       color: #555;
     }
   }
 
-  // hr {
-  //   margin: 0;
-  //   margin-top: -1px;
-  //   height: 0;
-  //   border: 0.5px solid rgb(230, 227, 227);
-  // }
 
   .center {
     padding-left: 10px;
@@ -38,7 +32,7 @@
         font-size: 16px;
         font-weight: bold;
         color: #999;
-        margin-top: 15px;
+        margin-top: 10px;
         margin-bottom: 5px;
       }
 
@@ -83,9 +77,11 @@
       &:nth-child(1) {
         background-color: whitesmoke;
       }
+
       &:nth-child(2) {
         background-color: #333;
       }
+
       &:nth-child(3) {
         background-color: darkblue;
       }

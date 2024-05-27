@@ -178,7 +178,7 @@ const Info = (props) => {
         },
         {
             itemKey: "Trạng thái thanh toán",
-            itemValue: checkPaymentMethod(data?.status_payment),
+            itemValue: checkStatusPayment(data?.status_payment),
         },
         {
             itemKey: "Tổng tiền",

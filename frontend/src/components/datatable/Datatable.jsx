@@ -1,15 +1,15 @@
 import "./datatable.scss";
 import {DataGrid} from "@mui/x-data-grid";
-import SearchIcon from "@mui/icons-material/Search";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import CryptoJS from "crypto-js";
 import {
     userColumns,
     productColumns,
     orderColumns,
     transactionColumns,
-    categoryColumn, bannerColumns,
+    categoryColumn,
+    bannerColumns,
+    statisticalProductColumns,
+    statisticalCategoryColumns, statisticalRevenueColumns
+
 } from "../../datatablesource";
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useRef, useState} from "react";
@@ -30,7 +30,8 @@ import {deleteBanner} from "../../apis/banner";
 const Datatable = (props) => {
     const user = useSelector((state) => state.auth.login?.currentUser);
     const userId = user?.data.user.id;
-    const {data, type, setIds} = props;
+    const {data, type, setIds, dataStatistical} = props;
+    const [rowsStatistical, setRowsStatistical] = useState(dataStatistical);
     const [rows, setRows] = useState(data);
     const [columns, setColumns] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -53,7 +54,7 @@ const Datatable = (props) => {
                             <div className="viewButton">Chi tiết</div>
                         </Link>
                         <button
-                            disabled={type === "transactions" ? true : false}
+                            disabled={type === "transactions"}
                             className={
                                 type === "transactions"
                                     ? "deleteButton disabled"
@@ -104,6 +105,20 @@ const Datatable = (props) => {
         if (type === "categories") {
             setColumns(categoryColumn.concat(actionColumn));
         }
+        if (type === "statistical") {
+            rowsStatistical?.category.map((row, i) => {
+                row.maxPrice = formatPrice(row.maxPrice);
+                row.minPrice = formatPrice(row.minPrice);
+                row.averagePrice = formatPrice(row.averagePrice);
+            });
+            rowsStatistical?.product.map((row, i) => {
+                row.price = formatPrice(row.price);
+            });
+            rowsStatistical?.revenue.map((row, i) => {
+                row.total = formatPrice(row.total);
+            })
+            setColumns(statisticalCategoryColumns);
+        }
     }, []);
 
     const handleDelete = async (id) => {
@@ -128,11 +143,11 @@ const Datatable = (props) => {
                     console.log(err)
                 }
             } else if (type === "products") {
-                deleteProduct(user?.data.accessToken, id, navigate, axiosJWT);
+                await deleteProduct(user?.data.accessToken, id, navigate, axiosJWT);
             } else if (type === "orders") {
-                deleteOrder(user?.data.accessToken, id, navigate, axiosJWT);
+                await deleteOrder(user?.data.accessToken, id, navigate, axiosJWT);
             } else if (type === "categories") {
-                deleteCategory(user?.data.accessToken, id, navigate, axiosJWT);
+                await deleteCategory(user?.data.accessToken, id, navigate, axiosJWT);
             } else if (type === "banners") {
                 try {
                     await deleteBanner(user?.data.accessToken, id, axiosJWT);
@@ -151,19 +166,58 @@ const Datatable = (props) => {
     return (
         <div className="datatable">
             <>
+                {type === "statistical" && (
+                    <>
+
+                        <h1 style={{marginTop: "20px"}}>Thống kê doanh thu</h1>
+
+                        <DataGrid
+                            autoHeight
+                            key={"id"}
+                            className="datagrid"
+                            rows={rowsStatistical?.revenue}
+                            columns={statisticalRevenueColumns}
+                            pageSize={4}
+                            rowsPerPageOptions={[4]}
+                            checkboxSelection
+                            onSelectionModelChange={(id) => setIds(id)}
+                            pagination
+                        />
+                    </>
+                )}
+                {type === "statistical" && (
+                    <h1 style={{marginTop: "10px"}}>Thống kê danh mục sản phẩm</h1>
+                )}
                 <DataGrid
+                    autoHeight
                     key={"id"}
                     className="datagrid"
-                    rows={rows}
+                    rows={type === "statistical" ? rowsStatistical?.category : rows}
                     columns={columns}
                     pageSize={9}
                     rowsPerPageOptions={[9]}
                     checkboxSelection
                     onSelectionModelChange={(id) => setIds(id)}
-                    hideFooter
-
+                    pagination
+                    hideFooter={type !== "statistical"}
                 />
             </>
+            {type === "statistical" && (
+                <>
+                    <h1 style={{marginTop: "20px"}}>Thống kê tồn kho sản phẩm</h1>
+                    <DataGrid
+                        autoHeight
+                        key={"id"}
+                        className="datagrid"
+                        rows={rowsStatistical?.product}
+                        columns={statisticalProductColumns}
+                        pageSize={4}
+                        rowsPerPageOptions={[4]}
+                        checkboxSelection
+                        pagination
+                    />
+                </>
+            )}
         </div>
     );
 };

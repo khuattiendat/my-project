@@ -6,6 +6,7 @@
   left: -100px;
   border-radius: 4px;
   z-index: 999;
+
   ul {
     list-style: none;
     padding: 0;
@@ -13,9 +14,11 @@
     border-radius: 4px;
     overflow: hidden;
     margin: 0;
+
     a {
       text-decoration: none;
     }
+
     li {
       padding: 6px;
       display: flex;
@@ -25,14 +28,17 @@
       cursor: pointer;
       color: #888;
       transition: all linear 0.1s;
+
       span {
         margin-left: 8px;
       }
+
       &:hover {
         background-color: #a6a0a0;
       }
     }
   }
+
   &::before {
     position: absolute;
     z-index: -1;
@@ -46,6 +52,7 @@
     background-color: #dadada;
   }
 }
+
 .modal {
   position: fixed;
   top: 0;
@@ -58,6 +65,7 @@
   justify-content: center;
   transition: all 0.2s linear;
   z-index: 999999;
+
   .modal_container {
     padding: 8px;
     position: relative;
@@ -76,15 +84,18 @@
       border-radius: 50%;
       cursor: pointer;
     }
+
     .modal_body {
       position: relative;
       margin-top: 40px;
       margin-bottom: 70px;
+
       h2 {
         text-align: center;
         color: #888;
         font-size: 24px;
       }
+
       .form_input {
         position: relative;
         display: flex;
@@ -93,17 +104,27 @@
         label {
           font-size: 18px;
         }
+
         input {
           width: 90%;
           padding: 8px 4px;
-          font-size: 18px;
+          font-size: 16px;
           margin-bottom: 30px;
           margin-top: 10px;
-          border: 1px solid #ccc;
           outline: none;
           align-self: center;
+          border: solid 1.5px #D3D3D3;
+          -webkit-transition: .2s; /* Safari */
+          transition: 1s;
+          border-radius: 4px;
+
+          &:focus {
+            box-shadow: 0 0 5pt 2pt #D3D3D3;
+            outline-width: 0;
+          }
         }
       }
+
       button {
         position: absolute;
         transform: translateX(-50%);
@@ -114,6 +135,9 @@
         font-weight: 600;
         color: #555;
         cursor: pointer;
+        border: none;
+        outline: none;
+        background: teal;
       }
     }
   }

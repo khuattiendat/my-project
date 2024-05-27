@@ -134,7 +134,7 @@ export const routesConfigAdmin = [
     // statistical
     {
         path: "/admin/statistical",
-        element: <Statistical/>,
+        element: <List type={"statistical"} title={"Thống kê"}/>,
         children: []
     },
     // not found

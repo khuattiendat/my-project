@@ -14,9 +14,9 @@ const Category = require('../models/Category');
 const Product = require('../models/Product');
 const {deleteProduct} = require('./productService');
 String.format = function () {
-    var s = arguments[0];
-    for (var i = 0; i < arguments.length - 1; i++) {
-        var reg = new RegExp("\\{" + i + "\\}", "gm");
+    let s = arguments[0];
+    for (let i = 0; i < arguments.length - 1; i++) {
+        const reg = new RegExp("\\{" + i + "\\}", "gm");
         s = s.replace(reg, arguments[i + 1]);
     }
     return s;
@@ -48,11 +48,10 @@ const getAllCategory = async () => {
 const getAllCategoryByPaging = async (page, value = "") => {
     try {
         if (!page) {
-            let result = {
+            return {
                 error: ERROR_SUCCESS,
                 message: String.format(MESSAGE_EMPTY, "page")
-            }
-            return result;
+            };
         }
         let totalPage;
         let categories = []
@@ -83,26 +82,25 @@ const getAllCategoryByPaging = async (page, value = "") => {
             })
             totalPage = Math.ceil(count / pageSize)
         }
-        let result = {
+        return {
             error: ERROR_FAILED,
             data: {
                 categories: categories,
                 totalPage: totalPage
             },
             message: MESSAGE_SUCCESS
-        }
-        return result;
+        };
     } catch (error) {
-        let result = {
+        return {
             error: ERROR_SUCCESS,
             message: error.message
         }
-        return result
     }
 }
 const addCategory = async (data) => {
+    let result;
     try {
-        var messages = [];
+        const messages = [];
         const checkNameCategory = await Category.findOne({
             where: {
                 name: data.name
@@ -115,7 +113,7 @@ const addCategory = async (data) => {
             messages.push("name Category is exist");
         }
         if (!isNullOrEmptyArray(messages)) {
-            var result = {
+            result = {
                 error: ERROR_SUCCESS,
                 data: null,
                 message: messages,
@@ -127,7 +125,7 @@ const addCategory = async (data) => {
         })
         await category.save()
         if (category) {
-            var result = {
+            result = {
                 error: ERROR_FAILED,
                 data: category.dataValues,
                 message: MESSAGE_SUCCESS,
@@ -136,7 +134,7 @@ const addCategory = async (data) => {
         }
 
     } catch (error) {
-        var result = {
+        result = {
             error: ERROR_SUCCESS,
             data: null,
             message: error.message,
@@ -206,6 +204,7 @@ const updateCategory = async (id, data) => {
     }
 }
 const deleteCategory = async (id) => {
+    let result;
     try {
         const productId = (await Product.findAll({where: {category_id: id}})).map((id) => id.dataValues.id)
         const row = await Category.findAll({
@@ -214,20 +213,20 @@ const deleteCategory = async (id) => {
             }
         })
         if (row.length > 0) {
-            deleteProduct([...productId])
+            await deleteProduct([...productId])
             await Category.destroy({
                 where: {
                     id: id
                 }
             })
-            var result = {
+            result = {
                 error: ERROR_FAILED,
                 data: null,
                 message: MESSAGE_SUCCESS,
             };
             return result
         } else {
-            var result = {
+            result = {
                 error: ERROR_FAILED,
                 data: null,
                 message: "user does not exist",
@@ -235,7 +234,7 @@ const deleteCategory = async (id) => {
             return result;
         }
     } catch (error) {
-        var result = {
+        result = {
             error: ERROR_SUCCESS,
             message: error.message,
         };
@@ -287,6 +286,7 @@ const searchCategory = async (value, page) => {
     }
 }
 const getCategoryById = async (id) => {
+    let result;
     try {
         const category = await Category.findOne({
             where: {
@@ -294,25 +294,25 @@ const getCategoryById = async (id) => {
             }
         })
         if (category) {
-            var result = {
+            result = {
                 error: ERROR_FAILED,
                 data: category,
                 message: MESSAGE_SUCCESS
-            }
+            };
             return result
         } else {
-            var result = {
+            result = {
                 error: ERROR_FAILED,
                 data: null,
                 message: String.format(MESSAGE_EXIST, "category")
-            }
+            };
             return result
         }
     } catch (error) {
-        var result = {
+        result = {
             error: ERROR_SUCCESS,
             message: error.message
-        }
+        };
         return result
     }
 }
@@ -325,26 +325,23 @@ const getIdCategoryByName = async (name) => {
             attributes: ['id']
         })
         if (category) {
-            var result = {
+            return {
                 error: ERROR_FAILED,
                 data: category,
                 message: MESSAGE_SUCCESS
             }
-            return result
         } else {
-            var result = {
+            return {
                 error: ERROR_FAILED,
                 data: null,
                 message: String.format(MESSAGE_EXIST, "category")
             }
-            return result
         }
     } catch (error) {
-        var result = {
+        return {
             error: ERROR_SUCCESS,
             message: error.message
         }
-        return result
     }
 }
 module.exports = {

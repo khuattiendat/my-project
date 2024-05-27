@@ -1,7 +1,4 @@
 import "./navbar.scss";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
-import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";

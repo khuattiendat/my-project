@@ -3,6 +3,31 @@
 
   .homeContainer {
     flex: 6;
+    height: 100vh;
+    overflow: auto;
+
+    .home_content {
+      margin-top: 60px;
+    }
+
+    &::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+
+    }
+
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: transparent;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      margin: 10px 0;
+      background-color: transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      height: 4px;
+    }
 
     .widgets,
     .charts {

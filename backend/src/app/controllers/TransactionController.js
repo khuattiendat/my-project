@@ -60,29 +60,6 @@ const TransactionController = {
             res.status(500).send(error.message);
         }
     },
-    getRevenueDaily: async (req, res) => {
-        try {
-            const transaction = await getRevenueDaily();
-            if (transaction.error !== ERROR_SUCCESS) {
-                res.status(200).send(transaction)
-            } else {
-                res.status(400).send(transaction)
-            }
-        } catch (error) {
-            res.status(500).send(error.message);
-        }
-    },
-    getRevenueMonthly: async (req, res) => {
-        try {
-            const transaction = await getRevenueMonthly();
-            if (transaction.error !== ERROR_SUCCESS) {
-                res.status(200).send(transaction)
-            } else {
-                res.status(400).send(transaction)
-            }
-        } catch (error) {
-            res.status(500).send(error.message);
-        }
-    }
+
 }
 module.exports = TransactionController;

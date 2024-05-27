@@ -28,6 +28,7 @@ import {
 import {showAlertConfirm, showAlertWarning} from "../../../utils/showAlert";
 import {enqueueSnackbar} from "notistack";
 import {deleteBanner, getAllBanner} from "../../../apis/banner";
+import {getRevenueYearly, getStatisticalCategoryProduct, getStatisticalInventory} from "../../../apis/statistical";
 
 const List = ({title, type}) => {
     const {state} = useLocation();
@@ -40,13 +41,26 @@ const List = ({title, type}) => {
     const [valueSearch, setValueSearch] = useState("");
     const [isFetching, setIsFetching] = useState(false);
     const [data, setData] = useState([]);
+    const [dataStatistical, setDataStatistical] = useState({
+        category: [],
+        product: [],
+        revenue: [],
+    });
+    const [selectedYear, setSelectedYear] = useState((new Date()).getFullYear());
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
+    let maxOffset = 10;
+    let thisYear = (new Date()).getFullYear();
+    let allYears = [];
+    for (let x = 0; x <= maxOffset; x++) {
+        allYears.push(thisYear - x)
+    }
     const fetchApi = async (valueSearch, page) => {
         try {
             let data = [];
             let totalPage = 1;
             let res;
+            let dataStatistical = {};
             switch (type) {
                 case "users":
                     setIsFetching(true);
@@ -99,12 +113,26 @@ const List = ({title, type}) => {
                     data = res?.data?.data?.banners;
                     totalPage = res?.data?.data?.totalPage;
                     break;
+                case "statistical":
+                    setIsFetching(true);
+                    let dataCategory = await getStatisticalCategoryProduct(user?.data.accessToken, axiosJWT)
+                    let dataProduct = await getStatisticalInventory(user?.data.accessToken, axiosJWT)
+                    let dataRevenue = await getRevenueYearly(user?.data.accessToken, axiosJWT, selectedYear)
+                    dataStatistical = {
+                        category: dataCategory?.data?.data,
+                        product: dataProduct?.data?.data,
+                        revenue: dataRevenue?.data?.data
+                    }
+                    totalPage = 1;
+                    break;
+
                 default:
                     setIsFetching(false);
                     break;
             }
             setData(data);
             setTotalPage(totalPage);
+            type === "statistical" && setDataStatistical(dataStatistical);
             setIsFetching(false);
         } catch (err) {
             console.log(err);
@@ -119,7 +147,7 @@ const List = ({title, type}) => {
         setPage(1);
         await fetchApi("", 1);
 
-    }, [type]);
+    }, [type, selectedYear]);
     useEffect(async () => {
         if (!user) {
             navigate("/admin/login");
@@ -239,94 +267,120 @@ const List = ({title, type}) => {
         <div className="list">
             <Sidebar/>
             <div className="listContainer">
+
                 <Navbar/>
-                <div className="datatableTitle">
-                    <span>{title}</span>
-                    <div className="input-form">
-                        <form action="" onSubmit={handleSubmitSearch}>
-                            <input
-                                type="text"
-                                placeholder="search"
-                                value={valueSearch}
-                                onChange={(e) => setValueSearch(e.target.value)}
-                            />
-                            <button type="submit">
-                                <SearchIcon/>
-                            </button>
-                        </form>
-                    </div>
-                    <button
-                        disabled={ids.length <= 0 || type === "transactions"}
-                        className={
-                            (ids.length <= 0 || type === "transactions") ? "deleteButton disabled" : "deleteButton"
-                        }
-                        onClick={() => {
-                            handleDelete(ids);
-                        }}
-                    >
-                        Xóa các mục đã chọn
-                    </button>
+                <div style={{marginTop: "60px"}}>
+                    {type === "statistical" ? (
 
-                    <Link
-                        onClick={(e) => {
-                            if (type === "orders" || type === "transactions") {
-                                e.preventDefault();
-                            }
-                        }}
-                        to={`/admin/${type}/new`}
-                        className={(type === "transactions" || type === "orders") ? "disabled link" : "link"}>
-                        Thêm Mới
-                    </Link>
+                            <div className="datatableTitle">
+                                <span>Thống kê</span>
+                                <div className={"statistical-year"}>
+                                    <span>Thống kê doanh thu theo năm</span>
+                                    <select onChange={(e) => setSelectedYear(e.target.value)}>
+                                        {
+                                            allYears.map((year, index) => (
+                                                <option key={index} value={year}>{year}</option>
+                                            ))
+                                        }
+                                    </select>
+                                </div>
 
+                            </div>
+                        ) :
+                        (
+                            <>
+                                <div className="datatableTitle">
+                                    <span>{title}</span>
+                                    <div className="input-form">
+                                        <form action="" onSubmit={handleSubmitSearch}>
+                                            <input
+                                                type="text"
+                                                placeholder="search"
+                                                value={valueSearch}
+                                                onChange={(e) => setValueSearch(e.target.value)}
+                                            />
+                                            <button type="submit">
+                                                <SearchIcon/>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <button
+                                        disabled={ids.length <= 0 || type === "transactions"}
+                                        className={
+                                            (ids.length <= 0 || type === "transactions") ? "deleteButton disabled" : "deleteButton"
+                                        }
+                                        onClick={() => {
+                                            handleDelete(ids);
+                                        }}
+                                    >
+                                        Xóa các mục đã chọn
+                                    </button>
+
+                                    <Link
+                                        onClick={(e) => {
+                                            if (type === "orders" || type === "transactions") {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                        to={`/admin/${type}/new`}
+                                        className={(type === "transactions" || type === "orders") ? "disabled link" : "link"}>
+                                        Thêm Mới
+                                    </Link>
+
+                                </div>
+                            </>
+                        )
+                    }
+
+
+                    {isFetching ? (
+                        <Loading/>
+                    ) : (
+                        <>
+                            {data && <Datatable
+                                dataStatistical={dataStatistical}
+                                data={data}
+                                title={title}
+                                type={type}
+                                totalPage={totalPage}
+                                setPage={setPage}
+                                page={page}
+                                setIds={setIds}
+                            />}
+                        </>
+                    )}
+                    {
+                        (type !== "statistical") && <div className="pagination">
+                            <ul>
+                                <li>
+                                    <button
+                                        disabled={page <= 1}
+                                        onClick={() => setPage((page) => page - 1)}
+                                    >
+                                        <ChevronLeftIcon className="icon"/>
+                                    </button>
+                                </li>
+                                <li>
+                                    <span>{page}</span>
+                                </li>
+                                <li>
+                                    <span>/</span>
+                                </li>
+                                <li>
+                                    <span>{totalPage}</span>
+                                </li>
+                                <li>
+                                    <button
+                                        disabled={page >= totalPage}
+                                        onClick={() => setPage((page) => page + 1)}
+                                    >
+                                        <ChevronRightIcon className="icon"/>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    }
                 </div>
-                {isFetching ? (
-                    <Loading/>
-                ) : (
-                    <>
-                        {data && <Datatable
-                            data={data}
-                            title={title}
-                            type={type}
-                            totalPage={totalPage}
-                            setPage={setPage}
-                            page={page}
-                            setIds={setIds}
-                        />}
-                    </>
-
-                )}
-                {
-                    data && <div className="pagination">
-                        <ul>
-                            <li>
-                                <button
-                                    disabled={page <= 1}
-                                    onClick={() => setPage((page) => page - 1)}
-                                >
-                                    <ChevronLeftIcon className="icon"/>
-                                </button>
-                            </li>
-                            <li>
-                                <span>{page}</span>
-                            </li>
-                            <li>
-                                <span>/</span>
-                            </li>
-                            <li>
-                                <span>{totalPage}</span>
-                            </li>
-                            <li>
-                                <button
-                                    disabled={page >= totalPage}
-                                    onClick={() => setPage((page) => page + 1)}
-                                >
-                                    <ChevronRightIcon className="icon"/>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                }
-
             </div>
         </div>
     );

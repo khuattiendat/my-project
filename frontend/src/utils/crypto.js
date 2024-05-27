@@ -2,7 +2,7 @@ import CryptoJS from "crypto-js";
 
 const SECRET = process.env.REACT_APP_SECRET_KEY;
 
-export function encrypt(plainText) {
+export function encrypt(plainText = "") {
     const b64 = CryptoJS.AES.encrypt(plainText.toString(), "test").toString();
     const e64 = CryptoJS.enc.Base64.parse(b64);
     const eHex = e64.toString(CryptoJS.enc.Hex);

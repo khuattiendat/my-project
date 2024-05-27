@@ -16,14 +16,6 @@ const DialogFlow = () => {
     ;
     return (
         <div>
-            {/*<df-messenger*/}
-            {/*    className="messenger"*/}
-            {/*    intent="WELCOME"*/}
-            {/*    chat-title="Chat với chúng tôi"*/}
-            {/*    agent-id="40362314-94ca-4979-b748-eae0fef908e9"*/}
-            {/*    language-code="vi"*/}
-            {/*    chat-icon={"https://www.google.com/images/branding/product/1x/assistant_96dp.png"}*/}
-            {/*></df-messenger>*/}
             <df-messenger
                 className="messenger"
                 intent="WELCOME"

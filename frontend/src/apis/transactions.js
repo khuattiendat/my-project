@@ -43,39 +43,11 @@ export const getLatestTransaction = async (accessToken, axiosJWT) => {
     }
 }
 export const getTransactionById = async (accessToken, id, axiosJWT) => {
-    try {
-        const res = await axiosJWT.get("transactions/" + id, {
-            headers: {
-                token: `Bearer ${accessToken}`
-            }
-        })
-        return res.data.data;
 
-    } catch (error) {
-        console.log(error);
-    }
-}
-export const getRevenueDaily = async (accessToken, axiosJWT) => {
-    try {
-        const res = await axiosJWT.get("transactions/revenue-daily", {
-            headers: {
-                token: `Bearer ${accessToken}`
-            }
-        })
-        return res.data.data;
-    } catch (error) {
-        console.log(error);
-    }
-}
-export const getRevenueMonthly = async (accessToken, axiosJWT) => {
-    try {
-        const res = await axiosJWT.get("transactions/revenue-monthly", {
-            headers: {
-                token: `Bearer ${accessToken}`
-            }
-        })
-        return res.data.data;
-    } catch (error) {
-        console.log(error);
-    }
+    return await axiosJWT.get("transactions/" + id, {
+        headers: {
+            token: `Bearer ${accessToken}`
+        }
+    })
+
 }

@@ -1,8 +1,31 @@
 .single {
   display: flex;
   width: 100%;
+
   .singleContainer {
     flex: 6;
+    height: 100vh;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+
+    }
+
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: transparent;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      margin: 10px 0;
+      background-color: transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      height: 4px;
+    }
+
 
     .top {
       padding: 20px;
@@ -27,11 +50,13 @@
       box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
       padding: 20px;
       margin: 10px 20px;
+
       .title {
         font-size: 16px;
         color: lightgray;
         margin-bottom: 20px;
       }
+
       .images {
         width: 100px;
         height: 100px;
