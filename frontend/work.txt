@@ -2,3 +2,7 @@
 --> làm phần thống kê
 -> thống kê tồn kho, thống kê doanh thu (theo tháng, năm)
 --> tích hợp thanh toán momo
+-----------------
+làm phần cho người dungf hủy đơn hàng
+tích hợp api của đối tác giao hàng để lấy mã vận đơn
+làm lại word ( phân tích )

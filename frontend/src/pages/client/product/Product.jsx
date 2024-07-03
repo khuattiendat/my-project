@@ -1,6 +1,5 @@
 import Header from "../../../components/header/Header";
 import React, {useEffect, useState} from "react";
-import axios from "axios";
 import {FreeMode, Navigation, Thumbs} from 'swiper/modules';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
@@ -18,16 +17,18 @@ import Footer from "../../../components/footer/Footer";
 import Flickity from "../../../components/flickity/Flickity";
 import {decrypt, encrypt} from "../../../utils/crypto";
 import {getListImages, getProductByCategoryId, getProductById} from "../../../apis/products";
-import {formatPrice, formatPriceDiscount} from "../../../utils/format";
+import {formatPriceDiscount} from "../../../utils/format";
 import {enqueueSnackbar} from "notistack";
 import {useDispatch, useSelector} from "react-redux";
 import {getProduct} from "../../../redux/productSlice";
+import Loading from "../../../components/Loading/Loading";
 
 const Product = () => {
     const BASE_URL_SERVER = process.env.REACT_APP_BASE_URL_SERVER;
     const params = useParams();
     const {id} = params;
     const _id = decrypt(id);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [product, setProduct] = useState({});
@@ -38,6 +39,7 @@ const Product = () => {
     const dispatch = useDispatch();
     const fetchApis = async () => {
         try {
+            setLoading(true)
             let product = await getProductById(_id);
             let listProduct = await getProductByCategoryId(product.category_id)
             let listImage = await getListImages(_id)
@@ -45,11 +47,14 @@ const Product = () => {
             setProduct(product)
             setListProductByCategoyId(listProduct)
             document.title = product.name ?? "Sản phẩm"
+            setLoading(false)
         } catch (e) {
+            setLoading(false)
             window.location = "/notFound"
         }
 
     }
+    console.log(loading)
     useEffect(async () => {
         window.scrollTo({
             top: 0,
@@ -74,7 +79,7 @@ const Product = () => {
             const isProductInCart = getProductByLocalStore.some(item => item.product_id === product.id)
 
             if (isProductInCart) {
-                let newState = getProductByLocalStore.map(item => {
+                getProductByLocalStore = getProductByLocalStore.map(item => {
                     if (item.product_id === product.id) {
                         let newQuantity = item.quantity + quantity
                         if (newQuantity > item.inventory) {
@@ -85,7 +90,6 @@ const Product = () => {
                     }
                     return item
                 })
-                getProductByLocalStore = newState
             } else {
                 getProductByLocalStore = [...getProductByLocalStore, data]
             }
@@ -121,7 +125,10 @@ const Product = () => {
                         >
                             {listImage.map((item, index) => (
                                 <SwiperSlide key={index}>
-                                    <img src={`${BASE_URL_SERVER}/uploads/${item.image_url}`} alt={"anh"}/>
+                                    {
+                                        loading ? <Loading/> :
+                                            <img src={`${BASE_URL_SERVER}/uploads/${item.image_url}`} alt={"anh"}/>
+                                    }
                                 </SwiperSlide>
                             ))}
                         </Swiper>
@@ -137,7 +144,10 @@ const Product = () => {
                         >
                             {listImage.map((item, index) => (
                                 <SwiperSlide key={index}>
-                                    <img src={`${BASE_URL_SERVER}/uploads/${item.image_url}`}/>
+                                    {
+                                        loading ? <Loading/> :
+                                            <img src={`${BASE_URL_SERVER}/uploads/${item.image_url}`}/>
+                                    }
                                 </SwiperSlide>
                             ))}
                         </Swiper>

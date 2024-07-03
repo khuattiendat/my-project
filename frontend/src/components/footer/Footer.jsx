@@ -13,12 +13,13 @@ const Footer = () => {
     return <div className={"footer"}>
         <div className={"footer_container"}>
             <div className={"footer_item"}>
-                <Link to={"#"}>
+                <Link to={"/"}>
                     <img src="/images/logo.png" alt=""/>
                 </Link>
                 <ul className={"footer_item_left"}>
                     <li>
                         <Tippy
+                            offset={[0, 20]}
                             delay={100}
                             placement={"top"}
                             content={<span>Follow on Facebook</span>}>
@@ -30,6 +31,7 @@ const Footer = () => {
                     </li>
                     <li>
                         <Tippy
+                            offset={[0, 20]}
                             delay={100}
                             placement={"top"}
                             content={<span>Follow on Instagram</span>}>
@@ -40,6 +42,7 @@ const Footer = () => {
                     </li>
                     <li>
                         <Tippy
+                            offset={[0, 20]}
                             delay={100}
                             placement={"top"}
                             content={<span>Follow on Twitter</span>}>

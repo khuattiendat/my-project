@@ -34,7 +34,6 @@ const Datatable = (props) => {
     const [rowsStatistical, setRowsStatistical] = useState(dataStatistical);
     const [rows, setRows] = useState(data);
     const [columns, setColumns] = useState([]);
-    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const axiosJWT = createAxios(user, dispatch, loginSuccess);

@@ -471,7 +471,7 @@ const getProductByPagingOrSearch = async (page = 1, value) => {
                 where: {
                     [Op.or]: [
                         {name: {[Op.like]: '%' + value + '%'}},
-                        {description: {[Op.like]: '%' + value + '%'}},
+                       // {description: {[Op.like]: '%' + value + '%'}},
                         {price: {[Op.like]: '%' + value + '%'}},
                         {'$Category.name$': {[Op.like]: '%' + value + '%'}}
                     ]
@@ -608,6 +608,28 @@ const updateQuantityProduct = async (products) => {
         }
     }
 }
+const getBestDiscount = async () => {
+    try {
+        const products = await Product.findAll({
+            order: [
+                ["discount", "DESC"]
+            ],
+            limit: 10
+        })
+        return {
+            error: ERROR_FAILED,
+            data: {
+                products: products,
+            },
+            message: MESSAGE_SUCCESS
+        };
+    } catch (error) {
+        return {
+            error: ERROR_SUCCESS,
+            message: error.message
+        };
+    }
+}
 module.exports = {
     getBestSellers,
     getNewest,
@@ -622,4 +644,5 @@ module.exports = {
     getListImages,
     filterProduct,
     updateQuantityProduct,
+    getBestDiscount
 }

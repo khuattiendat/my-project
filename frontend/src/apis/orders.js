@@ -74,14 +74,11 @@ export const getOrderByUserId = async (accessToken, id, axiosJWT, page, q, order
     return res.data.data;
 }
 export const updateOrder = async (accessToken, data, navigate, axiosJWT) => {
-    try {
-        await axiosJWT.put("orders", data, {
-            headers: {
-                token: `Bearer ${accessToken}`
-            }
-        })
-        enqueueSnackbar("Cập nhật thành công", {variant: "success", autoHideDuration: 1000})
-    } catch (error) {
-        console.log(error);
-    }
+
+    await axiosJWT.put("orders", data, {
+        headers: {
+            token: `Bearer ${accessToken}`
+        }
+    })
+
 }

@@ -8,24 +8,34 @@ import Footer from "../../../components/footer/Footer";
 import {getAllProducts, getBestsellerProducts, getNewest} from "../../../apis/products";
 import {fillerProduct} from "../../../utils/fillerProduct";
 import {getAllBannerIsActive} from "../../../apis/banner";
+import DialogFlow from "../../../components/dialogFlow/DialogFlow";
 
 const Home = () => {
     const [listBestseller, setListBestseller] = useState([])
     const [listNewest, setListNewest] = useState([])
     const [listProduct, setListProduct] = useState([])
     const [listBanner, setListBanner] = useState([])
+    const [listBestDiscount, setListBestDiscount] = useState([])
     const [loading, setLoading] = useState(false)
     const fetchApis = async () => {
-        setLoading(true)
-        let listBanner = await getAllBannerIsActive();
-        let listBestseller = await getBestsellerProducts();
-        let listNewest = await getNewest();
-        let listProduct = await getAllProducts();
-        setListBanner(listBanner.data.data)
-        setListProduct(listProduct.products)
-        setListBestseller(listBestseller.products)
-        setListNewest(listNewest.products);
-        setLoading(false)
+        try {
+            setLoading(true)
+            let listBanner = await getAllBannerIsActive();
+            let listBestseller = await getBestsellerProducts();
+            let listNewest = await getNewest();
+            let listProduct = await getAllProducts();
+            let listBestDiscount = await getBestsellerProducts();
+            setListBanner(listBanner.data.data)
+            setListProduct(listProduct.products)
+            setListBestseller(listBestseller.products)
+            setListNewest(listNewest.products);
+            setListBestDiscount(listBestDiscount.products)
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            console.log(error)
+        }
+
     }
     useEffect(async () => {
         document.title = "Trang chủ";
@@ -55,6 +65,12 @@ const Home = () => {
                 <Flickity data={listNewest} loading={loading}/>
                 <h1 className={"title-h1"}>
                     <p></p>
+                    <span>Sản phẩm đang được giảm giá</span>
+                    <p></p>
+                </h1>
+                <Flickity data={listBestDiscount} loading={loading}/>
+                <h1 className={"title-h1"}>
+                    <p></p>
                     <span>Nhẫn</span>
                     <p></p>
                 </h1>
@@ -71,9 +87,7 @@ const Home = () => {
                     <p></p>
                 </h1>
             </div>
-            <div className={"messenger"}>
-                {/*<Messengers/>*/}
-            </div>
+            <DialogFlow/>
             <Outstansing/>
             <Footer/>
 

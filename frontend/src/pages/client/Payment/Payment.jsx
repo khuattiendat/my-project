@@ -119,7 +119,7 @@ const Payment = () => {
             let confirm = await showAlertConfirm("Bạn có chắc chắn muốn đặt hàng không?", "Đặt hàng")
 
             if (confirm) {
-                if (paymentMethod === 0) {
+                if (Number(paymentMethod) === 0) {
                     try {
                         setLoading(true)
                         await addPaymentByCash(accessToken, data, axiosJWT)

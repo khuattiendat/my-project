@@ -4,9 +4,9 @@ import React, {useEffect, useState} from "react";
 import {createAxios} from "../../../utils/createInstance";
 import {useDispatch, useSelector} from "react-redux";
 import {loginSuccess} from "../../../redux/authSlice";
-import {getOrderByUserId, getOrderDetailByOrderId} from "../../../apis/orders";
+import {getOrderByUserId, getOrderDetailByOrderId, updateOrder} from "../../../apis/orders";
 import "./order.scss"
-import {Link} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import {DataGrid} from "@mui/x-data-grid";
 import {orderColumnClient} from "../../../datatablesource";
@@ -20,8 +20,11 @@ import Loading from "../../../components/Loading/Loading";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import {encrypt} from "../../../utils/crypto";
+import {enqueueSnackbar} from "notistack";
+import {showAlertConfirm} from "../../../utils/showAlert";
 
 const Order = () => {
+    const state = useLocation();
     const BASE_URL_SERVER = process.env.REACT_APP_BASE_URL_SERVER;
     const user = useSelector((state) => state.auth.login?.currentUser);
     const userId = user?.data.user.id;
@@ -35,9 +38,88 @@ const Order = () => {
     const [valueSearch, setValueSearch] = useState("");
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
+    const [columns, setColumns] = useState([]);
     //
+    const navigate = useNavigate()
     const [sort, setSort] = useState("latest");
-
+    const actionColumn = [
+        {
+            field: "action",
+            headerName: "xác nhận đơn hàng",
+            width: 250,
+            renderCell: (params) => {
+                const status = params.row.status_delivery;
+                return (
+                    <div className="cellAction">
+                        <button
+                            className={
+                                status === "Chưa giao"
+                                    ? ""
+                                    : "disabled"
+                            }
+                            disabled={status !== "Chưa giao"}
+                            onClick={() => handleDelete(params.row.id, status)}
+                        >
+                            Hủy đơn hàng
+                        </button>
+                        <button
+                            className={
+                                status === "Đang giao hàng"
+                                    ? ""
+                                    : "disabled"
+                            }
+                            disabled={status !== "Đang giao hàng"}
+                            onClick={() => handleUpdateOrder(params.row.id, status)}
+                        >
+                            Đã nhận được hàng
+                        </button>
+                    </div>
+                );
+            },
+        },
+    ]
+    const handleUpdateOrder = async (id, status) => {
+        const confirm = await showAlertConfirm("Bạn có chắc chắn muốn xác nhận đã nhận hàng không?", "");
+        if (confirm) {
+            let _data = {
+                id: id,
+                status_delivery: 2,
+                status_payment: 1
+            }
+            try {
+                await updateOrder(user?.data?.accessToken, _data, navigate, axiosJWT);
+                navigate(`/users/order`, {
+                    state: id,
+                });
+                enqueueSnackbar("Cập nhật thành công", {variant: "success", autoHideDuration: 1000})
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
+    const handleDelete = async (id, status) => {
+        if (status === "Đang giao hàng" || status === "Giao hàng thành công") {
+            enqueueSnackbar("Không thể hủy đơn hàng đã giao", {variant: "error"});
+            return;
+        }
+        const confirm = await showAlertConfirm("Bạn có chắc chắn muốn hủy đơn hàng này không?", "");
+        if (confirm) {
+            let _data = {
+                id: id,
+                status_delivery: 3,
+                status_payment: null
+            }
+            try {
+                await updateOrder(user?.data?.accessToken, _data, navigate, axiosJWT);
+                navigate(`/users/order`, {
+                    state: id,
+                });
+                enqueueSnackbar("Cập nhật thành công", {variant: "success", autoHideDuration: 1000})
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
     const handleChange = (event) => {
         setSort(event.target.value);
     };
@@ -71,6 +153,7 @@ const Order = () => {
         }
     }
     useEffect(async () => {
+        setColumns(orderColumnClient.concat(actionColumn));
         await fetchListOrders("");
         document.title = "Đơn hàng";
         window.scrollTo({
@@ -78,7 +161,7 @@ const Order = () => {
             behavior: "smooth",
             left: 0,
         });
-    }, [])
+    }, [state])
     useEffect(async () => {
             await fetchListOrders(valueSearch);
         }
@@ -109,7 +192,8 @@ const Order = () => {
                                             <div className={"left_content-item"} key={index}>
                                                 <div className={"left_content-item-img"}>
                                                     <Link to={`/product/${encrypt(item.product.id)}`}>
-                                                        <img alt={"image"} src={`${BASE_URL_SERVER}/uploads/${item.product.image}`}/>
+                                                        <img alt={"image"}
+                                                             src={`${BASE_URL_SERVER}/uploads/${item.product.image}`}/>
                                                     </Link>
                                                 </div>
                                                 <div className={"left_content-item-info"}>
@@ -179,7 +263,7 @@ const Order = () => {
                                         autoHeight
                                         className="datagrid"
                                         rows={listOrder}
-                                        columns={orderColumnClient}
+                                        columns={columns}
                                         pageSize={9}
                                         rowsPerPageOptions={[9]}
                                         onRowClick={(e) => {

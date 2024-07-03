@@ -138,6 +138,44 @@
     &_content {
       margin-left: 10px;
 
+      .cellAction {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+
+        button {
+          border: none;
+          outline: none;
+          background: $primary-lighter;
+          padding: 5px;
+          cursor: pointer;
+          transition: all 0.2s linear;
+          border-radius: 4px;
+
+          &:hover {
+            background: $primary-darker;
+            color: #fff;
+          }
+        }
+
+        button:nth-child(1) {
+          background: #f44336;
+
+          &:hover {
+            background: #d32f2f;
+          }
+        }
+
+        button.disabled {
+          background: #dadada;
+          cursor: not-allowed;
+
+            &:hover {
+                background: #dadada;
+            }
+        }
+      }
+
       .MuiDataGrid-virtualScroller {
         overflow-x: scroll;
         cursor: pointer;

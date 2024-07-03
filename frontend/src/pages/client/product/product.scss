@@ -46,6 +46,11 @@
       height: 100%;
       object-fit: contain;
       object-position: center;
+
+      &:hover {
+        transform: scale(1.2);
+        transition: all linear .3s;
+      }
     }
 
     .mySwiper2 {

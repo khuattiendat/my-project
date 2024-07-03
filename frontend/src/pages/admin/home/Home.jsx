@@ -18,6 +18,8 @@ import {
     getLatestTransaction
 } from "../../../apis/transactions";
 import {getRevenueDaily, getRevenueMonthly} from "../../../apis/statistical";
+import Loading from "../../../components/Loading/Loading";
+import {enqueueSnackbar} from "notistack";
 
 const Home = () => {
     const user = useSelector((state) => state.auth.login?.currentUser);
@@ -66,8 +68,9 @@ const Home = () => {
         }
     };
     useEffect(async () => {
-        document.title = "Home";
+        document.title = "Trang chủ";
         if (!user) {
+            enqueueSnackbar("Vui lòng đăng nhập", {variant: "error"})
             navigate("/admin/login");
         }
         await fetchApi();
@@ -91,7 +94,8 @@ const Home = () => {
                     </div>
                     <div className="listContainer">
                         <div className="listTitle">Giao dịch mới nhất</div>
-                        <Table data={dataTransaction} type="users" isFetching={isFetching}/>
+                        {isFetching ? <Loading/> : <Table data={dataTransaction} type="users"/>
+                        }
                     </div>
                 </div>
 

@@ -12,6 +12,7 @@ import {getProduct} from "../../../redux/productSlice";
 import LoginModal from "../../../components/modals/loginModal/LoginModal";
 import useModal from "../../../hooks/useModal";
 import {getAllProducts} from "../../../apis/products";
+import DialogFlow from "../../../components/dialogFlow/DialogFlow";
 
 const Cart = () => {
     const user = useSelector((state) => state.auth.login?.currentUser);
@@ -161,7 +162,10 @@ const Cart = () => {
                                                 <Link to={`/product/${encrypt(item.product_id)}`}>
                                                     <span>{item.name}
                                                         {item.inventory <= 0 && (
-                                                            <span style={{color: "red", paddingLeft: "0"}}> (SP tạm hết hàng)</span>
+                                                            <>
+                                                                <br/>
+                                                            <span style={{color: "red", paddingLeft: "0"}}> (Sản phẩm tạm thời hết hàng)</span>
+                                                            </>
                                                         )}
                                                     < /span>
                                                 </Link>

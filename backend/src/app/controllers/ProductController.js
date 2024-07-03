@@ -9,9 +9,21 @@ const {
     updateProduct,
     deleteProduct,
     getProductByPagingOrSearch,
-    getListImages, getBestSellers, getNewest, filterProduct, searchProduct
+    getListImages, getBestSellers, getNewest, filterProduct, searchProduct, getBestDiscount
 } = require('../services/productService');
 const ProductController = {
+    getBestDiscount: async (req, res) => {
+        try {
+            const products = await getBestDiscount();
+            if (products.error !== ERROR_SUCCESS) {
+                res.status(200).send(products);
+            } else {
+                res.status(400).send(products);
+            }
+        } catch (error) {
+            res.status(500).send(error.message);
+        }
+    },
     getBestSellers: async (req, res) => {
         try {
             const products = await getBestSellers();

@@ -108,12 +108,12 @@ const Header = () => {
                 </div>
                 <div className="right">
                     <ul>
-                        <li>
-                            <Link>
-                                <span style={{paddingRight: "4px"}}>Danh sách yêu thích</span>
-                                <FavoriteIcon fontSize="14px"/>
-                            </Link>
-                        </li>
+                        {/*<li>*/}
+                        {/*    <Link>*/}
+                        {/*        <span style={{paddingRight: "4px"}}>Danh sách yêu thích</span>*/}
+                        {/*        <FavoriteIcon fontSize="14px"/>*/}
+                        {/*    </Link>*/}
+                        {/*</li>*/}
                         <li>
                             {!user ? (
                                 <span onClick={() => {
@@ -124,7 +124,7 @@ const Header = () => {
                             ) : (
                                 <span aria-describedby={id_open} style={{fontWeight: "bold"}} variant="contained"
                                       onClick={handleOpen}>
-                  {user?.data.user.name}
+                Xin chào:  {user?.data.user.name}
                 </span>
                             )}
                             <div>

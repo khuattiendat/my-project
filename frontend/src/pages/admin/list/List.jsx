@@ -13,9 +13,7 @@ import {createAxios} from "../../../utils/createInstance";
 import {loginSuccess} from "../../../redux/authSlice";
 import {
     deleteProduct,
-    getAllProducts,
     getProductByPaging,
-    searchProduct,
 } from "../../../apis/products";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {deleteOrder, getAllOrder} from "../../../apis/orders";
@@ -141,6 +139,7 @@ const List = ({title, type}) => {
     };
     useEffect(async () => {
         if (!user) {
+            enqueueSnackbar("Vui lòng đăng nhập để tiếp tục", {variant: "error"})
             navigate("/admin/login");
         }
         setValueSearch("");
@@ -240,7 +239,7 @@ const List = ({title, type}) => {
                         state: ids,
                     });
                 } catch (err) {
-                    enqueueSnackbar("Xóa thất bại", {variant: "success", autoHideDuration: 1000})
+                    enqueueSnackbar("Xóa thất bại", {variant: "error", autoHideDuration: 1000})
                     console.log(err);
                 }
             } else if (type === "products") {
@@ -331,13 +330,13 @@ const List = ({title, type}) => {
                             </>
                         )
                     }
-
-
                     {isFetching ? (
-                        <Loading/>
+                        <div style={{height: "500px"}}>
+                            <Loading/>
+                        </div>
                     ) : (
                         <>
-                            {data && <Datatable
+                            {<Datatable
                                 dataStatistical={dataStatistical}
                                 data={data}
                                 title={title}

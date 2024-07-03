@@ -35,6 +35,10 @@ export const getNewest = async () => {
         console.log(error);
     }
 }
+export const getBestDiscoutn = async () => {
+    const res = await axios.get(`${BASE_URL}api/products/best-discount`);
+    return res.data.data
+}
 export const getProductByPaging = async (page, q) => {
     try {
         const res = await axios.get(`${BASE_URL}api/products/paging`, {

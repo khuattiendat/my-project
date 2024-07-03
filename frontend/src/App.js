@@ -13,22 +13,16 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     {routesConfigClient.map((route, index) => (
-                        <Route key={index} path={route.path} element={route.element}>
-                            {route.children.map((child, index) => (
-                                <Route key={index} path={child.path} element={child.element}/>
-                            ))}
-                        </Route>
-                    ))}
+                        <Route key={index} path={route.path} element={route.element}/>
+                    ))
+                    }
                     {routesConfigAdmin.map((route, index) => (
-                        <Route key={index} path={route.path} element={route.element}>
-                            {route.children.map((child, index) => (
-                                <Route key={index} path={child.path} element={child.element}/>
-                            ))}
-                        </Route>
+                        <Route key={index} path={route.path} element={route.element}/>
                     ))}
                 </Routes>
             </BrowserRouter>
-            {/*<DialogFlow/>*/}
+            
+
         </div>
     );
 }

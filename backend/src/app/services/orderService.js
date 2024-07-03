@@ -5,7 +5,6 @@ const {
     MESSAGE_SUCCESS,
     MESSAGE_ERROR,
     MESSAGE_EXIST,
-    MESSAGE_ALL_EMPTY
 } = require("../common/messageList");
 const {isNullOrWhiteSpace, isNullOrEmptyArray} = require("../common/utils")
 const Order = require("../models/Order")
@@ -323,15 +322,7 @@ const updateOrder = async (id, status_payment, status_delivery) => {
             }
         })
         if (row) {
-            if (status_payment) {
-                await Order.update({
-                    status_payment: status_payment
-                }, {
-                    where: {
-                        id: id,
-                    }
-                })
-            } else if (status_delivery) {
+            if (!status_payment) {
                 await Order.update({
                     status_delivery: status_delivery
                 }, {
@@ -339,15 +330,17 @@ const updateOrder = async (id, status_payment, status_delivery) => {
                         id: id,
                     }
                 })
+            } else {
+                await Order.update({
+                    status_delivery: status_delivery,
+                    status_payment: status_payment
+                }, {
+                    where: {
+                        id: id,
+                    }
+                })
             }
-            // await Order.update({
-            //     status_payment: status_payment,
-            //     status_delivery: status_delivery
-            // }, {
-            //     where: {
-            //         id: id,
-            //     }
-            // })
+
 
             return {
                 error: ERROR_FAILED,

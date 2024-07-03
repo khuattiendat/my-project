@@ -44,36 +44,35 @@ const FormInput = (props) => {
         return newArr;
     };
     const handleAddUser = async () => {
-            setErrorMessage([]);
-            const messages = [];
-            if (password.length < 6) {
-                messages.push("Mật khẩu phải có ít nhất 6 kí tự");
-            }
-            console.log(value)
-            if (!value.name || !value.email || !value.phone || !value.address || !password) {
-                messages.push("Vui lòng nhập đầy đủ thông tin")
-            }
-            if (checkEmail(value.email)) {
-                messages.push("Email không hợp lệ !!!");
-            }
-            if (checkPhone(value.phone)) {
-                messages.push("SDT không hợp lệ !!!");
-            }
-            let data = {
-                name: value.name,
-                email: value.email,
-                password: password,
-                phone_number: value.phone,
-                gender,
-                address: value.address,
-                role_id: roleId,
-            };
-            if (messages.length > 0) {
-                setErrorMessage(messages);
-            } else {
-                let confirm = await showAlertConfirm(
-                    "Xác nhận thông tin ",
-                    `
+        setErrorMessage([]);
+        const messages = [];
+        if (password.length < 6) {
+            messages.push("Mật khẩu phải có ít nhất 6 kí tự");
+        }
+        if (!value.name || !value.email || !value.phone || !value.address || !password) {
+            messages.push("Vui lòng nhập đầy đủ thông tin")
+        }
+        if (checkEmail(value.email)) {
+            messages.push("Email không hợp lệ !!!");
+        }
+        if (checkPhone(value.phone)) {
+            messages.push("SDT không hợp lệ !!!");
+        }
+        let data = {
+            name: value.name,
+            email: value.email,
+            password: password,
+            phone_number: value.phone,
+            gender,
+            address: value.address,
+            role_id: roleId,
+        };
+        if (messages.length > 0) {
+            setErrorMessage(messages);
+        } else {
+            let confirm = await showAlertConfirm(
+                "Xác nhận thông tin ",
+                `
         Họ và tên: ${value.name},
         email: ${value.email},
         Password: ${password},
@@ -81,24 +80,23 @@ const FormInput = (props) => {
         Giới tính: ${checkGender(gender)},
         Địa chỉ: ${value.address}
       `
-                );
-                if (confirm) {
-                    try {
-                        await addUser(data);
-                        enqueueSnackbar("Thêm mới thành công", {variant: "success", autoHideDuration: 1000,});
-                        navigate("/admin/users")
-                    } catch (error) {
-                        console.log(error.response.data.message);
-                        error.response.data.message.forEach(message => {
-                            enqueueSnackbar(message, {
-                                variant: "error", autoHideDuration: 1000,
-                            });
-                        })
-                    }
+            );
+            if (confirm) {
+                try {
+                    await addUser(data);
+                    enqueueSnackbar("Thêm mới thành công", {variant: "success", autoHideDuration: 1000,});
+                    navigate("/admin/users")
+                } catch (error) {
+                    console.log(error.response.data.message);
+                    error.response.data.message.forEach(message => {
+                        enqueueSnackbar(message, {
+                            variant: "error", autoHideDuration: 1000,
+                        });
+                    })
                 }
             }
         }
-    ;
+    }
     const handleAddBanner = async () => {
         const messages = [];
         setErrorMessage([]);
@@ -308,7 +306,6 @@ const FormInput = (props) => {
         }
     };
     useEffect(async () => {
-        console.log(inputs);
         if (data !== undefined) {
             if (type === "users" && isEdit) {
                 document.querySelector("[name='name']").value = data?.name;
@@ -347,7 +344,7 @@ const FormInput = (props) => {
     return (
         <>
             <div className="left">
-                {type === "products" || type === "banners" && files.length > 0 ? (
+                {(type === "products" || type === "banners" && files.length > 0) ? (
                     <div className="show-img">
                         {files.map((item, index) => (
                             <img key={index} src={URL.createObjectURL(item)} alt="images"/>
@@ -355,7 +352,7 @@ const FormInput = (props) => {
                     </div>
                 ) : (
                     <div className="show-img">
-                        {images?.map((item, index) => (
+                        {images && images?.map((item, index) => (
                             <img
                                 key={index}
                                 src={`${BASE_URL_SERVER}uploads/${item.image_url}`}
@@ -364,6 +361,30 @@ const FormInput = (props) => {
                         ))}
                     </div>
                 )}
+                {
+                    type === "products" && isEdit > 0 && (
+                        <div className="show-img">
+                            {images && images?.map((item, index) => (
+                                <img
+                                    key={index}
+                                    src={`${BASE_URL_SERVER}uploads/${item.image_url}`}
+                                    alt=""
+                                />
+                            ))}
+                        </div>
+                    )
+                }
+                {
+                    type === "banners" && isEdit && (
+                        <div className="show-img">
+                            <img
+                                key={data?.id}
+                                src={`${BASE_URL_SERVER}uploads/${data.image_url}`}
+                                alt=""
+                            />
+                        </div>
+                    )
+                }
             </div>
             <div className="right">
                 <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -529,7 +550,8 @@ const FormInput = (props) => {
                 </form>
             </div>
         </>
-    );
+    )
+        ;
 };
 
 export default FormInput;

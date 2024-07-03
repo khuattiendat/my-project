@@ -90,14 +90,18 @@ const
         const handleUpdateCategories = async (e) => {
             if (categories.includes(e.target.value)) {
                 setCategories(categories.filter(item => item !== e.target.value))
+                setPage(1)
             } else {
                 setCategories([...categories, e.target.value])
+                setPage(1)
             }
         }
         const handleUpdatePrice = (e) => {
+            setPage(1)
             setPrice(e.target.value)
         }
         const handleUpdateSort = (e) => {
+            setPage(1)
             setSort(e.target.value)
         }
 
