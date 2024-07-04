@@ -1,13 +1,12 @@
-const {getAllBanner} = require('../services/BannerService');
 const {ERROR_SUCCESS} = require("../common/messageList");
-const appRoot = require('app-root-path');
 const {
+    getAllBanner,
     addBanner,
     getAllBannerIsActive,
     updateBanner,
     deleteBanner,
     updateIsActive, getBannerById
-} = require(appRoot + "/src/app/services/BannerService");
+} = require("../services/bannerService");
 const BannerController = {
     getAllBanner: async (req, res) => {
         try {
