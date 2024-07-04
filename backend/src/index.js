@@ -19,13 +19,16 @@ app.use(morgan('combined'))
 app.use(bodyParser.json());// Use static folder
 app.use(express.static(__dirname + '/public'));
 app.use(methodOverride('_method'))
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, './views'));
 //router
 router(app)
 //
+app.use((req, res) => {
+    res.send("home");
+})
 
 
 app.listen(PORT, () => {
