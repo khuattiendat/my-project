@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install",
+    "prepare": "cd .. && husky install backend/.husky",
     "beautiful": "lint-staged"
   },
   "author": "",
