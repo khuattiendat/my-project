@@ -1,6 +1,6 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
 const sequelize = require('../../config/connectDB')
-const Category = sequelize.define('Categories', {
+const Category = sequelize.define('categories', {
     id: {
         type: DataTypes.INTEGER,
         allowNull: true,

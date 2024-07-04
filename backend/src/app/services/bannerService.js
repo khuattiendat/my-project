@@ -1,6 +1,6 @@
 const {ERROR_SUCCESS, MESSAGE_SUCCESS, ERROR_FAILED} = require("../common/messageList");
 const Banner = require("../models/Banner");
-const {isNullOrWhiteSpace, isNullOrEmptyArray} = require("../common/utils");
+const {isNullOrEmptyArray} = require("../common/utils");
 const getAllBanner = async (page = 1) => {
     try {
         let banners = [];

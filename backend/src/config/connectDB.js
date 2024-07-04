@@ -1,6 +1,5 @@
 const {Sequelize} = require('sequelize')
-const sequelize = new Sequelize('my_project', 'root', null, {
-    host: 'localhost',
+const sequelize = new Sequelize('mysql://root:XRPTkbRnlBclKYmVwZMiFuDmbyOquaMX@monorail.proxy.rlwy.net:29288/railway', {
     dialect: 'mysql',
     timezone: "+07:00",
 });
