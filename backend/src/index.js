@@ -13,7 +13,7 @@ const app = express()
 // config defaults
 app.use(cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_URL,
 }));
 app.use(cookieParser());
 app.use(morgan('combined'))
@@ -35,10 +35,6 @@ router(app)
 app.use("/", (req, res) => {
     res.send("Hello world")
 })
-app.use('*', (req, res) => {
-    res.status(404).send('404 Not Found')
-})
-
 app.listen(PORT, () => {
     console.log(`server listening on PORT ${PORT}`)
 })
