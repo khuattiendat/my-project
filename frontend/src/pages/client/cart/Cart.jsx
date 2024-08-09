@@ -12,7 +12,6 @@ import {getProduct} from "../../../redux/productSlice";
 import LoginModal from "../../../components/modals/loginModal/LoginModal";
 import useModal from "../../../hooks/useModal";
 import {getAllProducts} from "../../../apis/products";
-import DialogFlow from "../../../components/dialogFlow/DialogFlow";
 
 const Cart = () => {
     const user = useSelector((state) => state.auth.login?.currentUser);
@@ -93,7 +92,7 @@ const Cart = () => {
     }
     const handleClickPayment = () => {
         if (getProductByLocalStore.length > 0) {
-            const checkProductQuantity = getProductByLocalStore.some(item => item.inventory <= item.quantity);
+            const checkProductQuantity = getProductByLocalStore.some(item => item.inventory < item.quantity);
             const checkProductQuantity2 = getProductByLocalStore.some(item => item.quantity <= 0);
             if (checkProductQuantity2) {
                 enqueueSnackbar("Số lượng sản phẩm phải lớn hơn 0", {variant: "error"})
@@ -162,10 +161,7 @@ const Cart = () => {
                                                 <Link to={`/product/${encrypt(item.product_id)}`}>
                                                     <span>{item.name}
                                                         {item.inventory <= 0 && (
-                                                            <>
-                                                                <br/>
-                                                            <span style={{color: "red", paddingLeft: "0"}}> (Sản phẩm tạm thời hết hàng)</span>
-                                                            </>
+                                                            <span style={{color: "red", paddingLeft: "0"}}> (SP tạm hết hàng)</span>
                                                         )}
                                                     < /span>
                                                 </Link>

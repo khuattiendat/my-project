@@ -26,7 +26,6 @@
     }
 
     .itemImg.banner {
-      padding: 10px;
       width: 50%;
       height: 200px;
       border-radius: 5px;
@@ -53,15 +52,10 @@
           font-weight: bold;
           color: gray;
           margin-right: 5px;
-          min-width: 100px;
         }
 
         .itemValue {
           font-weight: 300;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          display: -webkit-box;
         }
 
         .itemBtn {

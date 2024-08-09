@@ -20,7 +20,7 @@ import {LoadingButton} from "@mui/lab";
 import {addBanner, updateBanner} from "../../apis/banner";
 
 const FormInput = (props) => {
-    const {inputs, type, data, isEdit, images = []} = props;
+    const {loadingApi, inputs, type, data, isEdit, images = []} = props;
     const BASE_URL_SERVER = process.env.REACT_APP_BASE_URL_SERVER;
     const user = useSelector((state) => state.auth.login?.currentUser);
     const navigate = useNavigate();
@@ -44,35 +44,36 @@ const FormInput = (props) => {
         return newArr;
     };
     const handleAddUser = async () => {
-        setErrorMessage([]);
-        const messages = [];
-        if (password.length < 6) {
-            messages.push("Mật khẩu phải có ít nhất 6 kí tự");
-        }
-        if (!value.name || !value.email || !value.phone || !value.address || !password) {
-            messages.push("Vui lòng nhập đầy đủ thông tin")
-        }
-        if (checkEmail(value.email)) {
-            messages.push("Email không hợp lệ !!!");
-        }
-        if (checkPhone(value.phone)) {
-            messages.push("SDT không hợp lệ !!!");
-        }
-        let data = {
-            name: value.name,
-            email: value.email,
-            password: password,
-            phone_number: value.phone,
-            gender,
-            address: value.address,
-            role_id: roleId,
-        };
-        if (messages.length > 0) {
-            setErrorMessage(messages);
-        } else {
-            let confirm = await showAlertConfirm(
-                "Xác nhận thông tin ",
-                `
+            setErrorMessage([]);
+            const messages = [];
+            if (password.length < 6) {
+                messages.push("Mật khẩu phải có ít nhất 6 kí tự");
+            }
+            console.log(value)
+            if (!value.name || !value.email || !value.phone || !value.address || !password) {
+                messages.push("Vui lòng nhập đầy đủ thông tin")
+            }
+            if (checkEmail(value.email)) {
+                messages.push("Email không hợp lệ !!!");
+            }
+            if (checkPhone(value.phone)) {
+                messages.push("SDT không hợp lệ !!!");
+            }
+            let data = {
+                name: value.name,
+                email: value.email,
+                password: password,
+                phone_number: value.phone,
+                gender,
+                address: value.address,
+                role_id: roleId,
+            };
+            if (messages.length > 0) {
+                setErrorMessage(messages);
+            } else {
+                let confirm = await showAlertConfirm(
+                    "Xác nhận thông tin ",
+                    `
         Họ và tên: ${value.name},
         email: ${value.email},
         Password: ${password},
@@ -80,23 +81,27 @@ const FormInput = (props) => {
         Giới tính: ${checkGender(gender)},
         Địa chỉ: ${value.address}
       `
-            );
-            if (confirm) {
-                try {
-                    await addUser(data);
-                    enqueueSnackbar("Thêm mới thành công", {variant: "success", autoHideDuration: 1000,});
-                    navigate("/admin/users")
-                } catch (error) {
-                    console.log(error.response.data.message);
-                    error.response.data.message.forEach(message => {
-                        enqueueSnackbar(message, {
-                            variant: "error", autoHideDuration: 1000,
-                        });
-                    })
+                );
+                if (confirm) {
+                    try {
+                        setLoading(true)
+                        await addUser(data);
+                        enqueueSnackbar("Thêm mới thành công", {variant: "success", autoHideDuration: 1000,});
+                        navigate("/admin/users")
+                        setLoading(false)
+                    } catch (error) {
+                        setLoading(false)
+                        console.log(error.response.data.message);
+                        error.response.data.message.forEach(message => {
+                            enqueueSnackbar(message, {
+                                variant: "error", autoHideDuration: 1000,
+                            });
+                        })
+                    }
                 }
             }
         }
-    }
+    ;
     const handleAddBanner = async () => {
         const messages = [];
         setErrorMessage([]);
@@ -115,10 +120,13 @@ const FormInput = (props) => {
             let confirm = await showAlertConfirm("Bạn muốn thêm banner này")
             if (confirm) {
                 try {
+                    setLoading(true)
                     await addBanner(user?.data.accessToken, data, axiosJWT);
                     enqueueSnackbar("Thêm mới thành công", {variant: "success", autoHideDuration: 1000,});
                     navigate("/admin/banners")
+                    setLoading(false)
                 } catch (error) {
+                    setLoading(false)
                     let messageError = JSON.stringify(error.response.data.message)
                     enqueueSnackbar(messageError, {variant: "error", autoHideDuration: 1000,})
                 }
@@ -161,7 +169,16 @@ const FormInput = (props) => {
       `
             );
             if (confirm) {
-                await addProduct(user?.data.accessToken, data, navigate, axiosJWT);
+                try {
+                    setLoading(true)
+                    await addProduct(user?.data.accessToken, data, axiosJWT);
+                    enqueueSnackbar("thêm mới thành công", {variant: "success", autoHideDuration: 1000})
+                    navigate("/admin/products")
+                    setLoading(false)
+                } catch (error) {
+                    setLoading(false)
+                    enqueueSnackbar("Đã có lỗi xảy ra!!!", {variant: "error", autoHideDuration: 1000,})
+                }
             }
         }
     };
@@ -175,10 +192,13 @@ const FormInput = (props) => {
             setErrorMessage(messages);
         } else {
             try {
+                setLoading(true)
                 await updateBanner(user?.data.accessToken, data, id, axiosJWT)
                 enqueueSnackbar("sửa thành công", {variant: "success", autoHideDuration: 1000})
                 navigate("/admin/banners")
+                setLoading(false)
             } catch (error) {
+                setLoading(false)
                 console.log(error)
                 let messageError = JSON.stringify(error.response.data.message)
                 enqueueSnackbar(messageError, {variant: "error", autoHideDuration: 1000,})
@@ -217,10 +237,13 @@ const FormInput = (props) => {
             setErrorMessage(messages);
         } else {
             try {
+                setLoading(true)
                 await updateProduct(user?.data.accessToken, data, id, navigate, axiosJWT);
                 enqueueSnackbar("sửa thành công", {variant: "success", autoHideDuration: 1000})
                 navigate("/admin/products")
+                setLoading(false)
             } catch (error) {
+                setLoading(false)
                 let messageError = JSON.stringify(error.response.data.message)
                 enqueueSnackbar(messageError, {variant: "error", autoHideDuration: 1000,})
             }
@@ -243,11 +266,7 @@ const FormInput = (props) => {
         } catch (error) {
             setLoading(false)
             console.log(error)
-        } finally {
-            setLoading(false)
         }
-
-
     };
     const handleUpdateUser = async (id) => {
         let name = document.querySelector("[name='name']").value ?? value.name;
@@ -270,10 +289,13 @@ const FormInput = (props) => {
         };
 
         try {
+            setLoading(true)
             await updateUser(user?.data.accessToken, data, id, axiosJWT);
             enqueueSnackbar("Cập nhật thành công", {variant: "success", autoHideDuration: 1000,});
             navigate("/admin/users");
+            setLoading(false)
         } catch (error) {
+            setLoading(false)
             let messageError = JSON.stringify(error.response.data.message)
             enqueueSnackbar(messageError, {variant: "error", autoHideDuration: 1000,})
         }
@@ -283,29 +305,37 @@ const FormInput = (props) => {
         let data = {
             name: document.querySelector("[name='name']").value ?? value.name,
         };
-        await updateCategory(user?.data.accessToken, data, id, navigate, axiosJWT);
+        try {
+            setLoading(true)
+            await updateCategory(user?.data.accessToken, data, id, navigate, axiosJWT);
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            console.log(error)
+        }
     };
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (type === "users" && isEdit) {
-            handleUpdateUser(data.id);
+            await handleUpdateUser(data.id);
         } else if (type === "users") {
-            handleAddUser();
+            await handleAddUser();
         } else if (type === "products" && isEdit) {
-            handleUpdateProduct(data.id);
+            await handleUpdateProduct(data.id);
         } else if (type === "products") {
-            handleAddProduct();
+            await handleAddProduct();
         } else if (type === "categories" && isEdit) {
-            handleUpdateCategory(data.id);
+            await handleUpdateCategory(data.id);
         } else if (type === "categories") {
-            handleAddCategory();
+            await handleAddCategory();
         } else if (type === "banners" && isEdit) {
-            handleUpdateBanner(data.id)
+            await handleUpdateBanner(data.id)
         } else if (type === "banners") {
-            handleAddBanner();
+            await handleAddBanner();
         }
     };
     useEffect(async () => {
+        console.log(inputs);
         if (data !== undefined) {
             if (type === "users" && isEdit) {
                 document.querySelector("[name='name']").value = data?.name;
@@ -335,8 +365,9 @@ const FormInput = (props) => {
                 }
             } else if (type === "products") {
                 const category = await getAllCategory();
+                console.log(category)
                 setSelectCategory(category);
-                setCategoryId(data.category_id);
+                setCategoryId(category[0]?.id);
             }
         };
         await fetchApi();
@@ -344,7 +375,7 @@ const FormInput = (props) => {
     return (
         <>
             <div className="left">
-                {(type === "products" || type === "banners" && files.length > 0) ? (
+                {type === "products" || type === "banners" && files.length > 0 ? (
                     <div className="show-img">
                         {files.map((item, index) => (
                             <img key={index} src={URL.createObjectURL(item)} alt="images"/>
@@ -352,7 +383,7 @@ const FormInput = (props) => {
                     </div>
                 ) : (
                     <div className="show-img">
-                        {images && images?.map((item, index) => (
+                        {images?.map((item, index) => (
                             <img
                                 key={index}
                                 src={`${BASE_URL_SERVER}uploads/${item.image_url}`}
@@ -361,30 +392,6 @@ const FormInput = (props) => {
                         ))}
                     </div>
                 )}
-                {
-                    type === "products" && isEdit > 0 && (
-                        <div className="show-img">
-                            {images && images?.map((item, index) => (
-                                <img
-                                    key={index}
-                                    src={`${BASE_URL_SERVER}uploads/${item.image_url}`}
-                                    alt=""
-                                />
-                            ))}
-                        </div>
-                    )
-                }
-                {
-                    type === "banners" && isEdit && (
-                        <div className="show-img">
-                            <img
-                                key={data?.id}
-                                src={`${BASE_URL_SERVER}uploads/${data.image_url}`}
-                                alt=""
-                            />
-                        </div>
-                    )
-                }
             </div>
             <div className="right">
                 <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -550,8 +557,7 @@ const FormInput = (props) => {
                 </form>
             </div>
         </>
-    )
-        ;
+    );
 };
 
 export default FormInput;

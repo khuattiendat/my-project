@@ -90,8 +90,8 @@ const PaymentController = {
                     "payment_method": "paypal"
                 },
                 "redirect_urls": {
-                    "return_url": `${HOST}/payments/payByPaypal/success?totalMoney=${totalMoney}&transactionId=${transactionId[0].id}&orderId=${orderId[0].id}`,
-                    "cancel_url": `${HOST}/payments/payByPaypal/cancel?&transactionId=${transactionId[0].id}&orderId=${orderId[0].id}`
+                    "return_url": `${HOST}api/payments/payByPaypal/success?totalMoney=${totalMoney}&transactionId=${transactionId[0].id}&orderId=${orderId[0].id}`,
+                    "cancel_url": `${HOST}api/payments/payByPaypal/cancel?&transactionId=${transactionId[0].id}&orderId=${orderId[0].id}`
                 },
                 "transactions": [{
                     "amount": {
@@ -148,7 +148,7 @@ const PaymentController = {
                 await updateTransaction(transactionId, payment, 1);
                 await updateOrder(orderId, 1, null)
                 await updateQuantityProduct(listProducts);
-                res.status(200).redirect("http://localhost:3000/users/order")
+                res.status(200).redirect("https://my-project-production.netlify.app/users/order")
             }
         });
     },
@@ -159,7 +159,7 @@ const PaymentController = {
         await deleteOrder(orderId);
         await updateTransaction(transactionId, null, 2)
 
-        res.status(200).redirect("http://localhost:3000/")
+        res.status(200).redirect("https://my-project-production.netlify.app/")
     },
     paymentProductByCash: async (req, res) => {
         try {

@@ -15,20 +15,16 @@ export const getAllTransaction = async (accessToken, page, q, axiosJWT) => {
     }
 }
 export const getTransactionByUserId = async (accessToken, page, userId, axiosJWT) => {
-    try {
-        const res = await axiosJWT.get("transactions/users", {
-            params: {
-                userId,
-                page
-            },
-            headers: {
-                token: `Bearer ${accessToken}`
-            }
-        })
-        return res.data.data
-    } catch (error) {
-        console.log(error);
-    }
+    const res = await axiosJWT.get("transactions/users", {
+        params: {
+            userId,
+            page
+        },
+        headers: {
+            token: `Bearer ${accessToken}`
+        }
+    })
+    return res.data.data
 }
 export const getLatestTransaction = async (accessToken, axiosJWT) => {
     try {
@@ -44,10 +40,10 @@ export const getLatestTransaction = async (accessToken, axiosJWT) => {
 }
 export const getTransactionById = async (accessToken, id, axiosJWT) => {
 
-    return await axiosJWT.get("transactions/" + id, {
+    const res = await axiosJWT.get("transactions/" + id, {
         headers: {
             token: `Bearer ${accessToken}`
         }
     })
-
+    return res.data.data
 }

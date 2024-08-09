@@ -1,5 +1,4 @@
 import axios from "axios";
-import {showAlertSuccess} from "../utils/showAlert";
 import {enqueueSnackbar} from "notistack";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL_SERVER;
@@ -12,12 +11,10 @@ export const getAllProducts = async () => {
     }
 }
 export const getProductByCategoryId = async (id) => {
-    try {
-        const res = await axios.get(`${BASE_URL}api/products/categories/${id}`);
-        return res.data.data
-    } catch (error) {
-        console.log(error);
-    }
+
+    const res = await axios.get(`${BASE_URL}api/products/categories/${id}`);
+    return res.data.data
+
 }
 export const getBestsellerProducts = async () => {
     try {
@@ -34,10 +31,6 @@ export const getNewest = async () => {
     } catch (error) {
         console.log(error);
     }
-}
-export const getBestDiscoutn = async () => {
-    const res = await axios.get(`${BASE_URL}api/products/best-discount`);
-    return res.data.data
 }
 export const getProductByPaging = async (page, q) => {
     try {
@@ -66,12 +59,8 @@ export const searchProduct = async (q) => {
 
 }
 export const getProductById = async (id) => {
-    try {
-        const res = await axios.get(`${BASE_URL}api/products/${id}`);
-        return res.data.data;
-    } catch (error) {
-        console.log(error);
-    }
+    const res = await axios.get(`${BASE_URL}api/products/${id}`);
+    return res.data.data;
 }
 export const deleteProduct = async (accessToken, id, navigate, axiosJWT) => {
     try {
@@ -91,27 +80,18 @@ export const deleteProduct = async (accessToken, id, navigate, axiosJWT) => {
         console.log(error);
     }
 }
-export const addProduct = async (accessToken, data, navigate, axiosJWT) => {
-    try {
-        await axiosJWT.post("products", data, {
-            headers: {
-                token: `Bearer ${accessToken}`,
-                "Content-Type": "multipart/form-data"
-            }
-        })
-        enqueueSnackbar("thêm mới thành công", {variant: "success", autoHideDuration: 1000})
-        navigate("/admin/products")
-    } catch (error) {
-        console.log(error);
-    }
+export const addProduct = async (accessToken, data, axiosJWT) => {
+    await axiosJWT.post("products", data, {
+        headers: {
+            token: `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data"
+        }
+    })
 }
 export const getListImages = async (id) => {
-    try {
-        const res = await axios.get(`${BASE_URL}api/products/gallery/${id}`);
-        return res.data.data;
-    } catch (error) {
-        console.log(error);
-    }
+    const res = await axios.get(`${BASE_URL}api/products/gallery/${id}`);
+    return res.data.data;
+
 }
 export const updateProduct = async (accessToken, data, id, navigate, axiosJWT) => {
 
@@ -122,22 +102,19 @@ export const updateProduct = async (accessToken, data, id, navigate, axiosJWT) =
     })
 
 }
-export const fillterProduct = async (price, orderBy, categories, page = 1) => {
-    try {
-        const res = await axios.get(`${BASE_URL}api/products/filter`, {
-            params: {
-                price,
-                orderBy,
-                categories,
-                page
-            },
-            paramsSerializer: {
-                indexes: true
-            }
-        });
-        return res.data.data;
-    } catch (error) {
-        console.log(error)
-    }
+export const filterProduct = async (price, orderBy, categories, page = 1) => {
+    const res = await axios.get(`${BASE_URL}api/products/filter`, {
+        params: {
+            price,
+            orderBy,
+            categories,
+            page
+        },
+        paramsSerializer: {
+            indexes: true
+        }
+    });
+    return res.data.data;
+
 
 }

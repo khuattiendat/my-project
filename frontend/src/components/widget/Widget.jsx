@@ -23,7 +23,6 @@ const Widget = (props) => {
             style={{
               color: "crimson",
               backgroundColor: "rgba(255, 0, 0, 0.2)",
-              fontSize: "28px"
             }}
           />
         ),

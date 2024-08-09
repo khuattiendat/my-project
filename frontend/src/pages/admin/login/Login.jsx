@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import "./login.scss";
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import Loading from "../../../components/Loading/Loading";
+import Loading from "../../../components/Loading/loadingPage/LoadingPage";
 import {loginAdmin} from "../../../apis/auth";
 import {enqueueSnackbar} from "notistack";
 

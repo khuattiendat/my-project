@@ -15,27 +15,18 @@ const Home = () => {
     const [listNewest, setListNewest] = useState([])
     const [listProduct, setListProduct] = useState([])
     const [listBanner, setListBanner] = useState([])
-    const [listBestDiscount, setListBestDiscount] = useState([])
     const [loading, setLoading] = useState(false)
     const fetchApis = async () => {
-        try {
-            setLoading(true)
-            let listBanner = await getAllBannerIsActive();
-            let listBestseller = await getBestsellerProducts();
-            let listNewest = await getNewest();
-            let listProduct = await getAllProducts();
-            let listBestDiscount = await getBestsellerProducts();
-            setListBanner(listBanner.data.data)
-            setListProduct(listProduct.products)
-            setListBestseller(listBestseller.products)
-            setListNewest(listNewest.products);
-            setListBestDiscount(listBestDiscount.products)
-            setLoading(false)
-        } catch (error) {
-            setLoading(false)
-            console.log(error)
-        }
-
+        setLoading(true)
+        let listBanner = await getAllBannerIsActive();
+        let listBestseller = await getBestsellerProducts();
+        let listNewest = await getNewest();
+        let listProduct = await getAllProducts();
+        setListBanner(listBanner.data.data)
+        setListProduct(listProduct.products)
+        setListBestseller(listBestseller.products)
+        setListNewest(listNewest.products);
+        setLoading(false)
     }
     useEffect(async () => {
         document.title = "Trang chủ";
@@ -65,12 +56,6 @@ const Home = () => {
                 <Flickity data={listNewest} loading={loading}/>
                 <h1 className={"title-h1"}>
                     <p></p>
-                    <span>Sản phẩm đang được giảm giá</span>
-                    <p></p>
-                </h1>
-                <Flickity data={listBestDiscount} loading={loading}/>
-                <h1 className={"title-h1"}>
-                    <p></p>
                     <span>Nhẫn</span>
                     <p></p>
                 </h1>
@@ -87,10 +72,12 @@ const Home = () => {
                     <p></p>
                 </h1>
             </div>
-            <DialogFlow/>
+            <div className={"messenger"}>
+                {/*<Messengers/>*/}
+            </div>
             <Outstansing/>
             <Footer/>
-
+            <DialogFlow/>
         </div>
 
     );

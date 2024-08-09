@@ -5,7 +5,7 @@ import "./flickityItem.scss"
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import Loading from "../../Loading/Loading";
+import Loading from "../../Loading/loadingPage/LoadingPage";
 
 const FlickityItem = ({product, loading}) => {
     const BASE_URL_SERVER = process.env.REACT_APP_BASE_URL_SERVER;

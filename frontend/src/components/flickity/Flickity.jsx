@@ -7,7 +7,7 @@ import {formatPrice, formatPriceDiscount} from "../../utils/format";
 import {Link} from "react-router-dom";
 import {encrypt} from "../../utils/crypto";
 import FlickityItem from "./flickityItem/FlickityItem";
-import Loading from "../Loading/Loading";
+import Loading from "../Loading/loadingPage/LoadingPage";
 
 
 const Flickity = ({data, loading}) => {

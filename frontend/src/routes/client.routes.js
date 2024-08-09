@@ -5,14 +5,12 @@ import Category from "../pages/client/category/Category";
 import Payment from "../pages/client/Payment/Payment";
 import Order from "../pages/client/order/Order";
 import Search from "../pages/client/search/Search";
-import DialogFlow from "../components/dialogFlow/DialogFlow";
 
 export const routesConfigClient = [
     {
         path: "/",
         element: <HomeClient/>,
-        children: [],
-
+        children: []
     },
     {
         path: "/cart",

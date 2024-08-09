@@ -13,15 +13,21 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     {routesConfigClient.map((route, index) => (
-                        <Route key={index} path={route.path} element={route.element}/>
-                    ))
-                    }
+                        <Route key={index} path={route.path} element={route.element}>
+                            {route.children.map((child, index) => (
+                                <Route key={index} path={child.path} element={child.element}/>
+                            ))}
+                        </Route>
+                    ))}
                     {routesConfigAdmin.map((route, index) => (
-                        <Route key={index} path={route.path} element={route.element}/>
+                        <Route key={index} path={route.path} element={route.element}>
+                            {route.children.map((child, index) => (
+                                <Route key={index} path={child.path} element={child.element}/>
+                            ))}
+                        </Route>
                     ))}
                 </Routes>
             </BrowserRouter>
-            
 
         </div>
     );

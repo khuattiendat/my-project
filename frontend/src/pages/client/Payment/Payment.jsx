@@ -17,7 +17,7 @@ import {createAxios} from "../../../utils/createInstance";
 import {loginSuccess, logoutSuccess} from "../../../redux/authSlice";
 import {checkPhone} from "../../../utils/validator";
 import {showAlertConfirm} from "../../../utils/showAlert";
-import Loading from "../../../components/Loading/Loading";
+import Loading from "../../../components/Loading/loadingPage/LoadingPage";
 import {getDistricts, getProvinces, getWards} from "../../../apis/provinces";
 
 const Payment = () => {
@@ -119,12 +119,12 @@ const Payment = () => {
             let confirm = await showAlertConfirm("Bạn có chắc chắn muốn đặt hàng không?", "Đặt hàng")
 
             if (confirm) {
-                if (Number(paymentMethod) === 0) {
+                if (paymentMethod === 0) {
                     try {
                         setLoading(true)
                         await addPaymentByCash(accessToken, data, axiosJWT)
                         enqueueSnackbar("Đặt hàng thành công", {variant: "success"})
-                        dispatch(getProduct([]));
+                        //  dispatch(getProduct([]));
                         navigate("/users/order")
                         setLoading(false)
                     } catch (error) {
@@ -137,7 +137,7 @@ const Payment = () => {
                         setLoading(true)
                         let response = await addPaymentByPaypal(accessToken, data, axiosJWT)
                         window.location = response.forwardLink
-                        dispatch(getProduct([]));
+                        //  dispatch(getProduct([]));
                         setLoading(false)
                     } catch (error) {
                         setLoading(false)

@@ -90,7 +90,7 @@ const statisticalRevenueDaily = async () => {
 // thống kê doanh thu theo tháng
 const statisticalRevenueMonthly = async () => {
     try {
-        const sql = "SELECT(MONTH(createdAt)) AS month, (YEAR(createdAt)) AS year ,SUM(transactions.amount) AS total FROM transactions WHERE NOT transactions.status_payment = 2  GROUP BY MONTH ORDER BY MONTH DESC LIMIT 12";
+        const sql = "SELECT(MONTH(createdAt)) AS month, (YEAR(createdAt)) AS year ,SUM(transactions.amount) AS total FROM transactions WHERE NOT transactions.status_payment = 2  GROUP BY month ORDER BY month DESC LIMIT 12";
         const transaction = await sequelize.query(sql, {type: QueryTypes.SELECT});
         return {
             error: ERROR_FAILED,

@@ -3,7 +3,7 @@ export const checkStatusPayment = (status) => {
     return statusPayment[status];
 }
 export const checkStatusDelivery = (status) => {
-    const statusDelivery = ["Chưa giao", "Đang giao hàng", "Giao hàng thành công", "Đã hủy"];
+    const statusDelivery = ["Chưa giao", "Đang giao hàng", "Đã giao hàng", "Đã hủy"];
     return statusDelivery[status];
 }
 export const checkPaymentMethod = (status) => {

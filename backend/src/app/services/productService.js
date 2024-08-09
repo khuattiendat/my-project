@@ -6,7 +6,6 @@ const {
     ERROR_SUCCESS,
     MESSAGE_EXIST,
     MESSAGE_EMPTY,
-    MESSAGE_ALL_EMPTY
 } = require("../common/messageList");
 const {isNullOrWhiteSpace, isNullOrEmptyArray} = require("../common/utils");
 const Product = require("../models/Product");
@@ -193,6 +192,7 @@ const addProduct = async (req, files) => {
         files.map((file) => {
             filenameList.push(file.filename)
         })
+
         const products = await Product.create({
             name: req.body.name,
             price: req.body.price,
@@ -405,7 +405,7 @@ const searchProduct = async (value) => {
                     {name: {[Op.like]: '%' + value + '%'}},
                     {description: {[Op.like]: '%' + value + '%'}},
                     {price: {[Op.like]: '%' + value + '%'}},
-                    {'$Category.name$': {[Op.like]: '%' + value + '%'}}
+                    {'$category.name$': {[Op.like]: '%' + value + '%'}}
                 ]
             }
         })
@@ -435,16 +435,16 @@ const searchProduct = async (value) => {
         };
     }
 }
-const getProductByPagingOrSearch = async (page = 1, value) => {
+const getProductByPagingOrSearch = async (page = 1, value = "") => {
     try {
-        let products = []
-        let totalPage = 1;
-        let totalProduct = 0;
-        let perPage = parseInt(process.env.PAGE_SIZE);
-        let offset = (page - 1) * perPage;
         if (page < 1) {
             page = 1;
         }
+        let products = []
+        let totalPage = 1;
+        let totalProduct = 0;
+        let perPage = 9;
+        let offset = (Number(page) - 1) * perPage;
         Product.belongsTo(Category, {foreignKey: 'category_id'})
         if (!value) {
             const {rows, count} = await Product.findAndCountAll({
@@ -471,9 +471,9 @@ const getProductByPagingOrSearch = async (page = 1, value) => {
                 where: {
                     [Op.or]: [
                         {name: {[Op.like]: '%' + value + '%'}},
-                       // {description: {[Op.like]: '%' + value + '%'}},
+                        {description: {[Op.like]: '%' + value + '%'}},
                         {price: {[Op.like]: '%' + value + '%'}},
-                        {'$Category.name$': {[Op.like]: '%' + value + '%'}}
+                        {'$category.name$': {[Op.like]: '%' + value + '%'}}
                     ]
                 },
                 limit: perPage,
@@ -608,28 +608,6 @@ const updateQuantityProduct = async (products) => {
         }
     }
 }
-const getBestDiscount = async () => {
-    try {
-        const products = await Product.findAll({
-            order: [
-                ["discount", "DESC"]
-            ],
-            limit: 10
-        })
-        return {
-            error: ERROR_FAILED,
-            data: {
-                products: products,
-            },
-            message: MESSAGE_SUCCESS
-        };
-    } catch (error) {
-        return {
-            error: ERROR_SUCCESS,
-            message: error.message
-        };
-    }
-}
 module.exports = {
     getBestSellers,
     getNewest,
@@ -644,5 +622,4 @@ module.exports = {
     getListImages,
     filterProduct,
     updateQuantityProduct,
-    getBestDiscount
 }

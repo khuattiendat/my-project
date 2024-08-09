@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const router = express.Router();
 const {MiddlewareLogin} = require('../app/middleware/MiddlewareLogin')
 const ProductController = require('../app/controllers/ProductController');
@@ -7,7 +8,6 @@ router.get('/', ProductController.getAllProducts);
 router.get('/paging', ProductController.getProductByPagingOrSearch)
 router.get('/search', ProductController.searchProduct)
 router.get('/best-sellers', ProductController.getBestSellers)
-router.get('/best-discount', ProductController.getBestDiscount)
 router.get('/newest', ProductController.getNewest)
 router.get('/filter', ProductController.filterProduct)
 router.get('/gallery/:idProduct', ProductController.getListImages);

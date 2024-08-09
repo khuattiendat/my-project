@@ -16,7 +16,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import {formatDate, formatPrice} from "../../../utils/format";
 import {checkStatusDelivery, checkStatusPayment} from "../../../utils/checkStatus";
-import Loading from "../../../components/Loading/Loading";
+import LoadingPage from "../../../components/Loading/loadingPage/LoadingPage";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import {encrypt} from "../../../utils/crypto";
@@ -184,7 +184,7 @@ const Order = () => {
                 <div className={"left"}>
                     <h2 className={"title"}>Chi tiết đơn hàng</h2>
                     <div className={"left_content"}>
-                        {loadOrderDetail ? <Loading/> : (
+                        {loadOrderDetail ? <LoadingPage/> : (
                             <>
                                 {listOrderDetail &&
                                     listOrderDetail.map((item, index) => {
@@ -256,7 +256,7 @@ const Order = () => {
                     </div>
 
                     <div className={"right_content"}>
-                        {loadOrder ? <Loading/> : (
+                        {loadOrder ? <LoadingPage/> : (
                             <>
                                 {listOrder && (
                                     <DataGrid

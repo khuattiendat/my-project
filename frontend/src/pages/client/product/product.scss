@@ -13,7 +13,7 @@
     margin: 10px 0;
 
     &.small {
-      max-width: 30px;
+      max-width: 50px;
     }
   }
 
@@ -46,11 +46,6 @@
       height: 100%;
       object-fit: contain;
       object-position: center;
-
-      &:hover {
-        transform: scale(1.2);
-        transition: all linear .3s;
-      }
     }
 
     .mySwiper2 {
@@ -119,6 +114,7 @@
 
 
       .price, .category {
+        display: flex;
         font-size: 20px;
         color: #000;
         font-weight: bold;

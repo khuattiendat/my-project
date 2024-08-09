@@ -18,16 +18,15 @@ const sendEmail = async (email, subject, html) => {
         subject: subject, // Subject line
         html: html, // html body
     }, (err) => {
-        let result;
         if (err) {
-            result = {
+            var result = {
                 error: ERROR_SUCCESS,
                 message: MESSAGE_ERROR,
                 err
             };
             return result;
         }
-        result = {
+        var result = {
             error: ERROR_FAILED,
             message: MESSAGE_SUCCESS,
         };

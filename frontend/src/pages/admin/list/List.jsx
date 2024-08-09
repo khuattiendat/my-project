@@ -5,7 +5,7 @@ import Datatable from "../../../components/datatable/Datatable";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import SearchIcon from "@mui/icons-material/Search";
-import Loading from "../../../components/Loading/Loading";
+import Loading from "../../../components/Loading/loadingPage/LoadingPage";
 import {useEffect, useState} from "react";
 import {deleteUser, getAllUsers} from "../../../apis/users";
 import {useDispatch, useSelector} from "react-redux";
@@ -13,7 +13,9 @@ import {createAxios} from "../../../utils/createInstance";
 import {loginSuccess} from "../../../redux/authSlice";
 import {
     deleteProduct,
+    getAllProducts,
     getProductByPaging,
+    searchProduct,
 } from "../../../apis/products";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {deleteOrder, getAllOrder} from "../../../apis/orders";
@@ -139,7 +141,6 @@ const List = ({title, type}) => {
     };
     useEffect(async () => {
         if (!user) {
-            enqueueSnackbar("Vui lòng đăng nhập để tiếp tục", {variant: "error"})
             navigate("/admin/login");
         }
         setValueSearch("");
@@ -155,6 +156,7 @@ const List = ({title, type}) => {
             await fetchApi(valueSearch, page);
         };
         await getdata();
+        console.log(data)
     }, [state, page]);
     const handleSubmitSearch = async (e) => {
         e.preventDefault();
@@ -239,7 +241,7 @@ const List = ({title, type}) => {
                         state: ids,
                     });
                 } catch (err) {
-                    enqueueSnackbar("Xóa thất bại", {variant: "error", autoHideDuration: 1000})
+                    enqueueSnackbar("Xóa thất bại", {variant: "success", autoHideDuration: 1000})
                     console.log(err);
                 }
             } else if (type === "products") {
@@ -330,23 +332,25 @@ const List = ({title, type}) => {
                             </>
                         )
                     }
+
+
                     {isFetching ? (
                         <div style={{height: "500px"}}>
                             <Loading/>
                         </div>
                     ) : (
-                        <>
-                            {<Datatable
-                                dataStatistical={dataStatistical}
-                                data={data}
-                                title={title}
-                                type={type}
-                                totalPage={totalPage}
-                                setPage={setPage}
-                                page={page}
-                                setIds={setIds}
-                            />}
-                        </>
+
+                        data && <Datatable
+                            dataStatistical={dataStatistical}
+                            data={data}
+                            title={title}
+                            type={type}
+                            totalPage={totalPage}
+                            setPage={setPage}
+                            page={page}
+                            setIds={setIds}
+                        />
+
                     )}
                     {
                         (type !== "statistical") && <div className="pagination">

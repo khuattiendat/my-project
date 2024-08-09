@@ -21,20 +21,21 @@ import {formatPriceDiscount} from "../../../utils/format";
 import {enqueueSnackbar} from "notistack";
 import {useDispatch, useSelector} from "react-redux";
 import {getProduct} from "../../../redux/productSlice";
-import Loading from "../../../components/Loading/Loading";
+import LoadingPage from "../../../components/Loading/loadingPage/LoadingPage";
+import LoadingText from "../../../components/Loading/loadingText/LoadingText";
 
 const Product = () => {
     const BASE_URL_SERVER = process.env.REACT_APP_BASE_URL_SERVER;
     const params = useParams();
     const {id} = params;
     const _id = decrypt(id);
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [product, setProduct] = useState({});
     const [quantity, setQuantity] = useState(1)
     const [listProductByCategoyId, setListProductByCategoyId] = useState([])
     const [listImage, setListImage] = useState([])
+    const [loading, setLoading] = useState(false)
     let getProductByLocalStore = useSelector((state) => state.product.product?.listProduct);
     const dispatch = useDispatch();
     const fetchApis = async () => {
@@ -50,11 +51,10 @@ const Product = () => {
             setLoading(false)
         } catch (e) {
             setLoading(false)
-            window.location = "/notFound"
+            console.log(e)
         }
 
     }
-    console.log(loading)
     useEffect(async () => {
         window.scrollTo({
             top: 0,
@@ -107,50 +107,51 @@ const Product = () => {
                     {product.discount > 0 &&
                         (
                             <div className={"product-discount"}>
-                                {`-${product.discount}%`}
+                                {loading ?
+                                    <LoadingPage style={{width: "2rem", height: "2rem"}}/> : `-${product.discount}%`}
                             </div>
                         )
                     }
                     <>
-                        <Swiper
-                            style={{
-                                '--swiper-navigation-color': '#fff',
-                                '--swiper-pagination-color': '#fff',
-                            }}
-                            loop={true}
-                            spaceBetween={10}
-                            thumbs={{swiper: thumbsSwiper}}
-                            modules={[FreeMode, Navigation, Thumbs]}
-                            className="mySwiper2"
-                        >
-                            {listImage.map((item, index) => (
-                                <SwiperSlide key={index}>
-                                    {
-                                        loading ? <Loading/> :
+                        {loading ? <LoadingPage/> :
+                            <Swiper
+                                style={{
+                                    '--swiper-navigation-color': '#fff',
+                                    '--swiper-pagination-color': '#fff',
+                                }}
+                                loop={true}
+                                spaceBetween={10}
+                                thumbs={{swiper: thumbsSwiper}}
+                                modules={[FreeMode, Navigation, Thumbs]}
+                                className="mySwiper2"
+                            >
+                                {
+                                    listImage.map((item, index) => (
+                                        <SwiperSlide key={index}>
                                             <img src={`${BASE_URL_SERVER}/uploads/${item.image_url}`} alt={"anh"}/>
-                                    }
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
-                        <Swiper
-                            onSwiper={setThumbsSwiper}
-                            loop={true}
-                            spaceBetween={4}
-                            slidesPerView={4}
-                            freeMode={true}
-                            watchSlidesProgress={true}
-                            modules={[FreeMode, Navigation, Thumbs]}
-                            className="mySwiper"
-                        >
-                            {listImage.map((item, index) => (
-                                <SwiperSlide key={index}>
-                                    {
-                                        loading ? <Loading/> :
-                                            <img src={`${BASE_URL_SERVER}/uploads/${item.image_url}`}/>
-                                    }
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                                        </SwiperSlide>
+                                    ))}
+                            </Swiper>}
+
+                        {
+                            loading ? <LoadingPage/> :
+
+                                <Swiper
+                                    onSwiper={thumbsSwiper}
+                                    loop={true}
+                                    spaceBetween={4}
+                                    slidesPerView={4}
+                                    // freeMode={true}
+                                    //  watchSlidesProgress={true}
+                                    modules={[FreeMode, Navigation, Thumbs]}
+                                    className="mySwiper"
+                                >
+                                    {listImage.map((item, index) => (
+                                        <SwiperSlide key={index}>
+                                            <img src={`${BASE_URL_SERVER}/uploads/${item.image_url}`} alt={item?.name}/>
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>}
                     </>
                 </div>
                 <div className={"right"}>
@@ -160,7 +161,7 @@ const Product = () => {
                         </Link>
                         /
                         <Link to={`/categories/${encrypt(product.category_id ? product.category_id : "1")}`}>
-                            {product.Category ? product?.Category.name : ""}
+                            {product.category ? product?.category.name : ""}
                         </Link>
                         /
                         <Link to={"#"}>
@@ -169,20 +170,22 @@ const Product = () => {
                     </div>
                     <div className={"product-content"}>
                         <div className={"product-name"}>
-                            {product.name}
+                            {loading ? <LoadingText/> : product.name}
                         </div>
                         <div className={"line small"}></div>
                         <div className={"price"}>
                             <span style={{color: "rgba(102, 102, 102, 0.85)", marginRight: "4px"}}>
                                 Giá sản phẩm:
                             </span>
-                            {formatPriceDiscount(product.price, product.discount)}
+                            {loading ? <LoadingText/> : formatPriceDiscount(product.price, product.discount)}
                         </div>
                         <div className={"category"}>
                                 <span style={{color: "rgba(102, 102, 102, 0.85)", marginRight: "4px"}}>
                                 Loại sản phẩm:
                             </span>
-                            {product.Category ? product?.Category.name : ""}
+                            {loading ? <LoadingText/> : (
+                                product.category ? product?.category.name : ""
+                            )}
                         </div>
                         <div className={"cart"}>
                             <div className={"quantity"}>
@@ -239,7 +242,7 @@ const Product = () => {
                         SẢN PHẨM TƯƠNG TỰ
                     </div>
                     <div className={"product-flickity"}>
-                        <Flickity data={listProductByCategoyId}/>
+                        <Flickity data={listProductByCategoyId} loading={loading}/>
                     </div>
 
                 </div>

@@ -87,7 +87,7 @@ export const productColumns = [
         renderCell: (params) => {
             return (
                 <div>
-                    {params.row.Category.name}
+                    {params.row.category.name}
                 </div>
             );
         },

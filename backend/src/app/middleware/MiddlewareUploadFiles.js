@@ -1,6 +1,6 @@
 const multer = require('multer');
 const path = require('path');
-const appRoot = require('app-root-path');
+var appRoot = require('app-root-path');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, appRoot + "/src/public/uploads/");
@@ -18,7 +18,7 @@ const imageFilter = function (req, file, cb) {
     }
     cb(null, true);
 };
-let uploadMultipleFiles = multer({storage: storage, fileFilter: imageFilter}).array('multiple_images', 10);
+let uploadMultipleFiles = multer({ storage: storage, fileFilter: imageFilter }).array('multiple_images', 10);
 const MiddleWareUploadFiles = (req, res, next) => {
     uploadMultipleFiles(req, res, (err) => {
         if (err instanceof multer.MulterError && err.code === "LIMIT_UNEXPECTED_FILE") {
@@ -26,7 +26,8 @@ const MiddleWareUploadFiles = (req, res, next) => {
             res.send('LIMIT_UNEXPECTED_FILE')
         } else if (err) {
             res.send(err.message)
-        } else {
+        }
+        else {
             // make sure to call next() if all was well
             next();
         }

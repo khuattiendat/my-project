@@ -2,7 +2,7 @@ import {Swiper, SwiperSlide} from "swiper/react";
 import "./banner.scss"
 import "swiper/css";
 import {Autoplay} from "swiper/modules";
-import Loading from "../Loading/Loading";
+import Loading from "../Loading/loadingPage/LoadingPage";
 
 const BASE_URL_SERVER = process.env.REACT_APP_BASE_URL_SERVER;
 const Banner = ({data, loading}) => {

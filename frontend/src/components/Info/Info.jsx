@@ -15,10 +15,11 @@ import {useSelector} from "react-redux";
 import {createAxios} from "../../utils/createInstance";
 import {loginSuccess} from "../../redux/authSlice";
 import {updateIsActiveBanner} from "../../apis/banner";
-import {enqueueSnackbar} from "notistack";
+import LoadingText from "../Loading/loadingText/LoadingText";
+import LoadingPage from "../Loading/loadingPage/LoadingPage";
 
 const Info = (props) => {
-    const {data, type, id, image} = props;
+    const {data, type, id, image, loading} = props;
     const {state} = useLocation();
     const BASE_URL = process.env.REACT_APP_BASE_URL_SERVER;
     const user = useSelector((state) => state.auth.login?.currentUser);
@@ -159,6 +160,7 @@ const Info = (props) => {
             }),
         },
     ];
+    console.log(data)
     const dataTransaction = (data) => [
         {
             itemKey: "Tên khách hàng",
@@ -226,11 +228,10 @@ const Info = (props) => {
         } else if (type === "orders") {
             setListItem(dataOrder(data));
         } else if (type === "transactions") {
-            setListItem(dataTransaction(data?.data?.data));
+            setListItem(dataTransaction(data));
         } else if (type === "banners") {
             setListItem(dataBanner(data));
         }
-        console.log(listItem)
     }, [data, state]);
     const handleUpdateDelivery = async () => {
         setIsShow(isShow => !isShow);
@@ -240,14 +241,13 @@ const Info = (props) => {
         let _data = {
             id: data?.id,
             status_delivery: status_delivery,
-            status_payment: data?.status_payment
+            status_payment: null
         }
         try {
             await updateOrder(user?.data?.accessToken, _data, navigate, axiosJWT);
             navigate(`/admin/orders/info/${encrypt(data?.id)}`, {
                 state: data?.id,
             });
-            enqueueSnackbar("Cập nhật thành công", {variant: "success", autoHideDuration: 1000})
             setIsShow(false);
         } catch (err) {
             console.log(err);
@@ -264,9 +264,7 @@ const Info = (props) => {
                 state: data?.id,
             });
             setIsShow(false);
-            enqueueSnackbar("Cập nhật thành công", {variant: "success"})
         } catch (err) {
-            enqueueSnackbar("Cập nhật thất bại", {variant: "error"})
             console.log(err)
         }
     }
@@ -287,23 +285,30 @@ const Info = (props) => {
             <h1 className="title">Thông tin chi tiết</h1>
             <div className="item">
                 {type === "users" || type === "products" || type === "banners" ? (
-                    <img
-                        src={
-                            type === "users"
-                                ? "/images/user-icon.png"
-                                : `${BASE_URL}uploads/${image ? image?.image_url : ""}`
-                        }
-                        alt=""
-                        className={type === "banners" ? "itemImg banner" : "itemImg"}
-                    />
+                    loading ?
+                        (
+                            <div style={{width: "150px", height: "150px"}}>
+                                <LoadingPage/>
+                            </div>
+                        )
+                        : (
+                            <img
+                                src={
+                                    type === "users"
+                                        ? "/images/user-icon.png"
+                                        : `${BASE_URL}uploads/${image ? image.image_url : ""}`
+                                }
+                                alt=""
+                                className={type === "banners" ? "itemImg banner" : "itemImg"}
+                            />)
                 ) : null
                 }
 
                 <div className="details">
-                    {listItem && listItem.map((item, index) => (
+                    {listItem.map((item, index) => (
                         <div className="detailItem" key={index}>
                             <span className="itemKey">{item.itemKey}:</span>
-                            <span className="itemValue">{item.itemValue}</span>
+                            <span className="itemValue">{loading ? <LoadingText/> : item.itemValue}</span>
                             {item.itemBtn && (
                                 <span className={"itemBtn"}>
                                     <span onClick={item?.onclick}>
@@ -314,36 +319,58 @@ const Info = (props) => {
                                             {
                                                 type === "orders" ? (
                                                     <div className={"change_delivery"}>
-                                                        <div className={"change_delivery_item"}
-                                                             onChange={handleOnchange}>
-                                                            <input type="radio" value={0}
-                                                                   name={"delivery"}
-                                                                   checked={data?.status_delivery === 0}
-                                                                   id={"option1"}/>
+                                                        <div
+                                                            className={"change_delivery_item"}
+                                                            onChange={handleOnchange}
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                value={0}
+                                                                name={"delivery"}
+                                                                checked={data?.status_delivery === 0}
+                                                                id={"option1"}
+                                                            />
                                                             <label htmlFor={"option1"}>Chưa giao hàng</label>
                                                         </div>
-                                                        <div className={"change_delivery_item"}
-                                                             onChange={handleOnchange}>
-                                                            <input type="radio" value={1}
-                                                                   checked={data?.status_delivery === 1}
-                                                                   name={"delivery"}
-                                                                   id={"option2"}/>
+                                                        <div
+                                                            className={"change_delivery_item"}
+                                                            onChange={handleOnchange}
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                value={1}
+                                                                checked={data?.status_delivery === 1}
+                                                                name={"delivery"}
+                                                                id={"option2"}
+                                                            />
                                                             <label htmlFor={"option2"}>Đang giao hàng</label>
                                                         </div>
-                                                        <div className={"change_delivery_item"}
-                                                             onChange={handleOnchange}>
-                                                            <input type="radio" value={2}
-                                                                   checked={data?.status_delivery === 2}
-                                                                   name={"delivery"}
-                                                                   id={"option3"}/>
-                                                            <label htmlFor={"option3"}>Giao hàng thành công</label>
+                                                        <div
+                                                            className={"change_delivery_item"}
+                                                            onChange={handleOnchange}
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                value={2}
+                                                                checked={data?.status_delivery === 2}
+                                                                name={"delivery"}
+                                                                id={"option3"}
+                                                            />
+                                                            <label htmlFor={"option3"}>
+                                                                Giao hàng thành công
+                                                            </label>
                                                         </div>
-                                                        <div className={"change_delivery_item"}
-                                                             onChange={handleOnchange}>
-                                                            <input type="radio" value={3}
-                                                                   checked={data?.status_delivery === 3}
-                                                                   name={"delivery"}
-                                                                   id={"option4"}/>
+                                                        <div
+                                                            className={"change_delivery_item"}
+                                                            onChange={handleOnchange}
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                value={3}
+                                                                checked={data?.status_delivery === 3}
+                                                                name={"delivery"}
+                                                                id={"option4"}
+                                                            />
                                                             <label htmlFor={"option4"}>Đã hủy</label>
                                                         </div>
                                                     </div>

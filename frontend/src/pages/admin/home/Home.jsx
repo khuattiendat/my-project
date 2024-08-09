@@ -18,8 +18,6 @@ import {
     getLatestTransaction
 } from "../../../apis/transactions";
 import {getRevenueDaily, getRevenueMonthly} from "../../../apis/statistical";
-import Loading from "../../../components/Loading/Loading";
-import {enqueueSnackbar} from "notistack";
 
 const Home = () => {
     const user = useSelector((state) => state.auth.login?.currentUser);
@@ -27,7 +25,7 @@ const Home = () => {
     const [total, setTotal] = useState({});
     const [dataTransaction, setDataTransaction] = useState([]);
     const [RevenueDaily, setRevenueDaily] = useState([]);
-    const [RevenueMonthly, setRevenueMonthly] = useState([]);
+  //  const [RevenueMonthly, setRevenueMonthly] = useState([]);
     const componentMounted = useRef(true);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -52,9 +50,9 @@ const Home = () => {
             dataTransaction = await listLateTransaction;
             const listProduct = await getAllProducts();
             let RevenueDaily = await getRevenueDaily(user?.data.accessToken, axiosJWT);
-            let RevenueMonthly = await getRevenueMonthly(user?.data.accessToken, axiosJWT);
+         //   let RevenueMonthly = await getRevenueMonthly(user?.data.accessToken, axiosJWT);
             setRevenueDaily(RevenueDaily?.data?.data);
-            setRevenueMonthly(RevenueMonthly?.data.data);
+         //   setRevenueMonthly(RevenueMonthly?.data.data);
             total.totalUser = await lisUser.totalUser;
             total.totalProduct = await listProduct.totalProducts;
             total.totalOrder = await lisOrder.totalOrder;
@@ -68,9 +66,8 @@ const Home = () => {
         }
     };
     useEffect(async () => {
-        document.title = "Trang chủ";
+        document.title = "Home";
         if (!user) {
-            enqueueSnackbar("Vui lòng đăng nhập", {variant: "error"})
             navigate("/admin/login");
         }
         await fetchApi();
@@ -90,12 +87,11 @@ const Home = () => {
                     </div>
                     <div className="charts">
                         <Featured data={RevenueDaily[0]}/>
-                        <Chart data={RevenueMonthly} title="Doanh thu 12 tháng qua" aspect={2}/>
+                        {/*<Chart data={RevenueMonthly} title="Doanh thu 12 tháng qua" aspect={2}/>*/}
                     </div>
                     <div className="listContainer">
                         <div className="listTitle">Giao dịch mới nhất</div>
-                        {isFetching ? <Loading/> : <Table data={dataTransaction} type="users"/>
-                        }
+                        <Table data={dataTransaction} type="users" isFetching={isFetching}/>
                     </div>
                 </div>
 

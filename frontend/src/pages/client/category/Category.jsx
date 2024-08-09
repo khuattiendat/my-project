@@ -1,5 +1,5 @@
 import Header from "../../../components/header/Header";
-import {fillterProduct} from "../../../apis/products";
+import { filterProduct} from "../../../apis/products";
 import "./category.scss"
 import Footer from "../../../components/footer/Footer";
 import {useEffect, useState} from "react";
@@ -9,7 +9,7 @@ import {decrypt} from "../../../utils/crypto";
 import {getAllCategory} from "../../../apis/category";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import Loading from "../../../components/Loading/Loading";
+import LoadingPage from "../../../components/Loading/loadingPage/LoadingPage";
 
 const dataFilterProductByPrice = [
     {
@@ -51,21 +51,34 @@ const
         const [page, setPage] = useState(1);
         const [totalPage, setTotalPage] = useState(1);
         const [loading, setLoading] = useState(false);
-        const fetchApi = async (price, categories, page) => {
+        const [loadingCategory, setLoadingCategory] = useState(false);
+        const fetchProduct = async (price, categories, page) => {
             setLoading(true)
             try {
-                let listCategory = await getAllCategory();
-                let data = await fillterProduct(price, sort, categories, page)
-                setListCategory(listCategory)
+                let data = await filterProduct(price, sort, categories, page)
                 setListProduct(data.products)
                 setTotalPage(data.pagination.totalPage)
                 setPage(Number(data.pagination.currentPage))
                 setLoading(false)
             } catch (e) {
                 setLoading(false)
-                window.location = "/notFound"
+                console.log(e)
             }
         }
+        const fetchCategory = async () => {
+            try {
+                setLoadingCategory(true)
+                let listCategory = await getAllCategory();
+                setListCategory(listCategory)
+                setLoadingCategory(false)
+            } catch (e) {
+                setLoadingCategory(false)
+                console.log(e)
+            }
+        }
+        useEffect(async () => {
+            await fetchCategory()
+        }, []);
         useEffect(async () => {
             document.title = "Danh mục sản phẩm"
             window.scrollTo({
@@ -76,7 +89,7 @@ const
             document.querySelectorAll(".checkbox_category").forEach(item => {
                 item.checked = (item.value === String(_id))
             })
-            await fetchApi(price, [_id], 1)
+            await fetchProduct(price, [_id], 1)
         }, [id])
         useEffect(async () => {
             window.scrollTo({
@@ -84,24 +97,20 @@ const
                 left: 0,
                 behavior: 'smooth',
             });
-            await fetchApi(price, categories, page)
+            await fetchProduct(price, categories, page)
         }, [price, categories, sort, page])
 
         const handleUpdateCategories = async (e) => {
             if (categories.includes(e.target.value)) {
                 setCategories(categories.filter(item => item !== e.target.value))
-                setPage(1)
             } else {
                 setCategories([...categories, e.target.value])
-                setPage(1)
             }
         }
         const handleUpdatePrice = (e) => {
-            setPage(1)
             setPrice(e.target.value)
         }
         const handleUpdateSort = (e) => {
-            setPage(1)
             setSort(e.target.value)
         }
 
@@ -113,18 +122,22 @@ const
                         <h2 className={"title"}>Lọc sản phẩm</h2>
                         <div className={"category_product"}>
                             <h3>Danh mục sản phẩm</h3>
-                            {listCategory.map((item, index) => (
-                                <div className={"category_product-item"} key={index}>
-                                    <input type="checkbox"
-                                           className={"checkbox_category"}
-                                           defaultChecked={item.id == _id}
-                                        //checked={item.id === _id || categories.includes(String(item.id))}
-                                           id={`option-${item.id}`}
-                                           value={item.id}
-                                           onChange={handleUpdateCategories}/>
-                                    <label htmlFor={`option-${item.id}`}>{item.name}</label>
-                                </div>
-                            ))}
+                            {
+                                loadingCategory ? <LoadingPage/> : (
+                                    listCategory.map((item, index) => (
+                                        <div className={"category_product-item"} key={index}>
+                                            <input type="checkbox"
+                                                   className={"checkbox_category"}
+                                                   defaultChecked={item.id == _id}
+                                                   id={`option-${item.id}`}
+                                                   value={item.id}
+                                                   onChange={handleUpdateCategories}/>
+                                            <label htmlFor={`option-${item.id}`}>{item.name}</label>
+                                        </div>
+                                    ))
+                                )
+                            }
+
                         </div>
                         <div className={"category_product product"}>
                             <h3>Khoảng giá</h3>
@@ -157,7 +170,7 @@ const
                         </div>
                         {
                             listProduct.length ? (
-                                loading ? <Loading/> : (
+                                loading ? <LoadingPage/> : (
                                     <div className={"right_list_product"}>
                                         {
                                             listProduct.map((item, index) => (

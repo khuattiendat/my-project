@@ -1,1 +1,1 @@
-export const fillerProduct = (array, name) => array.filter(item => item.Category.name === name)
+export const fillerProduct = (array, name) => array.filter(item => item.category.name === name)

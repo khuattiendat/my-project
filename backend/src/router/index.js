@@ -6,7 +6,7 @@ const galleryRouter = require('./gallery');
 const transactionRouter = require('./transaction');
 const paymentRouter = require('./payment');
 const orderRouter = require('./order');
-// const bannerRouter = require('./banner');
+const bannerRouter = require('./banner');
 const statisticRouter = require('./statistical');
 
 function Router(app) {
@@ -18,7 +18,7 @@ function Router(app) {
     app.use('/api/transactions', transactionRouter)
     app.use('/api/payments', paymentRouter);
     app.use('/api/orders', orderRouter);
-    // app.use('/api/banners', bannerRouter);
+    app.use('/api/banners', bannerRouter);
     app.use('/api/statistical', statisticRouter);
 }
 

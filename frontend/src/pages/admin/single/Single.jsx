@@ -2,7 +2,7 @@ import "./single.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import Navbar from "../../../components/navbar/Navbar";
 import List from "../../../components/table/Table";
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {getTransactionById, getTransactionByUserId,} from "../../../apis/transactions";
 import {useDispatch, useSelector} from "react-redux";
@@ -15,7 +15,7 @@ import {getCategoryById} from "../../../apis/category";
 import {getOrderById, getOrderDetailByOrderId} from "../../../apis/orders";
 import {decrypt} from "../../../utils/crypto";
 import {getBannerById} from "../../../apis/banner";
-import Loading from "../../../components/Loading/Loading";
+import LoadingPage from "../../../components/Loading/loadingPage/LoadingPage";
 import {enqueueSnackbar} from "notistack";
 
 const Single = (props) => {
@@ -28,23 +28,17 @@ const Single = (props) => {
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(false);
     const [dataOrder, setDataOrder] = useState([]);
-    const [listImageProduct, setListImageProduct] = useState([]);
-    const [image, setImage] = useState(null);
+    const [listImageProduct, setImage] = useState([]);
     const dispatch = useDispatch();
     const BASE_URL = process.env.REACT_APP_BASE_URL_SERVER;
     const axiosJWT = createAxios(user, dispatch, loginSuccess);
-    const navigate = useNavigate();
-    const fetchApi = async () => {
-        let data;
-        let res;
-        let dataTransaction;
-        let listImages;
-        let dataOrder;
-        let image;
-        try {
-            switch (type) {
-                case "users":
-                    setLoading(true);
+    useEffect(async () => {
+        const fetchApi = async () => {
+            let data;
+            if (type === "users") {
+                try {
+                    setLoading(true)
+                    let dataTransaction;
                     const listTransaction = await getTransactionByUserId(
                         user?.data.accessToken,
                         1,
@@ -53,64 +47,86 @@ const Single = (props) => {
                     );
                     data = await getUserById(user?.data.accessToken, ids, axiosJWT);
                     dataTransaction = listTransaction.transactions;
-                    break;
-                case "products":
-                    setLoading(true);
-                    res = await getProductById(ids);
-                    listImages = await getListImages(ids);
-                    image = listImages[0];
+                    setDataTransaction(dataTransaction);
+                    setLoading(false)
+                } catch (error) {
+                    setLoading(false)
+                    console.log(error);
+                }
+
+            } else if (type === "products") {
+                try {
+                    setLoading(true)
+                    const res = await getProductById(ids);
+                    const listImages = await getListImages(ids);
+                    setImage(listImages);
                     data = res;
-                    break;
-                case "orders":
-                    setLoading(true);
-                    res = await getOrderById(user?.data.accessToken, ids, axiosJWT);
+                    setLoading(false)
+                } catch (error) {
+                    setLoading(false)
+                    console.log(error);
+                }
+
+            } else if (type === "categories") {
+                try {
+                    setLoading(true)
+                    data = await getCategoryById(ids);
+                    setLoading(false)
+                } catch (error) {
+                    setLoading(false)
+                    console.log(error);
+                }
+            } else if (type === "orders") {
+                try {
+                    setLoading(true)
+                    let dataOrder;
+                    const res = await getOrderById(user?.data.accessToken, ids, axiosJWT);
                     dataOrder = await getOrderDetailByOrderId(
                         user?.data.accessToken,
                         ids,
                         axiosJWT
                     );
+                    setDataOrder(dataOrder);
                     data = res;
-                    break;
-                case "categories":
+                    setLoading(false)
+                } catch (error) {
+                    setLoading(false)
+                    enqueueSnackbar("Không tìm thấy dữ liệu", {variant: "error", autoHideDuration: 1000})
+                    console.log(error);
+                }
+
+            } else if (type === "transactions") {
+                try {
                     setLoading(true)
-                    data = await getCategoryById(ids);
-                    break;
-                case "banners":
-                    setLoading(true)
-                    res = await getBannerById(ids);
-                    let dataRes = res?.data?.data;
-                    image = dataRes;
-                    data = dataRes;
-                    break;
-                case "transactions":
-                    setLoading(true);
                     data = await getTransactionById(
                         user?.data.accessToken,
                         ids,
                         axiosJWT
                     );
-                default:
                     setLoading(false)
-                    break;
+                } catch (error) {
+                    setLoading(false)
+                    console.log(error);
+                }
+
+            } else if (type === "banners") {
+                try {
+                    setLoading(true)
+                    const res = await getBannerById(ids);
+                    let dataRes = res?.data?.data;
+                    setImage([dataRes]);
+                    data = dataRes;
+                    setLoading(false)
+                } catch (error) {
+                    setLoading(false)
+                    console.log(error);
+                }
 
             }
             setData(data);
-            setDataTransaction(dataTransaction)
-            setListImageProduct(listImages)
-            setDataOrder(dataOrder);
-            setImage(image);
-            setLoading(false)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-    useEffect(() => {
-        if (!user) {
-            enqueueSnackbar("Vui lòng đăng nhập", {variant: "error"});
-            navigate("/admin/login")
-        }
-        fetchApi();
-    }, [id, type]);
+        };
+        await fetchApi();
+    }, [id]);
     return (
         <div className="single">
             <Sidebar/>
@@ -120,11 +136,12 @@ const Single = (props) => {
                     <div className="top">
                         <div className="left">
                             <Info
-                                image={image}
+                                image={listImageProduct[0]}
                                 data={data}
                                 type={type}
                                 orderDetail={dataOrder}
                                 id={id}
+                                loading={loading}
                             />
                         </div>
                     </div>
@@ -132,33 +149,34 @@ const Single = (props) => {
                     {type === "users" && (
                         <div className="bottom">
                             <h1 className="title">Giao dịch gần đây</h1>
-                            {
-                                loading ? <Loading/> : <List data={dataTransaction} type="users"/>
-                            }
+                            <List data={dataTransaction} type="users"/>
                         </div>
                     )}
                     {type === "orders" && (
                         <div className="bottom">
                             <h1 className="title">Danh sách sản phẩm</h1>
-                            {
-                                loading ? <Loading/> : <List data={dataOrder} type="orders"/>
-                            }
+                            <List data={dataOrder} type="orders"/>
                         </div>
                     )}
-                    {type === "products" && (
+                    {type === "products" ? (
                         <div className="bottom">
                             <div className="show-img">
                                 <h1 className="title">Danh sách hình ảnh</h1>
-                                {listImageProduct?.map((item, index) => (
-                                    <img
-                                        key={index}
-                                        src={`${BASE_URL}uploads/${item.image_url}`}
-                                        alt="images"
-                                        className="images"
-                                    />
-                                ))}
+                                {loading ? <LoadingPage/> : (
+                                    listImageProduct.map((item, index) => (
+                                        <img
+                                            key={index}
+                                            src={`${BASE_URL}uploads/${item.image_url}`}
+                                            alt="images"
+                                            className="images"
+                                        />
+                                    ))
+                                )}
+
                             </div>
                         </div>
+                    ) : (
+                        <></>
                     )}
                 </div>
 
