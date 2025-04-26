@@ -11,7 +11,7 @@ import GlobalStyles from "./components/globalStyles/GlobalStyles";
 
 let persistor = persistStore(store)
 ReactDOM.render(
-    <SnackbarProvider maxSnack={3} anchorOrigin={{vertical: "top", horizontal: "right"}}>
+    <SnackbarProvider className='toast' maxSnack={3} anchorOrigin={{vertical: "top", horizontal: "right"}}>
         <Provider store={store}>
             <GlobalStyles>
                 <DarkModeContextProvider>

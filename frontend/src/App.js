@@ -6,10 +6,11 @@ import {routesConfigClient} from "./routes/client.routes";
 import {routesConfigAdmin} from "./routes/admin.routes";
 import DialogFlow from "./components/dialogFlow/DialogFlow";
 
+
 function App() {
     const {darkMode} = useContext(DarkModeContext);
     return (
-        <div className={darkMode ? "app dark" : "app"}>
+        <div className={darkMode ? "app dark " : "app"}>
             <BrowserRouter>
                 <Routes>
                     {routesConfigClient.map((route, index) => (

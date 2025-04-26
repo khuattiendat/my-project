@@ -37,8 +37,8 @@ const generateAccessToken = (user, isAdmin) => {
         id: user.id,
         isAdmin: isAdmin
     }, process.env.JWT_ACCESS_KEY, {
-        // token hết hạn sau 30s
-        expiresIn: '10m'
+        // token hết hạn sau 1 tuần
+        expiresIn: '7d'
     })
 }
 // tạo token làm mới token
@@ -49,7 +49,7 @@ const generateRefreshToken = (user, isAdmin) => {
             isAdmin: isAdmin
         },
         process.env.JWT_REFRESH_KEY,
-        {expiresIn: "2d"}
+        {expiresIn: "14d"}
     )
 }
 const loginAdmin = async (data) => {
@@ -378,9 +378,10 @@ const getUserById = async (id) => {
                 message: String.format(MESSAGE_EXIST, "user")
             };
         }
+        const {password, ...user} = users.dataValues;
         return {
             error: ERROR_FAILED,
-            data: users,
+            data: user,
             message: MESSAGE_SUCCESS
         };
     } catch (error) {

@@ -550,7 +550,7 @@ const FormInput = (props) => {
                     )}
 
                     <div className="formInput">
-                        <LoadingButton loading={loading} variant={"outlined"} type={"submit"}>
+                        <LoadingButton loadingPosition={'end'} loading={loading} variant={"outlined"} type={"submit"}>
                             {isEdit ? "Cập nhật" : "Thêm mới"}
                         </LoadingButton>
                     </div>

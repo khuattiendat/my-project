@@ -13,6 +13,5 @@ export function decrypt(cipherText) {
     const reb64 = CryptoJS.enc.Hex.parse(cipherText.toString());
     const bytes = reb64.toString(CryptoJS.enc.Base64);
     const decrypt = CryptoJS.AES.decrypt(bytes, "test");
-    const plain = decrypt.toString(CryptoJS.enc.Utf8);
-    return plain;
+    return decrypt.toString(CryptoJS.enc.Utf8);
 }

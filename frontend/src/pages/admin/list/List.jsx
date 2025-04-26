@@ -55,6 +55,10 @@ const List = ({title, type}) => {
     for (let x = 0; x <= maxOffset; x++) {
         allYears.push(thisYear - x)
     }
+    const accessToken = user?.data?.accessToken || localStorage.getItem("accessToken");
+    if (!accessToken) {
+        navigate("/admin/login");
+    }
     const fetchApi = async (valueSearch, page) => {
         try {
             let data = [];
@@ -65,7 +69,7 @@ const List = ({title, type}) => {
                 case "users":
                     setIsFetching(true);
                     res = await getAllUsers(
-                        user?.data.accessToken,
+                        accessToken,
                         page,
                         valueSearch,
                         axiosJWT
@@ -82,7 +86,7 @@ const List = ({title, type}) => {
                 case "orders":
                     setIsFetching(true);
                     res = await getAllOrder(
-                        user?.data.accessToken,
+                        accessToken,
                         page,
                         valueSearch,
                         axiosJWT
@@ -93,7 +97,7 @@ const List = ({title, type}) => {
                 case "transactions":
                     setIsFetching(true);
                     res = await getAllTransaction(
-                        user?.data.accessToken,
+                        accessToken,
                         page,
                         valueSearch,
                         axiosJWT
@@ -115,9 +119,9 @@ const List = ({title, type}) => {
                     break;
                 case "statistical":
                     setIsFetching(true);
-                    let dataCategory = await getStatisticalCategoryProduct(user?.data.accessToken, axiosJWT)
-                    let dataProduct = await getStatisticalInventory(user?.data.accessToken, axiosJWT)
-                    let dataRevenue = await getRevenueYearly(user?.data.accessToken, axiosJWT, selectedYear)
+                    let dataCategory = await getStatisticalCategoryProduct(accessToken, axiosJWT)
+                    let dataProduct = await getStatisticalInventory(accessToken, axiosJWT)
+                    let dataRevenue = await getRevenueYearly(accessToken, axiosJWT, selectedYear)
                     dataStatistical = {
                         category: dataCategory?.data?.data,
                         product: dataProduct?.data?.data,
@@ -168,7 +172,7 @@ const List = ({title, type}) => {
                 case "users":
                     setIsFetching(true);
                     res = await getAllUsers(
-                        user?.data.accessToken,
+                        accessToken,
                         page,
                         valueSearch,
                         axiosJWT
@@ -191,7 +195,7 @@ const List = ({title, type}) => {
                 case "orders":
                     setIsFetching(true);
                     res = await getAllOrder(
-                        user?.data.accessToken,
+                        accessToken,
                         page,
                         valueSearch,
                         axiosJWT
@@ -202,7 +206,7 @@ const List = ({title, type}) => {
                 case "transactions":
                     setIsFetching(true);
                     res = await getAllTransaction(
-                        user?.data.accessToken,
+                        accessToken,
                         page,
                         valueSearch,
                         axiosJWT
@@ -235,7 +239,7 @@ const List = ({title, type}) => {
         if (confirm) {
             if (type === "users") {
                 try {
-                    await deleteUser(user?.data.accessToken, ids, axiosJWT);
+                    await deleteUser(accessToken, ids, axiosJWT);
                     enqueueSnackbar("Xóa thành công", {variant: "success", autoHideDuration: 1000})
                     navigate("/admin/users", {
                         state: ids,
@@ -245,14 +249,14 @@ const List = ({title, type}) => {
                     console.log(err);
                 }
             } else if (type === "products") {
-                await deleteProduct(user?.data.accessToken, ids, navigate, axiosJWT);
+                await deleteProduct(accessToken, ids, navigate, axiosJWT);
             } else if (type === "orders") {
-                await deleteOrder(user?.data.accessToken, ids, navigate, axiosJWT);
+                await deleteOrder(accessToken, ids, navigate, axiosJWT);
             } else if (type === "categories") {
-                await deleteCategory(user?.data.accessToken, ids, navigate, axiosJWT);
+                await deleteCategory(accessToken, ids, navigate, axiosJWT);
             } else if (type === "banners") {
                 try {
-                    await deleteBanner(user?.data.accessToken, ids, axiosJWT);
+                    await deleteBanner(accessToken, ids, axiosJWT);
                     enqueueSnackbar("Xóa thành công", {variant: "success", autoHideDuration: 1000})
                     navigate("/admin/banners", {
                         state: ids,

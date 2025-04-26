@@ -7,6 +7,7 @@ const {QueryTypes} = require('sequelize');
 const {updateQuantityProduct} = require("../services/productService");
 require('dotenv').config();
 const HOST = process.env.HOST
+const FRONTEND_URL = process.env.FRONTEND_URL
 paypal.configure({
     'mode': 'sandbox', //sandbox or live
     'client_id': process.env.CLIENT_ID,
@@ -15,40 +16,6 @@ paypal.configure({
 let listProducts = [];
 const PaymentController = {
     paymentProductByPaypal: async (req, res) => {
-        // data mẫu
-        // axios
-        //   .post("http://localhost:8088/api/payments/payByPaypal", {
-        //     user_id: "5",
-        //     user_name: "test",
-        //     user_email: "test",
-        //     user_phone: "test",
-        //     note: "test",
-        //     total_money: 2000000,
-        //     payment: "paypal",
-        //     listProducts: [
-        //       {
-        //         product_id: 33,
-        //         quantity: 2,
-        //         price: 1000000,
-        //         total_money: 1000000,
-        //         name: "test",
-        //       },
-        //       {
-        //         product_id: 36,
-        //         quantity: 1,
-        //         price: 1000000,
-        //         total_money: 300000,
-        //         name: "test",
-        //       },
-        //     ],
-        //   })
-        //   .then((res) => {
-        //     window.location = res.data.forwardLink;
-        //   })
-        //   .catch((error) => {
-        //     console.log(error.response);
-        //   });
-        //
         try {
             const data = req.body;
             console.log(data)
@@ -111,7 +78,7 @@ const PaymentController = {
             paypal.payment.create(create_payment_json, function (error, payment) {
                 if (error) {
                     console.log(error)
-                    throw error;
+                    res.status(400).send(error);
                 } else {
                     for (let i = 0; i < payment.links.length; i++) {
                         if (payment.links[i].rel === 'approval_url') {
@@ -121,7 +88,7 @@ const PaymentController = {
                 }
             });
         } catch (error) {
-            res.status(500).send(error.message)
+            res.status(500).send(error)
         }
 
     },
@@ -141,6 +108,7 @@ const PaymentController = {
         paypal.payment.execute(paymentId, execute_payment_json, async function (error, payment) {
             if (error) {
                 // throw error;
+
                 res.status(400).send(error);
             } else {
                 const transactionId = req.query.transactionId;
@@ -148,7 +116,7 @@ const PaymentController = {
                 await updateTransaction(transactionId, payment, 1);
                 await updateOrder(orderId, 1, null)
                 await updateQuantityProduct(listProducts);
-                res.status(200).redirect("https://my-project-production.netlify.app/users/order")
+                res.status(200).redirect(`${FRONTEND_URL}/users/order`);
             }
         });
     },
@@ -159,7 +127,7 @@ const PaymentController = {
         await deleteOrder(orderId);
         await updateTransaction(transactionId, null, 2)
 
-        res.status(200).redirect("https://my-project-production.netlify.app/")
+        res.status(200).redirect(FRONTEND_URL)
     },
     paymentProductByCash: async (req, res) => {
         try {

@@ -1,6 +1,4 @@
 import Swal from 'sweetalert2'
-import { SnackbarProvider, useSnackbar } from "notistack";
-import React from 'react';
 export const showAlertError = (message) => {
     Swal.fire({
         title: "error",

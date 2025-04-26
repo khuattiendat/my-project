@@ -21,7 +21,7 @@ const User = sequelize.define('users', {
     },
     password: {
         allowNull: false,
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
     },
     role_id: {
         allowNull: false,
@@ -36,6 +36,7 @@ const User = sequelize.define('users', {
 }, {
     timestamps: true,
     paranoid: true,
+
 });
 // User.associate = (models => {
 //     User.hasMany(models.Order, {onDelete: "cascade", hooks: true});

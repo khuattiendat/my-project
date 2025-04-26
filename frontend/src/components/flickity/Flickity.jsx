@@ -20,6 +20,16 @@ const Flickity = ({data, loading}) => {
                             loop={data.length > 5}
                             slidesPerView={4}
                             spaceBetween={10}
+                            breakpoints={{
+                                576: {
+                                    // width: 576,
+                                    slidesPerView: 2,
+                                },
+                                768: {
+                                    // width: 768,
+                                    slidesPerView: 3,
+                                },
+                            }}
                             // autoplay={{
                             //     delay: 3000,
                             //     disableOnInteraction: false,

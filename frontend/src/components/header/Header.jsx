@@ -61,6 +61,7 @@ const Header = () => {
                 _dispatch(logoutSuccess());
                 navigate("/");
             } catch (err) {
+                _dispatch(logoutSuccess());
                 enqueueSnackbar("Đăng xuất thất bại", {
                     variant: "success",
                     autoHideDuration: 1000,
@@ -266,7 +267,7 @@ const Header = () => {
                 </ul>
             </div>
             <div className="header_bottom-mb">
-                
+
             </div>
         </div>
     );

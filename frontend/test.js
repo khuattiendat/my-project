@@ -1,1 +1,17 @@
-//SELECT categories.name AS categoryName, COUNT(products.id) AS totalProduct, MAX(products.price) AS maxPrice, MIN(products.price) AS minPrice, AVG(products.price) AS averagePrice FROM products  INNER JOIN categories ON products.category_id = categories.id WHERE (products.deletedAt IS NULL AND categories.deletedAt IS NULL) GROUP BY categories.name;
+const numbers = [1, 2, 3, 2, 4, 2, 5, 3, 3, 3];
+
+let frequency = {};
+let maxCount = 0;
+let mostFrequentElement = null;
+
+for (let i = 0; i < numbers.length; i++) {
+    let num = numbers[i];
+    frequency[num] = (frequency[num] || 0) + 1;
+
+    if (frequency[num] > maxCount) {
+        maxCount = frequency[num];
+        mostFrequentElement = num;
+    }
+}
+
+// console.log(mostFrequentElement, maxCount); // Output: 3
