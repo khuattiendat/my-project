@@ -26,7 +26,14 @@ String.format = function () {
 };
 const getBestSellers = async () => {
     try {
-        const sql = `SELECT SUM(order_details.quantity) as total_sold, products.* FROM order_details INNER JOIN products ON order_details.product_id = products.id WHERE order_details.deletedAt IS NULL AND products.deletedAt IS NULL GROUP BY products.id ORDER BY SUM(order_details.quantity) DESC LIMIT 10`;
+        const sql = `SELECT SUM(order_details.quantity) as total_sold, products.*
+                     FROM order_details
+                              INNER JOIN products ON order_details.product_id = products.id
+                     WHERE order_details.deletedAt IS NULL
+                       AND products.quantity > 0
+                       AND products.deletedAt IS NULL
+                     GROUP BY products.id
+                     ORDER BY SUM(order_details.quantity) DESC LIMIT 10`;
         const products = await sequelize.query(sql, {type: QueryTypes.SELECT})
         return {
             error: ERROR_FAILED,
@@ -70,11 +77,15 @@ const getAllProducts = async () => {
         Product.belongsTo(Category, {foreignKey: 'category_id'})
         // Gallery.belongsTo(Product, {foreignKey: "product_id"})
         const {count, rows} = await Product.findAndCountAll({
+            where: {
+                quantity: {
+                    [Op.gt]: 0 // Lấy các sản phẩm có quantity > 0
+                }
+            },
             include: [{
                 model: Category,
                 required: false
-            }
-            ]
+            }]
         });
         await rows.forEach((item) => {
             products.push(item.dataValues)
@@ -544,8 +555,12 @@ const filterProduct = async (price, orderBy, categories, page = 1) => {
         const perPage = 9;
         const offset = (page - 1) * perPage;
 
-        let countProductSql = `SELECT COUNT(*) as total FROM products WHERE products.deletedAt IS NULL ${hasPrice} ${hasCategories}`;
-        let sql = `SELECT products.* FROM products WHERE products.deletedAt IS NULL ${hasPrice} ${hasCategories}`;
+        let countProductSql = `SELECT COUNT(*) as total
+                               FROM products
+                               WHERE products.deletedAt IS NULL ${hasPrice} ${hasCategories}`;
+        let sql = `SELECT products.*
+                   FROM products
+                   WHERE products.deletedAt IS NULL ${hasPrice} ${hasCategories}`;
 
         switch (orderBy) {
             case "priceLowToHigh":

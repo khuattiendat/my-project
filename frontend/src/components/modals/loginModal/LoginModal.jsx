@@ -31,6 +31,7 @@ const LoginModal = ({show, hide}) => {
             enqueueSnackbar("Đăng nhập thành công", {variant: "success", autoHideDuration: 1000});
             setPassword("");
             setPhoneNumber("");
+            localStorage.setItem("accessToken", dataLogin.data.accessToken);
             hide();
         } else {
             enqueueSnackbar(dataLogin.message, {variant: "error", autoHideDuration: 1000});

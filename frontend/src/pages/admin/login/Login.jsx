@@ -25,6 +25,8 @@ const Login = () => {
         let dataLogin = await loginAdmin(newUser, dispatch);
         if (dataLogin.error === 0) {
             enqueueSnackbar("Đăng nhập thành công", {variant: "success", autoHideDuration: 1000});
+            localStorage.setItem("accessToken", dataLogin.data.accessToken);
+            localStorage.setItem("refreshToken", dataLogin.data.refreshToken);
             navigate("/admin");
         } else {
             enqueueSnackbar(dataLogin?.message, {variant: "error", autoHideDuration: 1000});

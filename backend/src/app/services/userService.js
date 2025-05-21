@@ -17,11 +17,11 @@ const {
     isNullOrEmptyArray,
     customDateTime,
 } = require("../common/utils");
-const {Op} = require("sequelize");
+const { Op } = require("sequelize");
 const sendEmail = require("../../utils/sendMail");
 const Order = require("../models/Order");
 const OrderDetail = require("../models/OrderDetail");
-const {decrypt} = require("dotenv");
+const { decrypt } = require("dotenv");
 String.format = function () {
     let s = arguments[0];
     for (let i = 0; i < arguments.length - 1; i++) {
@@ -49,7 +49,7 @@ const generateRefreshToken = (user, isAdmin) => {
             isAdmin: isAdmin
         },
         process.env.JWT_REFRESH_KEY,
-        {expiresIn: "14d"}
+        { expiresIn: "14d" }
     )
 }
 const loginAdmin = async (data) => {
@@ -109,7 +109,7 @@ const loginAdmin = async (data) => {
             refreshTokens.push(refreshToken);
             return {
                 error: ERROR_FAILED,
-                data: {accessToken, user, refreshToken},
+                data: { accessToken, user, refreshToken },
                 message: MESSAGE_SUCCESS,
             };
         }
@@ -183,7 +183,7 @@ const loginUser = async (data) => {
             refreshTokens.push(refreshToken);
             return {
                 error: ERROR_FAILED,
-                data: {accessToken, user, refreshToken},
+                data: { accessToken, user, refreshToken },
                 message: MESSAGE_SUCCESS,
             };
         }
@@ -319,7 +319,7 @@ const getAllUser = async (page, value) => {
             page = 1;
         }
         if (!value) {
-            const {rows, count} = await User.findAndCountAll({
+            const { rows, count } = await User.findAndCountAll({
                 limit: pageSize,
                 offset: offset
             })
@@ -329,14 +329,14 @@ const getAllUser = async (page, value) => {
             totalPage = Math.ceil(count / pageSize);
             totalUser = count;
         } else {
-            const {count, rows} = await User.findAndCountAll({
+            const { count, rows } = await User.findAndCountAll({
                 where: {
                     [Op.or]: [
-                        {name: {[Op.like]: '%' + value.trim() + '%'}},
-                        {email: {[Op.like]: '%' + value.trim() + '%'}},
-                        {phone_number: {[Op.like]: '%' + value.trim() + '%'}},
-                        {address: {[Op.like]: '%' + value.trim() + '%'}},
-                        {gender: {[Op.like]: '%' + value.trim() + '%'}},
+                        { name: { [Op.like]: '%' + value.trim() + '%' } },
+                        { email: { [Op.like]: '%' + value.trim() + '%' } },
+                        { phone_number: { [Op.like]: '%' + value.trim() + '%' } },
+                        { address: { [Op.like]: '%' + value.trim() + '%' } },
+                        { gender: { [Op.like]: '%' + value.trim() + '%' } },
                     ]
                 },
                 limit: pageSize,
@@ -378,7 +378,7 @@ const getUserById = async (id) => {
                 message: String.format(MESSAGE_EXIST, "user")
             };
         }
-        const {password, ...user} = users.dataValues;
+        const { password, ...user } = users.dataValues;
         return {
             error: ERROR_FAILED,
             data: user,
@@ -495,12 +495,12 @@ const updateUser = async (id, data) => {
 const deleteUser = async (id) => {
     try {
         const row = await User.findAll({
-            where: {id: id},
+            where: { id: id },
         });
         if (row.length > 0) {
-            const orderId = (await Order.findAll({where: {user_id: id}})).map(item => item.dataValues.id);
-            await OrderDetail.destroy({where: {order_id: [...orderId]}});
-            await Order.destroy({where: {id: [...orderId]}});
+            const orderId = (await Order.findAll({ where: { user_id: id } })).map(item => item.dataValues.id);
+            await OrderDetail.destroy({ where: { order_id: [...orderId] } });
+            await Order.destroy({ where: { id: [...orderId] } });
             await User.destroy({
                 where: {
                     id: id,
@@ -538,14 +538,14 @@ const searchUser = async (value, page) => {
         if (page < 1) {
             page = 1;
         }
-        const {count, rows} = await User.findAndCountAll({
+        const { count, rows } = await User.findAndCountAll({
             where: {
                 [Op.or]: [
-                    {name: {[Op.like]: '%' + value.trim() + '%'}},
-                    {email: {[Op.like]: '%' + value.trim() + '%'}},
-                    {phone_number: {[Op.like]: '%' + value.trim() + '%'}},
-                    {address: {[Op.like]: '%' + value.trim() + '%'}},
-                    {gender: {[Op.like]: '%' + value.trim() + '%'}},
+                    { name: { [Op.like]: '%' + value.trim() + '%' } },
+                    { email: { [Op.like]: '%' + value.trim() + '%' } },
+                    { phone_number: { [Op.like]: '%' + value.trim() + '%' } },
+                    { address: { [Op.like]: '%' + value.trim() + '%' } },
+                    { gender: { [Op.like]: '%' + value.trim() + '%' } },
                 ]
             },
             limit: pageSize,
@@ -580,7 +580,7 @@ const searchUser = async (value, page) => {
 }
 const resetPassword = async (id, data) => {
     try {
-        let {oldPassword} = data;
+        let { oldPassword } = data;
         let messages = [];
         const salt = await bcrypt.genSalt(10);
         const newPassword = await bcrypt.hash(data.newPassword, salt);
@@ -653,7 +653,7 @@ const randomNewPassword = (length) => {
 const forgotPassword = async (data) => {
     try {
         let messages = [];
-        const {phone_number, email} = data;
+        const { phone_number, email } = data;
         const passwordRandom = randomNewPassword(6);
         const salt = await bcrypt.genSalt(10);
         const newPassword = await bcrypt.hash(passwordRandom, salt);

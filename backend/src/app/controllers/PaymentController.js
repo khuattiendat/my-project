@@ -90,7 +90,6 @@ const PaymentController = {
         } catch (error) {
             res.status(500).send(error)
         }
-
     },
     ResponsePaymentSuccess: async (req, res) => {
         const totalMoney = req.query.totalMoney;
